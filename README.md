@@ -3,6 +3,10 @@
 Planificación de caminatas (EVA) en el Monte Sharp, cráter Gale.
 Monorepo con **backend** y **frontend** independientes.
 
+> 👥 **¿Eres del equipo?** Empieza por la **[Guía para el equipo (CONTRIBUTING.md)](CONTRIBUTING.md)**: requisitos, instalación, cómo crear ramas y Pull Requests, y reparto de tareas.
+>
+> Repo: https://github.com/JhonAlex28/senda-mars
+
 ```
 senda-v2/
 ├── backend/    API Python · FastAPI · arquitectura hexagonal
@@ -15,8 +19,8 @@ senda-v2/
 Requisitos: **Python 3.11+** y **Node.js 20+**.
 
 ```bash
-git clone <url-del-repo>
-cd <repo>
+git clone https://github.com/JhonAlex28/senda-mars.git
+cd senda-mars
 python scripts/setup.py   # una sola vez (~1 min): crea backend/.venv e instala todo
 python scripts/dev.py     # arranca backend + frontend. Ctrl+C detiene ambos
 ```

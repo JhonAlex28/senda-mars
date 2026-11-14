@@ -1,3 +1,5 @@
+<!-- Título del PR en formato Conventional Commits, ej: feat(frontend): add OpenLayers map -->
+
 ## ¿Qué cambia?
 <!-- Descripción breve -->
 

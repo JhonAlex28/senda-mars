@@ -4,11 +4,19 @@ from __future__ import annotations
 import subprocess
 import sys
 
-from _common import BACKEND, FRONTEND, VENV, check_versions, info, npm, venv_python
+from _common import BACKEND, FRONTEND, ROOT, VENV, check_versions, info, npm, venv_python
+
+
+def enable_git_hooks() -> None:
+    """Activa .githooks/ (validación de Conventional Commits) si es un repo git."""
+    if (ROOT / ".git").exists():
+        subprocess.run(["git", "config", "core.hooksPath", ".githooks"], cwd=ROOT, check=False)
+        info("Hooks de git activados (.githooks/commit-msg)")
 
 
 def main() -> None:
     check_versions()
+    enable_git_hooks()
 
     if not venv_python().exists():
         info("Creando entorno virtual en backend/.venv ...")
