@@ -6,8 +6,25 @@ Monorepo con **backend** y **frontend** independientes.
 ```
 senda-v2/
 ├── backend/    API Python · FastAPI · arquitectura hexagonal
-└── frontend/   React · TypeScript · Vite · organizado por features
+├── frontend/   React · TypeScript · Vite · organizado por features
+└── scripts/    setup.py y dev.py (instalar y arrancar todo)
 ```
+
+## Inicio rápido
+
+Requisitos: **Python 3.11+** y **Node.js 20+**.
+
+```bash
+git clone <url-del-repo>
+cd <repo>
+python scripts/setup.py   # una sola vez (~1 min): crea backend/.venv e instala todo
+python scripts/dev.py     # arranca backend + frontend. Ctrl+C detiene ambos
+```
+
+- Frontend: http://localhost:5173
+- API y documentación: http://localhost:8000/docs
+
+Si un puerto está ocupado, `dev.py` lo avisa. Para ver qué lo ocupa en Windows: `Get-NetTCPConnection -LocalPort 8000 -State Listen`.
 
 ## Backend — arquitectura hexagonal (puertos y adaptadores)
 
