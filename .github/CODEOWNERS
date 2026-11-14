@@ -1,0 +1,5 @@
+# Revisores automáticos por carpeta.
+# Quita el "#" y reemplaza por los usuarios reales de GitHub del equipo.
+# /backend/   @usuario1 @usuario2
+# /frontend/  @usuario3 @usuario4
+# /.github/   @usuario5
