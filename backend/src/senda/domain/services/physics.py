@@ -1,6 +1,7 @@
 """Física de la EVA: funciones puras, sin I/O."""
 from __future__ import annotations
 
+MARS_G = 3.721               # m/s²
 MARS_G_RATIO = 0.38          # gravedad de Marte relativa a la Tierra
 SUIT_FACTOR = 1.25           # penalización metabólica del traje presurizado
 O2_ENERGY_KJ_PER_L = 20.1    # equivalente energético del O2

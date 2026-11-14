@@ -1,0 +1,106 @@
+import type { MissionAction, MissionState } from './types';
+
+export const initialMissionState: MissionState = {
+  phase: 'globe',
+  base: null,
+  baseConfirmed: false,
+  goals: [],
+  hazards: [],
+  tool: 'select',
+  focusedTargetId: null,
+  traverse: null,
+  traverseProfile: 'safe',
+  activeParkingId: null,
+  evaPlans: {},
+  notice: null,
+};
+
+/** Cambiar base, objetivos o peligros deja obsoletas las rutas calculadas. */
+function invalidatePlan(state: MissionState, reason: string): MissionState {
+  if (!state.traverse) return state;
+  return {
+    ...state,
+    traverse: null,
+    evaPlans: {},
+    activeParkingId: null,
+    phase: state.phase === 'walk' ? 'plan' : state.phase,
+    notice: `${reason} Plan the traverse again.`,
+  };
+}
+
+function move<T>(list: T[], from: number, to: number): T[] {
+  const next = [...list];
+  const [item] = next.splice(from, 1);
+  next.splice(to, 0, item);
+  return next;
+}
+
+export function missionReducer(state: MissionState, action: MissionAction): MissionState {
+  switch (action.type) {
+    case 'openMission':
+      return { ...state, phase: 'plan' };
+    case 'backToGlobe':
+      return { ...state, phase: 'globe' };
+    case 'setPhase':
+      return { ...state, phase: action.phase, tool: 'select', focusedTargetId: null };
+
+    case 'initBase':
+      return state.base ? state : { ...state, base: action.point };
+    case 'moveBase':
+      return invalidatePlan({ ...state, base: action.point }, 'The base moved.');
+    case 'confirmBase':
+      return { ...state, baseConfirmed: true, tool: 'select' };
+    case 'editBase':
+      return { ...state, baseConfirmed: false, tool: 'base' };
+
+    case 'toggleGoal': {
+      const has = state.goals.includes(action.id);
+      const goals = has ? state.goals.filter((g) => g !== action.id) : [...state.goals, action.id];
+      return invalidatePlan({ ...state, goals }, 'Your goals changed.');
+    }
+    case 'moveGoal':
+      if (action.to < 0 || action.to >= state.goals.length) return state;
+      return invalidatePlan({ ...state, goals: move(state.goals, action.from, action.to) }, 'Your goal order changed.');
+    case 'focusTarget':
+      return { ...state, focusedTargetId: action.id };
+
+    case 'addHazard':
+      return invalidatePlan({ ...state, hazards: [...state.hazards, action.hazard] }, 'You marked a new danger zone.');
+    case 'removeHazard':
+      return invalidatePlan(
+        { ...state, hazards: state.hazards.filter((_, i) => i !== action.index) },
+        'A danger zone was removed.',
+      );
+    case 'clearHazards':
+      return invalidatePlan({ ...state, hazards: [] }, 'Danger zones were cleared.');
+    case 'setTool':
+      return { ...state, tool: action.tool };
+
+    case 'traversePlanned':
+      return {
+        ...state,
+        traverse: action.plan,
+        evaPlans: {},
+        activeParkingId: action.plan.parkings[0]?.id ?? null,
+        focusedTargetId: null,
+        notice: null,
+      };
+    case 'selectTraverseProfile':
+      return { ...state, traverseProfile: action.profile };
+    case 'selectParking':
+      return { ...state, activeParkingId: action.id };
+    case 'evaPlanned':
+      return {
+        ...state,
+        evaPlans: { ...state.evaPlans, [action.parkingId]: { routes: action.routes, profile: 'safe' } },
+      };
+    case 'selectEvaProfile': {
+      const plan = state.evaPlans[action.parkingId];
+      if (!plan) return state;
+      return { ...state, evaPlans: { ...state.evaPlans, [action.parkingId]: { ...plan, profile: action.profile } } };
+    }
+
+    case 'dismissNotice':
+      return { ...state, notice: null };
+  }
+}

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from senda.domain.models.geo import GeoPoint
-from senda.domain.models.target import Rubric, ScienceTarget
+from senda.domain.models.target import Rubric, ScienceTarget, ScienceTask
 
 
 class JsonTargetRepository:
@@ -21,6 +21,12 @@ class JsonTargetRepository:
                 p = feat["properties"]
                 lon, lat = feat["geometry"]["coordinates"][:2]
                 r = p.get("rubric", {})
+                s = p.get("eva_sampling")
+                task = ScienceTask(
+                    tool=s.get("tool", ""),
+                    duration_min=float(s.get("duration_min", 0.0)),
+                    protocol=s.get("protocol", ""),
+                ) if s else None
                 cache[p["id"]] = ScienceTarget(
                     id=p["id"],
                     name=p["name"],
@@ -33,6 +39,8 @@ class JsonTargetRepository:
                     ),
                     description=p.get("desc_en", ""),
                     category=p.get("type_en", ""),
+                    is_base=bool(p.get("is_base", False)),
+                    task=task,
                 )
             self._cache = cache
         return self._cache

@@ -1,4 +1,6 @@
 // API pública de la feature: otras partes de la app solo importan desde aquí
-export { TargetList } from './components/TargetList';
+export { GoalList } from './components/GoalList';
+export { TargetCard } from './components/TargetCard';
 export { useTargets } from './hooks/useTargets';
-export type { Target, Rubric } from './types';
+export { stars } from './lib/stars';
+export type { Rubric, ScienceTask, Target } from './types';

@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Protocol
 
 from senda.domain.models.environment import EnvironmentSnapshot
+from senda.domain.models.geo import BoundingBox
 from senda.domain.models.target import ScienceTarget
 from senda.domain.models.terrain import TerrainGrid
 
@@ -19,4 +20,5 @@ class EnvironmentRepository(Protocol):
 
 
 class TerrainProvider(Protocol):
-    def get_grid(self) -> TerrainGrid: ...
+    def site_bounds(self) -> BoundingBox: ...
+    def get_grid(self, bbox: BoundingBox, cell_size_m: float) -> TerrainGrid: ...
