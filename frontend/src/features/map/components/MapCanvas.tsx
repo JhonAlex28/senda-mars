@@ -56,9 +56,26 @@ export function MapCanvas({
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#0d0908]">
+    <div className="relative h-full w-full overflow-hidden bg-[#120b09]">
+      {/* Full-bleed orbital Mars backdrop so widescreen viewports never show flat black bars */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-30 saturate-125"
+        style={{
+          backgroundImage: "url('/assets/mars_texture_8k.jpg')",
+          filter: 'blur(2px) brightness(0.65)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(circle at 50% 50%, rgba(120, 58, 34, 0.14) 0%, rgba(11, 15, 22, 0.78) 78%, rgba(8, 11, 16, 0.94) 100%)',
+        }}
+      />
       {/* Etiquetas del mapa (T05, P1…) en cajas de tamaño fijo: el traductor no debe cambiarlas */}
-      <div translate="no" className="notranslate h-full w-full">
+      <div translate="no" className="notranslate relative z-10 h-full w-full">
         <svg
           ref={svgRef}
           viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
@@ -78,6 +95,44 @@ export function MapCanvas({
           role="application"
           aria-label="Terrain map. Scroll to zoom, drag to move."
         >
+          <defs>
+            <pattern id="senda-gis-minor" width={100} height={100} patternUnits="userSpaceOnUse">
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#4FC3F7" strokeOpacity="0.07" strokeWidth={0.8} />
+            </pattern>
+            <pattern id="senda-gis-major" width={500} height={500} patternUnits="userSpaceOnUse">
+              <rect width={500} height={500} fill="url(#senda-gis-minor)" />
+              <path d="M 500 0 L 0 0 0 500" fill="none" stroke="#F0883E" strokeOpacity="0.14" strokeWidth={1.4} />
+            </pattern>
+          </defs>
+          {/* Seamless planetary GIS graticule extending beyond the DEM square */}
+          <rect
+            x={-projection.width * 4}
+            y={-projection.height * 4}
+            width={projection.width * 9}
+            height={projection.height * 9}
+            fill="url(#senda-gis-major)"
+          />
+          <circle
+            cx={projection.width / 2}
+            cy={projection.height / 2}
+            r={projection.width * 0.85}
+            fill="none"
+            stroke="#4FC3F7"
+            strokeOpacity="0.18"
+            strokeWidth={1.5}
+            strokeDasharray="10 8"
+          />
+          <rect
+            x={0}
+            y={0}
+            width={projection.width}
+            height={projection.height}
+            fill="none"
+            stroke="#4FC3F7"
+            strokeOpacity="0.32"
+            strokeWidth={1.5}
+            strokeDasharray="6 4"
+          />
           {rasters.map((raster) => {
             const r = projection.rectOf(raster.bbox);
             return (
@@ -90,6 +145,7 @@ export function MapCanvas({
                 height={r.h}
                 preserveAspectRatio="none"
                 opacity={raster.opacity}
+                style={{ imageRendering: 'auto' }}
               />
             );
           })}
