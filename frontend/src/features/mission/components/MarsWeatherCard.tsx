@@ -69,11 +69,15 @@ function Scenario() {
   const { tau, lmstHour, speActive } = state.env;
   const changed = tau !== DEFAULT_ENV.tau || lmstHour !== DEFAULT_ENV.lmstHour || speActive !== DEFAULT_ENV.speActive;
 
-  // Estimaciones (no mediciones): curva diaria de temperatura amortiguada por el polvo,
-  // autonomía del rover que baja con el polvo y dosis que sube con un destello solar
+  // Estimaciones (no mediciones), acotadas a los rangos publicados de REMS y RAD en Gale:
+  // curva diaria de temperatura (-84 °C antes del amanecer a +4 °C por la tarde) amortiguada por
+  // el polvo; dosis GCR de 0.64-0.67 mSv/sol modulada por la columna de CO2 (presión diaria
+  // ~845 Pa); un destello solar la sube; la autonomía del rover baja con el polvo
   const phase = Math.sin(((lmstHour - 6) / 14) * Math.PI);
-  const tempC = Math.round(-68 + 70 * Math.max(0, phase) - (tau - 0.62) * 8);
-  const radMsv = speActive ? 1.85 : Number((0.67 - Math.min(0.08, (tau - 0.62) * 0.03)).toFixed(2));
+  const tempC = Math.round(-84 + 88 * Math.max(0, phase) - (tau - 0.62) * 8);
+  const pressurePa = 845 + 18 * Math.cos(((lmstHour - 12) / 12) * Math.PI);
+  const radBaseline = 0.67 - ((pressurePa - 820) / 100) * 0.02;
+  const radMsv = speActive ? 1.85 : Number(Math.max(0.64, radBaseline - Math.min(0.03, (tau - 0.62) * 0.015)).toFixed(2));
   const rangeKm = Math.round(100 * Math.exp(-0.21 * Math.max(0, tau - 0.62)));
   const dustWord = tau >= 2 ? 'Dust storm' : tau >= 1.1 ? 'Hazy' : 'Clear';
 
@@ -98,6 +102,7 @@ function Scenario() {
         <>
           <p className="rounded border border-warning/40 bg-warning/10 p-xs font-body text-[11px] text-on-surface">
             Practice only. These numbers are estimates, not measurements. They change the final launch check, not the routes.
+            <span className="mt-[2px] block text-on-surface-variant">Bounded by published ranges: REMS −90…+6 °C, RAD 0.64–0.67 mSv/sol.</span>
           </p>
 
           <Slider label="Dust in the air" value={`${dustWord} · τ ${tau.toFixed(2)}`} min={0.3} max={3.2} step={0.05} current={tau}
