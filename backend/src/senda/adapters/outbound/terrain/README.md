@@ -2,7 +2,9 @@
 
 Implementaciones del puerto `TerrainProvider` (`application/ports/outbound.py`):
 
-- `synthetic.py` ✅: grilla generada por fórmula (rampa, cráter, mesetas, crestas del boxwork), para demo.
-- `geotiff_dem.py` (pendiente): DEM real USGS / HiRISE (con rasterio).
+- `npy_dem.py` ✅ (por defecto): DEM real del USGS (*MSL Gale Merged DEM 1 m*, HiRISE + CTX + MOLA)
+  exportado a NumPy en `data/terrain/{local,regional}` (ver `docs/terrain-data.md`). Elige la
+  grilla de 1 m o de 10 m según la resolución pedida y promedia por bloques.
+- `synthetic.py`: grilla generada por fórmula, solo como demo o respaldo (`SENDA_TERRAIN=synthetic`).
 
-Para cambiar de uno a otro solo se modifica `container.py`; el dominio no cambia.
+`container.py` elige uno u otro; el dominio no cambia.

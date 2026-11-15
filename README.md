@@ -122,7 +122,7 @@ uvicorn senda.main:app --reload       # http://localhost:8000/docs
 | `POST /api/v1/quantum/optimize-route` | *(Opcional)* Optimizador QAOA de secuencia de objetivos (Qiskit Aer / IBM Quantum) |
 
 Las tres alternativas son **safe** (evita pendientes y peligros), **scientific** (pasa cerca de los objetivos)
-y **fast** (menor tiempo). El terreno es sintético (`adapters/outbound/terrain/synthetic.py`) hasta conectar el DEM real.
+y **fast** (menor tiempo). El terreno es real: DEM del USGS *MSL Gale Merged DEM 1 m* (HiRISE + CTX + MOLA), leído por `adapters/outbound/terrain/npy_dem.py` (ver `docs/terrain-data.md`). `SENDA_TERRAIN=synthetic` vuelve al terreno de demo.
 
 ---
 

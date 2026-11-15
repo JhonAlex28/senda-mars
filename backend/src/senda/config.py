@@ -16,6 +16,8 @@ _BACKEND_ROOT = Path(__file__).resolve().parents[2]
 class Settings:
     data_dir: Path
     cors_origins: list[str]
+    # "dem" = terreno real del USGS (data/terrain); "synthetic" = terreno por fórmula (demo)
+    terrain: str = "dem"
     # Asistente de IA local (Ollama). Desactivado por defecto: en Render no hay modelo
     assistant_enabled: bool = False
     llm_model: str = "qwen3:1.7b"
@@ -37,6 +39,7 @@ class Settings:
         return cls(
             data_dir=data_dir,
             cors_origins=[o.strip() for o in origins.split(",") if o.strip()],
+            terrain=os.getenv("SENDA_TERRAIN", "dem").strip().lower(),
             assistant_enabled=_flag(os.getenv("SENDA_ASSISTANT_ENABLED", "false")),
             llm_model=os.getenv("SENDA_LLM_MODEL", "qwen3:1.7b"),
             ollama_url=os.getenv("SENDA_OLLAMA_URL", "http://localhost:11434"),

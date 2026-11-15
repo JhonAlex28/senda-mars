@@ -9,11 +9,13 @@ from senda.adapters.outbound.llm.ollama_model import OllamaAssistantModel
 from senda.adapters.outbound.persistence.json_environment import JsonEnvironmentRepository
 from senda.adapters.outbound.persistence.json_targets import JsonTargetRepository
 from senda.adapters.outbound.quantum.qiskit_qaoa import QiskitQaoaOptimizer
+from senda.adapters.outbound.terrain.npy_dem import NpyDemTerrainProvider, dem_available
 from senda.adapters.outbound.terrain.synthetic import SyntheticTerrainProvider
 from senda.application.ports.outbound import (AssistantModel, EnvironmentRepository,
                                               KnowledgeBase, QuantumOptimizer, TargetRepository,
                                               TerrainProvider)
 from senda.config import Settings
+from senda.domain.models.geo import BoundingBox
 
 
 @dataclass(frozen=True)
@@ -25,6 +27,14 @@ class Container:
     knowledge: KnowledgeBase
     quantum: QuantumOptimizer
     assistant_model: AssistantModel | None = None   # None = asistente desactivado
+
+
+def _terrain(s: Settings, site: BoundingBox) -> TerrainProvider:
+    """Terreno real (DEM del USGS) si está disponible; el sintético queda como demo/respaldo."""
+    terrain_dir = s.data_dir / "terrain"
+    if s.terrain != "synthetic" and dem_available(terrain_dir):
+        return NpyDemTerrainProvider(site, terrain_dir)
+    return SyntheticTerrainProvider(site)
 
 
 def _assistant_model(s: Settings) -> AssistantModel | None:
@@ -42,8 +52,7 @@ def get_container() -> Container:
         settings=s,
         target_repo=JsonTargetRepository(s.data_dir / "targets_v0.geojson"),
         environment_repo=environment,
-        # Cambiar por un DEM real (geotiff_dem.py) solo toca esta línea
-        terrain=SyntheticTerrainProvider(environment.site_bounds()),
+        terrain=_terrain(s, environment.site_bounds()),
         knowledge=MarkdownKnowledgeBase(s.data_dir / "knowledge"),
         quantum=QiskitQaoaOptimizer(s.ibm_quantum_token, s.ibm_quantum_channel,
                                     s.ibm_quantum_instance),

@@ -9,5 +9,7 @@ Each target has a priority rubric scored out of 15: novelty + habitability + hum
 category and an on-site task (tool, duration in minutes, protocol) that adds time and
 resource use at the stop.
 
-Current terrain is a deterministic synthetic model that reproduces the main features of the
-sector; a real 1 m DEM (USGS MSL Gale merged DEM, HiRISE) is planned as a drop-in adapter.
+Terrain is real: the USGS MSL Gale Merged DEM (1 m, built from MRO HiRISE and CTX stereo plus
+MGS MOLA), cut to the site in two grids: local at 1 m per cell (spacewalks) and regional at
+10 m per cell (rover). Elevations in the site range from about -3915 m to -3408 m; the
+boxwork unit is rough, with real slopes near 18 degrees on the walking routes.
