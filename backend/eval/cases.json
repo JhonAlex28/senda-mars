@@ -1,0 +1,61 @@
+{
+  "_note": "Examen del copiloto. NO usar estas frases en los datos de entrenamiento (training/ usa plantillas distintas) para que la nota mida generalización, no memoria.",
+  "plan_on_screen": {
+    "rover": {"profile": "safe", "duration_min": 32.5, "distance_m": 3351, "safety_pct": 98, "resource_left_pct": 90.2, "return_ok": true},
+    "spacewalks": [
+      {"parking": "P1", "targets": ["T02", "T03"], "profile": "safe", "duration_min": 74.0, "distance_m": 594, "safety_pct": 51, "resource_left_pct": 72.4, "return_ok": true},
+      {"parking": "P2", "targets": ["T05", "T06"], "profile": "safe", "duration_min": 61.5, "distance_m": 420, "safety_pct": 96, "resource_left_pct": 84.3, "return_ok": true}
+    ]
+  },
+  "cases": [
+    {"id": "plan-01", "category": "plan", "message": "Prepara la salida de mañana, tengo 3 horas", "expect": {"tool": "plan_outing", "args": {"time_available_min": 180}}},
+    {"id": "plan-02", "category": "plan", "message": "Hazme una ruta para mañana, ¿a qué lugares debo ir?", "expect": {"tool": "plan_outing"}},
+    {"id": "plan-03", "category": "plan", "message": "Tengo 2 horas y hay una tormenta de polvo, organiza la salida", "expect": {"tool": "plan_outing", "args": {"time_available_min": 120, "speed_factor": 0.7}}},
+    {"id": "plan-04", "category": "plan", "message": "Planifica una EVA a T03", "expect": {"tool": "plan_outing", "args": {"target_ids": ["T03"]}}},
+    {"id": "plan-05", "category": "plan", "message": "Plan an outing to the two highest priority targets", "expect": {"tool": "plan_outing"}},
+    {"id": "plan-06", "category": "plan", "message": "Arma la misión de hoy con los objetivos más importantes", "expect": {"tool": "plan_outing"}},
+    {"id": "plan-07", "category": "plan", "message": "Quiero ir a Valle de la Luna y Nevado Sajama", "expect": {"tool": "plan_outing", "args": {"target_ids": ["T05", "T06"]}}},
+    {"id": "plan-08", "category": "plan", "message": "We have 90 minutes, what can we visit?", "expect": {"tool": "plan_outing", "args": {"time_available_min": 90}}},
+    {"id": "plan-09", "category": "plan", "message": "Un astronauta tiene fuga en el traje, planifica algo corto", "expect": {"tool": "plan_outing", "args": {"o2_multiplier": 1.5}}},
+    {"id": "plan-10", "category": "plan", "message": "Dame la ruta más rápida para hoy, tengo hora y media", "expect": {"tool": "plan_outing", "args": {"time_available_min": 90, "profile": "fast"}}},
+    {"id": "plan-11", "category": "plan", "message": "Organiza la jornada de exploración", "expect": {"tool": "plan_outing"}},
+    {"id": "plan-12", "category": "plan", "message": "Plan tomorrow's EVA, there is a dust storm coming", "expect": {"tool": "plan_outing", "args": {"speed_factor": 0.7}}},
+
+    {"id": "view-01", "category": "view", "message": "Cambia a la ruta científica", "mission": {"has_plan": true}, "expect": {"tool": "adjust_view", "args": {"profile": "scientific"}}},
+    {"id": "view-02", "category": "view", "message": "Inicia la simulación", "mission": {"has_plan": true}, "expect": {"tool": "adjust_view", "args": {"screen": "go"}}},
+    {"id": "view-03", "category": "view", "message": "Switch to the safest route", "mission": {"has_plan": true}, "expect": {"tool": "adjust_view", "args": {"profile": "safe"}}},
+    {"id": "view-04", "category": "view", "message": "Muéstrame las caminatas", "mission": {"has_plan": true}, "expect": {"tool": "adjust_view", "args": {"screen": "walk"}}},
+    {"id": "view-05", "category": "view", "message": "Usa la ruta rápida y arranca la misión", "mission": {"has_plan": true}, "expect": {"tool": "adjust_view", "args": {"profile": "fast", "screen": "go"}}},
+
+    {"id": "current-01", "category": "current_plan", "message": "¿Cuánto oxígeno le queda a la caminata?", "mission": {"has_plan": true, "plan": "plan_on_screen"}, "expect": {"tool": "get_current_plan"}},
+    {"id": "current-02", "category": "current_plan", "message": "¿Qué ruta elegí para el rover?", "mission": {"has_plan": true, "plan": "plan_on_screen"}, "expect": {"tool": "get_current_plan"}},
+    {"id": "current-03", "category": "current_plan", "message": "How long is the whole plan?", "mission": {"has_plan": true, "plan": "plan_on_screen"}, "expect": {"tool": "get_current_plan"}},
+    {"id": "current-04", "category": "current_plan", "message": "¿Con cuánta batería vuelve el rover?", "mission": {"has_plan": true, "plan": "plan_on_screen"}, "expect": {"tool": "get_current_plan"}},
+
+    {"id": "weather-01", "category": "conditions", "message": "¿Cómo está el clima en este momento?", "expect": {"tool": "get_mission_conditions"}},
+    {"id": "weather-02", "category": "conditions", "message": "¿Podemos salir hoy?", "expect": {"tool_any": ["get_mission_conditions", "plan_outing"]}},
+    {"id": "weather-03", "category": "conditions", "message": "What's the radiation level right now?", "expect": {"tool": "get_mission_conditions"}},
+    {"id": "weather-04", "category": "conditions", "message": "¿Hay mucho polvo afuera?", "expect": {"tool": "get_mission_conditions"}},
+
+    {"id": "targets-01", "category": "targets", "message": "¿Cuáles son los objetivos más importantes?", "expect": {"tool": "list_science_targets"}},
+    {"id": "targets-02", "category": "targets", "message": "Which rocks can we sample here?", "expect": {"tool": "list_science_targets"}},
+    {"id": "targets-03", "category": "targets", "message": "¿Qué hay que hacer en T05?", "expect": {"tool_any": ["list_science_targets", "explain_system"]}},
+
+    {"id": "howto-01", "category": "how_to", "message": "¿Cómo marco una zona peligrosa en el mapa?", "expect": {"tool": "explain_system", "args": {"topic": "using_senda"}}},
+    {"id": "howto-02", "category": "how_to", "message": "Dame los pasos para planificar una caminata", "expect": {"tool": "explain_system", "args": {"topic": "using_senda"}}},
+    {"id": "howto-03", "category": "how_to", "message": "How do I start the simulation?", "expect": {"tool": "explain_system", "args": {"topic": "using_senda"}}},
+    {"id": "howto-04", "category": "how_to", "message": "¿Cómo veo la foto satelital?", "expect": {"tool": "explain_system", "args": {"topic": "map_and_weather"}}},
+    {"id": "howto-05", "category": "how_to", "message": "¿Qué puedes hacer por mí?", "expect": {"tool": "explain_system", "args": {"topic": "copilot"}}},
+    {"id": "howto-06", "category": "how_to", "message": "¿Cómo cambio la base de lugar?", "expect": {"tool": "explain_system", "args": {"topic": "using_senda"}}},
+
+    {"id": "explain-01", "category": "explain", "message": "¿Cómo calcula SENDA el porcentaje de seguridad de una ruta?", "expect": {"tool": "explain_system", "args": {"topic": "route_profiles"}}},
+    {"id": "explain-02", "category": "explain", "message": "¿Qué diferencia hay entre la ruta segura y la científica?", "expect": {"tool": "explain_system", "args": {"topic": "route_profiles"}}},
+    {"id": "explain-03", "category": "explain", "message": "How is the oxygen of the suit calculated?", "expect": {"tool": "explain_system", "args": {"topic": "mobility_and_resources"}}},
+    {"id": "explain-04", "category": "explain", "message": "¿Cuándo dice NO GO el sistema?", "expect": {"tool": "explain_system", "args": {"topic": "readiness"}}},
+
+    {"id": "offtopic-01", "category": "off_topic", "message": "¿Cuál es la capital de Francia?", "expect": {"no_tools": true}},
+    {"id": "offtopic-02", "category": "off_topic", "message": "Write me a poem about cats", "expect": {"no_tools": true}},
+    {"id": "offtopic-03", "category": "off_topic", "message": "¿Quién ganó el mundial de fútbol?", "expect": {"no_tools": true}},
+    {"id": "offtopic-04", "category": "off_topic", "message": "Recomiéndame una película", "expect": {"no_tools": true}}
+  ]
+}

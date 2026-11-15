@@ -276,7 +276,7 @@ def _outing_summary(plan: OutingPlan, targets: dict[str, ScienceTarget]) -> dict
     flagged = [c for c in plan.readiness.checks if c.verdict is not Verdict.GO]
     if flagged:
         out["conditions_flagged"] = [f"{c.label}: {c.value} {c.unit} ({c.verdict.value}, "
-                                     f"{c.source})" for c in flagged]
+                                     f"{_short_source(c.source)})" for c in flagged]
     if not plan.planned:
         out["why_not_planned"] = ("conditions are no_go" if plan.readiness.verdict is Verdict.NO_GO
                                   else "no target has a safe return")
@@ -306,6 +306,13 @@ def _outing_summary(plan: OutingPlan, targets: dict[str, ScienceTarget]) -> dict
                      "danger_zones": len(plan.hazards)},
     })
     return out
+
+
+def _short_source(source: str) -> str:
+    """"Curiosity REMS Ground/Air Temperature Series (Ruíz et al. 2025)" → "Curiosity REMS":
+    el instrumento basta; la cita completa alarga la respuesta del modelo."""
+    words = source.split(" (")[0].split()
+    return " ".join(words[:2]) if len(words) > 2 else " ".join(words)
 
 
 def _leg(r: RoutePlan, resource_key: str) -> dict[str, Any]:

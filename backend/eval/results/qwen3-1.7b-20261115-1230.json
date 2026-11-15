@@ -1,0 +1,1051 @@
+{
+ "model": "qwen3:1.7b",
+ "date": "2026-11-15T12:30:39",
+ "summary": {
+  "cases": 42,
+  "all_checks_pass_pct": 57.1,
+  "overall": {
+   "routing": 69.0,
+   "args": 43.5,
+   "language": 100.0,
+   "grounded": 90.9
+  },
+  "by_category": {
+   "conditions": {
+    "routing": 100.0,
+    "args": null,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "current_plan": {
+    "routing": 25.0,
+    "args": null,
+    "language": 100.0,
+    "grounded": 66.7
+   },
+   "explain": {
+    "routing": 50.0,
+    "args": 0.0,
+    "language": 100.0,
+    "grounded": null
+   },
+   "how_to": {
+    "routing": 33.3,
+    "args": 16.7,
+    "language": 100.0,
+    "grounded": null
+   },
+   "off_topic": {
+    "routing": 100.0,
+    "args": null,
+    "language": 100.0,
+    "grounded": null
+   },
+   "plan": {
+    "routing": 91.7,
+    "args": 75.0,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "targets": {
+    "routing": 66.7,
+    "args": null,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "view": {
+    "routing": 60.0,
+    "args": 60.0,
+    "language": 100.0,
+    "grounded": 50.0
+   }
+  },
+  "avg_seconds": 2.2
+ },
+ "cases": [
+  {
+   "id": "plan-01",
+   "category": "plan",
+   "message": "Prepara la salida de mañana, tengo 3 horas",
+   "seconds": 8.3,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "safe",
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "Se ha preparado la salida de mañana con los siguientes detalles:  \n- **Objetivos seleccionados**: T05, T06, T07, T08, T02, T03, T04 (prioridad 14 a 11).  \n- **Duración total**: 170.3 minutos.  \n- **Perfil elegido**: \"safe\" (más seguro, con menor velocidad y mayor seguridad).  \n- **Objetivos omitidos**: T04 (por falta de tiempo) y T03 (por falta de tiempo).  \n- **Caminata espacial**: 100.8 minutos en P1 (con 78.2% de oxígeno) y 34.2 minutos en P2 (con 92.7% de oxígeno).  \n- **Rover**: 35.2 minutos de duración, 3646 metros recorridos, 10.1° de pendiente máxima, 98% de seguridad, 95.2% de batería.  \n\nNo hay zonas de peligro activas."
+  },
+  {
+   "id": "plan-02",
+   "category": "plan",
+   "message": "Hazme una ruta para mañana, ¿a qué lugares debo ir?",
+   "seconds": 3.0,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "safe",
+      "speed_factor": 0.7,
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "Se ha planeado una ruta segura para mañana con los siguientes lugares de interés: Valle de la Luna, Nevado Sajama, Monte Grande polygons y Eastern boxwork contact. Se han omitido los lugares T04, T03 y T02 debido a la falta de tiempo. La ruta total se estimó en aproximadamente 155 minutos, con un perfil seguro, y se incluyó un tiempo de espaciowalk de 105 minutos con un 78% de oxígeno restante."
+  },
+  {
+   "id": "plan-03",
+   "category": "plan",
+   "message": "Tengo 2 horas y hay una tormenta de polvo, organiza la salida",
+   "seconds": 4.3,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ],
+      "time_available_min": 120,
+      "profile": "safe",
+      "speed_factor": 0.7
+     }
+    }
+   ],
+   "reply": "Se ha organizado la salida con los siguientes detalles:  \n- **Objetivos seleccionados**: T05 (Valle de la Luna) y T06 (Nevado Sajama).  \n- **Duración total**: 106.2 minutos.  \n- **Perfil de ruta**: Seguro (safe).  \n- **Por qué se seleccionaron estos objetivos**: Se ajustaron a la duración disponible (2 horas = 120 minutos) y a la prioridad de los objetivos.  \n- **Objetivos omitidos**: T04, T03, T02, T08, T07 debido a la falta de tiempo.  \n- **Alerta**: No hay zonas de peligro (danger_zones: 0).  \n- **Estado de la nave**: Ruta segura, con 95.1% de batería y 87.8% de oxígeno disponible."
+  },
+  {
+   "id": "plan-04",
+   "category": "plan",
+   "message": "Planifica una EVA a T03",
+   "seconds": 1.6,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "speed_factor": 1,
+      "target_ids": [
+       "T03"
+      ],
+      "time_available_min": 180,
+      "profile": "safe"
+     }
+    }
+   ],
+   "reply": "Se ha planificado una EVA a T03 (Volcán Peña Blanca) con un tiempo total de 62.7 minutos. El perfil seleccionado es \"safe\", con una duración de 28.4 minutos para el rover, 34.3 minutos para el espaciowalk y un nivel de seguridad del 98% en el rover y del 94% en el espaciowalk. No se han omitido ningún objetivo."
+  },
+  {
+   "id": "plan-05",
+   "category": "plan",
+   "message": "Plan an outing to the two highest priority targets",
+   "seconds": 1.5,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "profile": "scientific",
+      "target_ids": [
+       "T05",
+       "T06"
+      ],
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "Loaded on screen: targets T05 and T06 (Valle de la Luna and Nevado Sajama) with a scientific profile, total time 88.9 minutes. No targets dropped. The route is safe and optimized for scientific exploration."
+  },
+  {
+   "id": "plan-06",
+   "category": "plan",
+   "message": "Arma la misión de hoy con los objetivos más importantes",
+   "seconds": 5.0,
+   "scores": {
+    "routing": false,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "La misión de hoy se armará con los objetivos más importantes, incluyendo los siguientes puntos clave:\n\n- **T05**: Valle de la Luna (drill, Monte Grande hollow) - Es un sitio de extracción de muestras clave para estudiar la matriz de roca no cementada que resistió la erosión eólica.\n- **T06**: Nevado Sajama (drill, ridge) - Un sitio de extracción de muestras para estudiar la resistencia de las rocas en la cima de las ridas y su relación con el agua subterránea.\n- **T07**: Monte Grande polygons - Un sistema de fracturas y veines de calcio sulfato que requiere una precisión alta para la extracción de muestras.\n- **T08**: Eastern boxwork contact - Un contacto geológico con protección contra rayos cósmicos y un sitio para estudiar la circulación de fluidos subterráneos.\n- **T02**: Altadena (drill) - Un sitio de extracción de muestras para estudiar la roca de tipo sulfato antes de entrar en el sistema de veines diagenéticos.\n- **T03**: Volcán Peña Blanca - Un outcropping con veines resistentes que registran la circulación de fluidos subterráneos.\n- **T04**: Ridge-hollow nodular transition - Un área de transición con una gradación en la densidad de nódulos y concretaciones que es clave para la cartografía de los caminos de flujo de fluidos.\n\n**Total time**: 180 minutos (3 horas)  \n**Chosen profile**: \"scientific\" (modo científico)  \n**Why**: Para garantizar la seguridad y la precisión en la extracción de muestras, se elige el modo científico, que ofrece un equilibrio entre la exploración científica y la protección de la salud del equipo."
+  },
+  {
+   "id": "plan-07",
+   "category": "plan",
+   "message": "Quiero ir a Valle de la Luna y Nevado Sajama",
+   "seconds": 1.9,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "scientific",
+      "speed_factor": 1,
+      "target_ids": [
+       "T05",
+       "T06"
+      ]
+     }
+    }
+   ],
+   "reply": "Se ha planeado una ruta científica para visitar Valle de la Luna y Nevado Sajama, con un tiempo total de 88.9 minutos. La ruta se divide en dos etapas: una para el Valle de la Luna y otra para Nevado Sajama, con un perfil científico. La simulación incluye el tiempo de desplazamiento del rover, el tiempo de espaciowalks y los niveles de oxígeno y seguridad. No se han omitido ningún objetivo, y la situación es segura."
+  },
+  {
+   "id": "plan-08",
+   "category": "plan",
+   "message": "We have 90 minutes, what can we visit?",
+   "seconds": 3.0,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 90,
+      "profile": "scientific",
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "Loaded on screen: targets T05, T06, and T07 (total time 88.9 min, chosen profile scientific, reason: sufficient time for science and safety). T04, T03, T02, T08, and T07 were dropped due to not enough time. No danger zones marked."
+  },
+  {
+   "id": "plan-09",
+   "category": "plan",
+   "message": "Un astronauta tiene fuga en el traje, planifica algo corto",
+   "seconds": 3.7,
+   "scores": {
+    "routing": true,
+    "args": false,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "safe",
+      "speed_factor": 0.7,
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "Se ha planificado una ruta segura con tiempo disponible de 180 minutos. Los objetivos T05, T06, T07 y T08 se incluyeron, mientras que T04, T03 y T02 se dejaron por falta de tiempo. La ruta se realizó con un perfil seguro, duró 49.5 minutos y se recorrió 3590 metros. Los espaciowalks se realizaron con un perfil seguro, duraron 105.4 minutos y se recorrieron 353 metros. La batería del rover quedó en el 95% y el oxígeno en el 77.9%. No hay zonas de peligro."
+  },
+  {
+   "id": "plan-10",
+   "category": "plan",
+   "message": "Dame la ruta más rápida para hoy, tengo hora y media",
+   "seconds": 4.1,
+   "scores": {
+    "routing": true,
+    "args": false,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 30,
+      "profile": "fast",
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "La ruta más rápida para hoy ha sido planificada con éxito. Se han seleccionado los objetivos prioritarios: Valle de la Luna (T05), Nevado Sajama (T06) y Monte Grande (T07). Se ha dedicado 30 minutos a la misión, pero se han dejado fuera los objetivos T03, T02, T08, T04 y T06 debido a la falta de tiempo. La ruta se realizó con un perfil rápido, duró 32.3 minutos, cubrió 3366 metros y tuvo un 91% de seguridad. Los espacioflees se realizaron con un perfil rápido, duraron 30.1 minutos y tuvieron un 34% de seguridad."
+  },
+  {
+   "id": "plan-11",
+   "category": "plan",
+   "message": "Organiza la jornada de exploración",
+   "seconds": 4.5,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "scientific",
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ],
+      "speed_factor": 1,
+      "o2_multiplier": 1.5
+     }
+    }
+   ],
+   "reply": "Se ha organizado la jornada de exploración con los siguientes detalles:\n\n- **Objetivos científicos (targets)**: T05, T06, T07, T08, T02, T03, T04 (prioridad 14 a 11).\n- **Duración total**: 169.4 minutos.\n- **Ruta científica (profile)**: \"scientific\".\n- **Zonas de riesgo**: 0.\n- **Objetivos científicos seleccionados**: T05, T06, T07, T08, T02.\n- **Duración de la ruta científica**: 35.3 minutos.\n- **Distancia recorrida**: 3646 metros.\n- **Duración de los espacioflying (spacewalks)**: 99.8 minutos (P1) y 34.3 minutos (P2).\n- **Oxígeno disponible**: 95.2% (rover) y 67.5% (P1), 89.0% (P2).\n- **Zonas de riesgo**: 0.\n\n**Objetivos no incluidos**: T03 y T04 debido a la falta de tiempo."
+  },
+  {
+   "id": "plan-12",
+   "category": "plan",
+   "message": "Plan tomorrow's EVA, there is a dust storm coming",
+   "seconds": 2.7,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "safe",
+      "speed_factor": 0.7,
+      "danger_zones": [
+       {
+        "lat": 19.05,
+        "lon": -102,
+        "radius_m": 500
+       }
+      ]
+     }
+    }
+   ],
+   "reply": "Loaded on screen: targets T05, T06, T07, T08 (total time 154.9 min, chosen profile \"safe\" due to dust storm conditions). T03, T02, T04 were dropped due to insufficient time. No danger zones marked."
+  },
+  {
+   "id": "view-01",
+   "category": "view",
+   "message": "Cambia a la ruta científica",
+   "seconds": 1.3,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "scientific"
+     }
+    }
+   ],
+   "reply": "La ruta científica ha sido seleccionada. El mapa muestra la ruta planificada con los puntos de parada y las zonas de peligro. No se han incluido los objetivos con prioridad menor debido a la disponibilidad de tiempo y las condiciones del ambiente. Se recomienda seguir la ruta científica para maximizar la exploración de los objetivos científicos."
+  },
+  {
+   "id": "view-02",
+   "category": "view",
+   "message": "Inicia la simulación",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "go"
+     }
+    }
+   ],
+   "reply": "La simulación ha iniciado. El perfil seleccionado es \"go\" (embarcación) y se muestran los resultados de la simulación. No hay objetivos seleccionados, y no hay zonas de peligro."
+  },
+  {
+   "id": "view-03",
+   "category": "view",
+   "message": "Switch to the safest route",
+   "seconds": 0.8,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "safe"
+     }
+    }
+   ],
+   "reply": "The route profile has been switched to \"safe\" for the current plan. No targets are selected, and the simulation is not yet started. The system is ready for any further instructions."
+  },
+  {
+   "id": "view-04",
+   "category": "view",
+   "message": "Muéstrame las caminatas",
+   "seconds": 4.9,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": false
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "Se han mostrado las caminatas relacionadas con los objetivos científicos mencionados. El plan incluye las siguientes caminatas:\n\n- **T05**: Valle de la Luna (drill, Monte Grande hollow) - Duración: 25.0 min, Descripción: Caminata de 25 minutos para el punto de interés T05.\n- **T06**: Nevado Sajama (drill, ridge) - Duración: 25.0 min, Descripción: Caminata de 25 minutos para el punto de interés T06.\n- **T07**: Monte Grande polygons - Duración: 20.0 min, Descripción: Caminata de 20 minutos para el punto de interés T07.\n- **T08**: Eastern boxwork contact - Duración: 20.0 min, Descripción: Caminata de 20 minutos para el punto de interés T08.\n- **T02**: Altadena (drill) - Duración: 30.0 min, Descripción: Caminata de 30 minutos para el punto de interés T02.\n- **T03**: Volcán Peña Blanca - Duración: 30.0 min, Descripción: Caminata de 30 minutos para el punto de interés T03.\n- **T04**: Ridge-hollow nodular transition - Duración: 20.0 min, Descripción: Caminata de 20 minutos para el punto de interés T04.\n\nEl total de tiempo estimado es 165 minutos. El perfil seleccionado es \"scientific\" (científico), ya que se priorizan los objetivos científicos y se garantiza la seguridad. No se han incluido caminatas adicionales debido a la falta de tiempo o a la falta de información relevante."
+  },
+  {
+   "id": "view-05",
+   "category": "view",
+   "message": "Usa la ruta rápida y arranca la misión",
+   "seconds": 2.6,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "profile": "fast",
+      "time_available_min": 180,
+      "speed_factor": 0.7
+     }
+    }
+   ],
+   "reply": "Se ha planificado una misión rápida con el objetivo de explorar los puntos científicos prioritarios. Se han incluido los puntos T05, T06, T07 y T08, mientras que T03 y T02 se han dejado fuera debido a la falta de tiempo. La duración total de la misión es de 178.3 minutos, con un perfil rápido, y se ha ajustado el perfil de seguridad y la duración de los espaciowalks. No hay zonas de peligro activas."
+  },
+  {
+   "id": "current-01",
+   "category": "current_plan",
+   "message": "¿Cuánto oxígeno le queda a la caminata?",
+   "seconds": 1.0,
+   "scores": {
+    "routing": false,
+    "args": null,
+    "language": true,
+    "grounded": false
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "El estado actual de la misión es \"go\" (aceptable), con condiciones climáticas y ambientales seguras. La caminata tiene 150 litros de oxígeno."
+  },
+  {
+   "id": "current-02",
+   "category": "current_plan",
+   "message": "¿Qué ruta elegí para el rover?",
+   "seconds": 1.5,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_current_plan",
+     "args": {
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "Elegí una ruta segura con un tiempo de 32.5 minutos, que incluye dos paradas para realizar tareas científicas. La ruta se divide en dos etapas: una para T02 y T03, y otra para T05 y T06. La duración total es de 168 minutos, con un nivel de batería del rover del 90.2% y una cantidad suficiente de oxígeno para las paradas. La ruta se realizó de forma segura, sin riesgos detectados."
+  },
+  {
+   "id": "current-03",
+   "category": "current_plan",
+   "message": "How long is the whole plan?",
+   "seconds": 3.9,
+   "scores": {
+    "routing": false,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "safe",
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    },
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "using_senda"
+     }
+    },
+    {
+     "name": "get_mission_conditions",
+     "args": {}
+    }
+   ],
+   "reply": "The current Martian conditions are favorable for the mission. The temperature ranges from -76°C to -12°C, with light wind and low dust levels, and radiation levels are within safe limits. The plan is set to use the \"safe\" profile, ensuring a secure route for the crew. The total duration of the plan is 170.3 minutes, with 170 minutes allocated for the rover traverse and 10 minutes for spacewalks. The mission is scheduled to start with the full available time."
+  },
+  {
+   "id": "current-04",
+   "category": "current_plan",
+   "message": "¿Con cuánta batería vuelve el rover?",
+   "seconds": 2.0,
+   "scores": {
+    "routing": false,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "overview"
+     }
+    }
+   ],
+   "reply": "La planificación de una salida en SENDA aborda tres aspectos clave: la preparación del equipo (batería, oxígeno), el destino científico (objetivos con prioridad), y la ruta más adecuada (seguro, científico o rápido). La planificación se realiza con base en los datos actuales del entorno marciano, asegurando que se cumplan los límites de tiempo y recursos."
+  },
+  {
+   "id": "weather-01",
+   "category": "conditions",
+   "message": "¿Cómo está el clima en este momento?",
+   "seconds": 1.1,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "El clima actual en el lugar es favorable, con temperaturas entre -76°C y -12°C, sin riesgos significativos. Los valores de temperatura, viento, polvo y radiación están dentro de los límites seguros. No hay indicadores de peligro que requieran una planificación especial."
+  },
+  {
+   "id": "weather-02",
+   "category": "conditions",
+   "message": "¿Podemos salir hoy?",
+   "seconds": 2.8,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "profile": "safe",
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "Se ha planeado una salida segura para hoy con el perfil \"safe\". Los objetivos principales son T05, T06, T07 y T08, con un tiempo total de 170.3 minutos. Se ha dejado fuera T04 y T03 debido a la falta de tiempo. La ruta se ha organizado de manera segura, con un perfil de seguridad, y se ha incluido el tiempo y el oxígeno disponibles para cada parada."
+  },
+  {
+   "id": "weather-03",
+   "category": "conditions",
+   "message": "What's the radiation level right now?",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {}
+    }
+   ],
+   "reply": "The radiation level is currently 0.64 mSv/sol, which is considered \"go\" (safe) based on the measurements. This value is from the RAD Surface Measurements instrument on Curiosity."
+  },
+  {
+   "id": "weather-04",
+   "category": "conditions",
+   "message": "¿Hay mucho polvo afuera?",
+   "seconds": 0.9,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "El clima exterior es seguro, con temperaturas entre -76°C y -12°C, sin polvo significativo. No hay riesgos inmediatos para la misión."
+  },
+  {
+   "id": "targets-01",
+   "category": "targets",
+   "message": "¿Cuáles son los objetivos más importantes?",
+   "seconds": 4.3,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {
+      "target_ids": [
+       "T05",
+       "T06",
+       "T07",
+       "T08",
+       "T02",
+       "T03",
+       "T04"
+      ]
+     }
+    }
+   ],
+   "reply": "Los objetivos más importantes incluyen:\n\n1. **Valle de la Luna (T05)**: Un sitio de extracción de muestras con un enfoque en la matriz de roca no cementada, clave para entender la erosión eolianes.\n2. **Nevado Sajama (T06)**: Un sitio de extracción de muestras en la cima de una cuesta cementada, clave para estudiar la resistencia de las cuestas frente a la erosión.\n3. **Monte Grande polygons (T07)**: Un sistema de fracturas y vías de vapor de calcio, requiriendo un alto nivel de precisión para la extracción de muestras.\n4. **Eastern boxwork contact (T08)**: Un contacto geológico con protección contra rayos cósmicos, clave para estudiar la circulación de fluidos subterráneos.\n5. **Altadena (T02)**: Un sitio de extracción de muestras en la cima de la unidad boxwork, para estudiar la mineralogía de la roca sulfatada.\n6. **Volcán Peña Blanca (T03)**: Un outcropping con vías de vapor resistentes, clave para estudiar la circulación de fluidos subterráneos.\n7. **Ridge-hollow nodular transition (T04)**: Un área de transición con una gradación en la densidad de nódulos y concretaciones, clave para mapar los caminos de flujo de fluidos.\n\nEstos objetivos son prioritarios debido a su relevancia científica y su ubicación estratégica en la superficie de Marte."
+  },
+  {
+   "id": "targets-02",
+   "category": "targets",
+   "message": "Which rocks can we sample here?",
+   "seconds": 0.5,
+   "scores": {
+    "routing": false,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "Call list_science_targets to get information about the science targets and their on-site task duration."
+  },
+  {
+   "id": "targets-03",
+   "category": "targets",
+   "message": "¿Qué hay que hacer en T05?",
+   "seconds": 1.8,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {
+      "target_ids": [
+       "T05"
+      ]
+     }
+    }
+   ],
+   "reply": "Los puntos de interés científicos en T05 incluyen un sitio de perforación en el fondo del Monte Grande hollow, que es clave para estudiar la matriz de roca no cementada que resistió la erosión eólica. Este sitio es prioritario (puntuación 14) y requiere un tiempo de tarea de 25 minutos. La descripción detalla cómo este sitio se relaciona con la pregunta central de SENDA sobre por qué las cuestas resisten la erosión mientras los valles no lo hacen, y si los fluidos de agua tardíos sostuvieron entornos habitables."
+  },
+  {
+   "id": "howto-01",
+   "category": "how_to",
+   "message": "¿Cómo marco una zona peligrosa en el mapa?",
+   "seconds": 1.2,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "No puedo marcar zonas peligrosas en el mapa, ya que esta función no está disponible en el sistema SENDA. Para hacerlo, se requiere el uso de la función `plan_outing` para planificar rutas y zonas de riesgo."
+  },
+  {
+   "id": "howto-02",
+   "category": "how_to",
+   "message": "Dame los pasos para planificar una caminata",
+   "seconds": 2.8,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "using_senda"
+     }
+    }
+   ],
+   "reply": "Los pasos para planificar una caminata en SENDA son los siguientes:\n\n1. **Abrir la misión**: En el mapa, elige **Mount Sharp · Gale** y presiona **Explorar base** para acceder a la planificación.\n2. **Definir los objetivos**: Selecciona los puntos de interés (rocas) que deseas visitar y establece su prioridad.\n3. **Planificar el trayecto del rover**: Selecciona el perfil de ruta (más seguro, científico o rápido) y ajusta la velocidad del vehículo.\n4. **Planificar las caminatas espaciales**: Selecciona los puntos de parada del rover y planifica las rutas de caminata para llegar a los objetivos.\n5. **Iniciar la simulación**: Verifica el estado del clima, la batería del rover y la cantidad de oxígeno en la caja de la caminata espacial. Si hay insuficiente, ajusta el plan.\n\nLa planificación se muestra en la barra superior del mapa, con indicadores de avance y seguridad."
+  },
+  {
+   "id": "howto-03",
+   "category": "how_to",
+   "message": "How do I start the simulation?",
+   "seconds": 0.7,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "go"
+     }
+    }
+   ],
+   "reply": "The plan must be created first using the `plan_outing` tool. I will now proceed to plan the outing based on the available targets and conditions."
+  },
+  {
+   "id": "howto-04",
+   "category": "how_to",
+   "message": "¿Cómo veo la foto satelital?",
+   "seconds": 0.7,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "scientific",
+      "screen": "plan"
+     }
+    }
+   ],
+   "reply": "La foto satelital no se puede mostrar porque no hay un plan cargado. Debes planear primero con la función `plan_outing` para cargar el ruta y configurar la vista."
+  },
+  {
+   "id": "howto-05",
+   "category": "how_to",
+   "message": "¿Qué puedes hacer por mí?",
+   "seconds": 1.9,
+   "scores": {
+    "routing": true,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "overview"
+     }
+    }
+   ],
+   "reply": "La plataforma SENDA es un sistema de planificación para operaciones en la superficie de Marte en el cráter Gale, enfocado en la planificación de rutas, paradas y parques de espacio. Puede ayudarte a determinar si es seguro salir, seleccionar los objetivos científicos, planificar las rutas y gestionar los recursos. ¿Qué te gustaría que haga específicamente?"
+  },
+  {
+   "id": "howto-06",
+   "category": "how_to",
+   "message": "¿Cómo cambio la base de lugar?",
+   "seconds": 0.6,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "safe",
+      "screen": "go"
+     }
+    }
+   ],
+   "reply": "La planificación no ha sido realizada aún. Por favor, utilice la función `plan_outing` para preparar la ruta y cargarla en la pantalla."
+  },
+  {
+   "id": "explain-01",
+   "category": "explain",
+   "message": "¿Cómo calcula SENDA el porcentaje de seguridad de una ruta?",
+   "seconds": 2.8,
+   "scores": {
+    "routing": true,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "overview"
+     }
+    }
+   ],
+   "reply": "Utilizo el sistema SENDA para planificar las operaciones en la superficie de Marte. El sistema evalúa tres aspectos principales: la preparación de la EVA (go / caution / no_go), el destino científico y la ruta más adecuada. La seguridad de la ruta se calcula considerando factores como las zonas de peligro, la velocidad del rover, el nivel de oxígeno y la disponibilidad de recursos. Si deseas conocer el porcentaje de seguridad de una ruta específica, puedes usar el comando `get_mission_conditions` para obtener información detallada sobre el entorno marino y la preparación de la EVA."
+  },
+  {
+   "id": "explain-02",
+   "category": "explain",
+   "message": "¿Qué diferencia hay entre la ruta segura y la científica?",
+   "seconds": 1.2,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "La ruta segura es más lenta y se enfoca en la seguridad del equipo, evitando zonas de riesgo y garantizando suficiente oxígeno para el espaciowalk. La ruta científica es más rápida y se centra en la exploración de objetivos científicos, permitiendo un desplazamiento más rápido pero con un mayor riesgo de desaceleración o accidentes."
+  },
+  {
+   "id": "explain-03",
+   "category": "explain",
+   "message": "How is the oxygen of the suit calculated?",
+   "seconds": 1.1,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "The oxygen level in a suit is calculated based on the amount of oxygen consumed during the EVA (Extra-Vehicular Activity) and the rate at which oxygen is replenished. The system uses a combination of the suit's oxygen tank capacity, the duration of the activity, and the efficiency of the life support system to determine the remaining oxygen. This calculation is critical for ensuring the safety and success of the mission."
+  },
+  {
+   "id": "explain-04",
+   "category": "explain",
+   "message": "¿Cuándo dice NO GO el sistema?",
+   "seconds": 1.6,
+   "scores": {
+    "routing": true,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "overview"
+     }
+    }
+   ],
+   "reply": "Usé la función `explain_system` para explicar cómo funciona SENDA. El sistema evalúa la preparación de una salida, incluyendo la seguridad, los objetivos científicos y el recorrido. La planificación se realiza en tres modos (seguro, científico, rápido) para comparar opciones."
+  },
+  {
+   "id": "offtopic-01",
+   "category": "off_topic",
+   "message": "¿Cuál es la capital de Francia?",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "No puedo ayudar con esta pregunta, ya que el sistema SENDA se centra en la planificación de misión y no en preguntas geográficas."
+  },
+  {
+   "id": "offtopic-02",
+   "category": "off_topic",
+   "message": "Write me a poem about cats",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "I cannot generate poems about cats, as my capabilities are limited to mission planning and simulation for the SENDA mission. Please provide a different request."
+  },
+  {
+   "id": "offtopic-03",
+   "category": "off_topic",
+   "message": "¿Quién ganó el mundial de fútbol?",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "No puedo ayudar con esa pregunta, ya que estoy dedicado a la planificación de misión en Marte con el sistema SENDA."
+  },
+  {
+   "id": "offtopic-04",
+   "category": "off_topic",
+   "message": "Recomiéndame una película",
+   "seconds": 1.2,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "No puedo recomendar películas, ya que mi función es planificar viajes y actividades en el Marte con el sistema SENDA. ¡Si tienes alguna pregunta sobre rutas, objetivos científicos o condiciones del clima, estaré encantado de ayudarte!"
+  }
+ ]
+}

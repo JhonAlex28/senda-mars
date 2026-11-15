@@ -1,0 +1,25 @@
+{
+ "seed": 7,
+ "total": 1662,
+ "train": 1529,
+ "val": 133,
+ "by_kind": {
+  "plan": 636,
+  "conditions": 128,
+  "current_plan": 177,
+  "multi_view": 80,
+  "explain": 252,
+  "off_topic": 46,
+  "target_detail": 37,
+  "plan_bad_weather": 90,
+  "view_no_plan": 17,
+  "multi_current": 59,
+  "view": 86,
+  "current_plan_empty": 16,
+  "targets": 38
+ },
+ "by_lang": {
+  "Spanish": 1078,
+  "English": 584
+ }
+}
