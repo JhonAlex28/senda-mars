@@ -97,5 +97,37 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
 
     case 'dismissNotice':
       return { ...state, notice: null };
+
+    case 'planLoaded':
+      return {
+        ...state,
+        phase: 'walk',
+        tool: 'select',
+        goals: action.goals,
+        hazards: action.hazards,
+        traverse: action.traverse,
+        traverseProfile: action.traverseProfile,
+        evaPlans: action.evaPlans,
+        activeParkingId: action.traverse.parkings[0]?.id ?? null,
+        focusedTargetId: null,
+        notice: null,
+      };
+    case 'viewChanged': {
+      let next = state;
+      if (action.profile) {
+        const profile = action.profile;
+        const evaPlans = Object.fromEntries(
+          Object.entries(state.evaPlans).map(([id, plan]) => [id, { ...plan, profile }]),
+        );
+        next = { ...next, traverseProfile: profile, evaPlans };
+      }
+      // Solo se abre una pantalla si lo que necesita ya está planificado
+      const phase = action.phase;
+      const allowed =
+        phase === 'plan' ||
+        (phase === 'walk' && !!next.traverse) ||
+        (phase === 'go' && !!next.traverse && next.traverse.parkings.every((p) => next.evaPlans[p.id]));
+      return phase && allowed ? { ...next, phase, tool: 'select', focusedTargetId: null } : next;
+    }
   }
 }

@@ -46,4 +46,14 @@ export type MissionAction =
   | { type: 'selectParking'; id: string }
   | { type: 'evaPlanned'; parkingId: string; routes: RoutePlan[] }
   | { type: 'selectEvaProfile'; parkingId: string; profile: RouteProfile }
-  | { type: 'dismissNotice' };
+  | { type: 'dismissNotice' }
+  // Un plan completo calculado de una vez (lo usa el asistente): objetivos, rutas y perfiles
+  | {
+      type: 'planLoaded';
+      goals: string[];
+      hazards: Hazard[];
+      traverse: TraversePlan;
+      traverseProfile: RouteProfile;
+      evaPlans: Record<string, EvaPlan>;
+    }
+  | { type: 'viewChanged'; profile?: RouteProfile; phase?: Exclude<Phase, 'globe'> };
