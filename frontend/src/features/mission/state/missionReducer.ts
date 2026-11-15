@@ -22,7 +22,6 @@ export const initialMissionState: MissionState = {
       { id: 'EVA-2', name: 'EVA-2', role: 'GEO', suitId: 'xEMU-02', restingBpm: 64, massKg: 68 },
     ],
   },
-  quantumSummary: null,
   activePlan: null,
   profileId: 'EVA-1',
   crewStatusOpen: false,
@@ -157,11 +156,6 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       return { ...state, crewStatusOpen: action.open };
     case 'setCopilotOpen':
       return { ...state, copilotOpen: action.open };
-    case 'applyQuantumGoals':
-      return invalidatePlan(
-        { ...state, goals: action.goals, quantumSummary: action.summary },
-        `IBM Quantum QAOA (${action.summary.bestBitstring}) updated your mission sequence.`,
-      );
     case 'loadDemo':
       return {
         ...state,

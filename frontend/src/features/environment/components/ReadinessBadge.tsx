@@ -8,12 +8,18 @@ const PILL: Record<Verdict, string> = {
   no_go: 'bg-error text-on-error',
 };
 
-/** Veredicto del clima en una fila: icono + GO / CAUTION / NO GO. Sol y fuente quedan en el tooltip. */
-export function ReadinessBadge({ readiness }: { readiness: Readiness }) {
+/**
+ * Veredicto del clima: icono + GO / CAUTION / NO GO. Sol y fuente quedan en el tooltip.
+ * `stacked`: "Weather" encima del veredicto (cabecera); si no, en una fila.
+ */
+export function ReadinessBadge({ readiness, stacked = false }: { readiness: Readiness; stacked?: boolean }) {
   const meta = VERDICT_META[readiness.verdict];
   const sources = [...new Set(readiness.checks.map((c) => c.source.split(' ')[0]))].join(', ');
   return (
-    <div className="flex items-center justify-between gap-sm" title={`Sol ${readiness.sol}, ${readiness.local_solar_time} LTST · ${sources}`}>
+    <div
+      className={stacked ? 'flex flex-col items-center gap-[2px]' : 'flex items-center justify-between gap-sm'}
+      title={`Sol ${readiness.sol}, ${readiness.local_solar_time} LTST · ${sources}`}
+    >
       <span className="flex items-center gap-xs font-body text-body-sm text-on-surface-variant">
         <Icon name="partly_cloudy_day" className="text-[18px] text-accent" />
         Weather

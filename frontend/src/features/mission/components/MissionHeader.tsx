@@ -18,12 +18,10 @@ interface HeaderButtonProps {
   icon: string;
   label: string;
   onClick?: () => void;
-  /** Bloqueado: se ve con candado y "Soon" (datos todavía sin fuente oficial). */
-  locked?: boolean;
   tone?: 'default' | 'accent' | 'success';
 }
 
-function HeaderButton({ icon, label, onClick, locked, tone = 'default' }: HeaderButtonProps) {
+function HeaderButton({ icon, label, onClick, tone = 'default' }: HeaderButtonProps) {
   const toneCls = {
     default: 'border-outline text-on-surface hover:border-accent hover:text-accent',
     accent: 'border-accent text-accent hover:bg-primary hover:text-on-primary',
@@ -32,14 +30,12 @@ function HeaderButton({ icon, label, onClick, locked, tone = 'default' }: Header
   return (
     <button
       type="button"
-      disabled={locked}
       onClick={onClick}
-      title={locked ? `${label} · soon` : label}
-      className={`inline-flex min-h-[44px] items-center gap-xs rounded-full border bg-surface px-md font-mono text-mono-sm transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-outline disabled:hover:text-on-surface ${toneCls}`}
+      title={label}
+      className={`inline-flex min-h-[44px] items-center gap-xs rounded-full border bg-surface px-md font-mono text-mono-sm transition-colors duration-fast ${toneCls}`}
     >
-      <Icon name={locked ? 'lock' : icon} className="text-[18px]" />
+      <Icon name={icon} className="text-[18px]" />
       <span>{label}</span>
-      {locked && <span className="font-label text-label-sm uppercase text-on-surface-variant">Soon</span>}
     </button>
   );
 }
@@ -60,13 +56,26 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
 
   return (
     <header className="flex flex-col border-b border-outline-variant bg-surface-container">
-      <div className="flex flex-wrap items-center justify-between gap-sm px-xl py-sm">
+      <div className="flex flex-wrap items-center gap-sm px-xl py-sm">
+        {/* Izquierda: logo, volver al globo, misión y clima real */}
         <SendaLogo />
-        <div className="flex flex-col gap-xs">
-          <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
-          {readiness && <ReadinessBadge readiness={readiness} />}
-        </div>
-        <div className="flex flex-wrap items-center gap-sm">
+        <button
+          type="button"
+          onClick={() => dispatch({ type: 'backToGlobe' })}
+          aria-label="Return to Mars globe"
+          title="Return to Mars"
+          className="inline-flex min-h-[44px] items-center gap-xs rounded-full border-2 border-accent/60 bg-surface-container-high pl-xs pr-md font-headline text-title-md text-on-surface transition-colors duration-fast hover:border-accent hover:bg-primary hover:text-on-primary"
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15">
+            <Icon name="arrow_back" className="text-[20px] text-accent" />
+          </span>
+          Return
+        </button>
+        <h1 className="ml-sm font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
+        {readiness && <ReadinessBadge readiness={readiness} stacked />}
+
+        {/* Derecha: acciones; quien planifica (extra) queda al final */}
+        <div className="ml-auto flex flex-wrap items-center gap-sm">
           {going ? (
             <>
               <HeaderButton icon="monitor_heart" label="Crew status" tone="accent" onClick={() => dispatch({ type: 'setCrewStatusOpen', open: true })} />
@@ -80,11 +89,8 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
               <HeaderButton icon="auto_awesome" label="Copilot" tone="accent" onClick={() => dispatch({ type: 'setCopilotOpen', open: true })} />
             </>
           )}
-          <HeaderButton icon="science" label="Labs" locked />
-          <HeaderButton icon="memory" label="Quantum" locked />
           <HeaderButton icon="satellite_alt" label="Gale EZ" onClick={() => setConceptOpen(true)} />
           {extra}
-          <HeaderButton icon="public" label="Mars" onClick={() => dispatch({ type: 'backToGlobe' })} />
         </div>
       </div>
       <CrewSuitModal open={crewOpen} onClose={() => setCrewOpen(false)} />

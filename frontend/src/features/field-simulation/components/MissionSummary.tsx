@@ -1,4 +1,4 @@
-import type { CrewConfig, QuantumSummary } from '@/features/mission';
+import type { CrewConfig } from '@/features/mission';
 import { formatDistance, formatMinutes } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { Icon } from '@/shared/ui/Icon';
@@ -10,7 +10,6 @@ interface MissionSummaryProps {
   roverCapacity: number;
   targetName: (id: string) => string | undefined;
   crew?: CrewConfig;
-  quantumSummary?: QuantumSummary | null;
   onReplan: () => void;
   onExit: () => void;
 }
@@ -24,7 +23,7 @@ interface Row {
 }
 
 /** Resumen final: lo realizado frente a lo planificado + nota unificada NASA. */
-export function MissionSummary({ state, roverCapacity, targetName, crew, quantumSummary, onReplan, onExit }: MissionSummaryProps) {
+export function MissionSummary({ state, roverCapacity, targetName, crew, onReplan, onExit }: MissionSummaryProps) {
   const { planned } = state;
   const parkings = new Set(state.legs.map((l) => l.parkingId).filter(Boolean)).size;
 
@@ -138,7 +137,6 @@ export function MissionSummary({ state, roverCapacity, targetName, crew, quantum
               const payload = {
                 mission: 'SENDA Mars v2 — Mount Sharp Exploration',
                 crew: crew ?? null,
-                quantumOptimization: quantumSummary ?? null,
                 completedAt: new Date().toISOString(),
                 evaluation: {
                   overallScore,
@@ -234,9 +232,6 @@ export function MissionSummary({ state, roverCapacity, targetName, crew, quantum
               const crewLine = crew
                 ? `${crew.teamName} — ${crew.members.map((m) => `${m.name} (${m.role}, ${m.suitId})`).join(' | ')}`
                 : 'SENDA-ARES CREW';
-              const quantumBlock = quantumSummary
-                ? `<div class="box"><h3>Optional Quantum Co-Processor (QAOA)</h3><p>Backend: <b>${quantumSummary.backendName}</b> · Bitstring: <b>${quantumSummary.bestBitstring}</b> · ⟨H_C⟩ = ${quantumSummary.expectationValue} · Job: ${quantumSummary.jobId}</p></div>`
-                : '';
               const rowsHtml = rows
                 .map((r) => `<tr><td>${r.label}</td><td style="text-align:right">${r.actual}</td><td style="text-align:right">${r.planned}</td></tr>`)
                 .join('');
@@ -255,7 +250,6 @@ export function MissionSummary({ state, roverCapacity, targetName, crew, quantum
                 <div class="score">UNIFIED MISSION SCORE: ${overallScore}/100 (GRADE ${grade}) — Safety ${safetyScore} · Science ${scienceScore} · Efficiency ${efficiencyScore}</div>
                 <table><thead><tr><th>Metric</th><th style="text-align:right">Done</th><th style="text-align:right">Planned</th></tr></thead><tbody>${rowsHtml}</tbody></table>
                 <div class="box"><b>Completed Targets (${state.completed.length}) &amp; MSR Sample Cache (${(state.completed.length * 0.25).toFixed(2)} kg):</b> ${state.completed.map((id, idx) => `MSR-Ti-0${idx + 1} (${targetName(id) ?? id})`).join(', ') || 'None'}<br/><b>Skipped Targets (${state.skipped.length}):</b> ${state.skipped.map((id) => targetName(id) ?? id).join(', ') || 'None'}</div>
-                ${quantumBlock}
               </body></html>`);
               win.document.close();
               win.focus();

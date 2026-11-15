@@ -111,7 +111,6 @@ function GoView({ projection, site, readiness }: ViewProps) {
       crew={state.crew}
       crewStatusOpen={state.crewStatusOpen}
       onCloseCrewStatus={() => dispatch({ type: 'setCrewStatusOpen', open: false })}
-      quantumSummary={state.quantumSummary}
       renderFooter={(supplies: ReactNode) => <WeatherStrip readiness={readiness}>{supplies}</WeatherStrip>}
       // Al cerrar el resumen la interfaz queda limpia para otra misión (base, tripulación e historial se conservan)
       onReplan={() => dispatch({ type: 'finishMission' })}
