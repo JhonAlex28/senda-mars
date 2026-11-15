@@ -12,10 +12,9 @@ import {
   type Projection,
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
-import { PROFILE_META, distinctProfiles } from '@/features/route-planning';
+import { PROFILE_META, distinctProfiles, routesApi } from '@/features/route-planning';
 import { TargetCard, type Target } from '@/features/targets';
 import { Terrain3DView, TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
-import { computeGridAStar } from '@/shared/lib/astar';
 import { bboxAround } from '@/shared/lib/geo';
 import type { BBox, GeoPoint } from '@/shared/types/geo';
 import { Icon } from '@/shared/ui/Icon';
@@ -43,6 +42,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const [hover, setHover] = useState<GeoPoint | null>(null);
   const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
   const [customAStar, setCustomAStar] = useState<{ points: GeoPoint[]; distanceM: number; maxSlope: number } | null>(null);
+  const [scoutError, setScoutError] = useState<string | null>(null);
   const walking = state.phase === 'walk';
   const parking = activeParking(state);
   const activeRoverRoute = selectedTraverse(state);
@@ -70,10 +70,29 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const onMapClick = (p: GeoPoint) => {
     if (state.tool === 'base') dispatch({ type: 'moveBase', point: p });
     else if (state.tool === 'hazard') dispatch({ type: 'addHazard', hazard: { ...p, radius_m: hazardRadius } });
-    else if (state.tool === 'astar' && state.base) {
-      const res = computeGridAStar(site.grid, state.base, p, state.hazards, { gridSize: 48, maxSlopeDeg: 20, slopeWeight: 1.5 });
-      setCustomAStar(res);
-    } else dispatch({ type: 'focusTarget', id: null });
+    else if (state.tool === 'astar' && state.base) void scout(state.base, p);
+    else dispatch({ type: 'focusTarget', id: null });
+  };
+
+  // Vista previa de un camino seguro desde la base: lo calcula el planificador del backend
+  // (mismo A*, terreno y reglas que las rutas reales), no una copia en el navegador.
+  const scout = async (base: GeoPoint, to: GeoPoint) => {
+    setScoutError(null);
+    try {
+      const [route] = await routesApi.path(
+        'rover',
+        [
+          { ...base, kind: 'base', ref_id: 'base' },
+          { ...to, kind: 'waypoint', ref_id: '' },
+        ],
+        { hazards: state.hazards },
+        ['safe'],
+      );
+      setCustomAStar(route ? { points: route.points, distanceM: route.distance_m, maxSlope: route.max_slope_deg } : null);
+    } catch (e) {
+      setCustomAStar(null);
+      setScoutError(e instanceof Error ? e.message : 'No safe path to that point.');
+    }
   };
 
   return (
@@ -146,6 +165,14 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
                     onClick={() => setCustomAStar(null)}
                     className="text-on-surface-variant hover:text-on-surface"
                   >
+                    ✕
+                  </button>
+                </div>
+              )}
+              {scoutError && (
+                <div className="absolute bottom-md right-md z-30 flex items-center gap-sm rounded-md border border-error/60 bg-surface-container/95 px-md py-xs font-mono text-mono-sm shadow-lg">
+                  <span className="text-error">Scout path: {scoutError}</span>
+                  <button type="button" onClick={() => setScoutError(null)} className="text-on-surface-variant hover:text-on-surface">
                     ✕
                   </button>
                 </div>
