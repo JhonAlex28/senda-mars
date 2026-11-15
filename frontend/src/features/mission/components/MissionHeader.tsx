@@ -76,6 +76,7 @@ export function MissionHeader() {
               <HeaderButton icon="play_arrow" label="Demo" tone="success" onClick={loadDemo} />
               <HeaderButton icon="restart_alt" label="Reset" onClick={() => dispatch({ type: 'resetMission' })} />
               <HeaderButton icon="badge" label="Crew config" onClick={() => setCrewOpen(true)} />
+              <HeaderButton icon="auto_awesome" label="Copilot" tone="accent" onClick={() => dispatch({ type: 'setCopilotOpen', open: true })} />
             </>
           )}
           <HeaderButton icon="science" label="Labs" locked />

@@ -67,6 +67,8 @@ export interface MissionState {
   quantumSummary: QuantumSummary | null;
   /** Modal "Crew status" (HUD del casco) durante la ejecución. */
   crewStatusOpen: boolean;
+  /** Chat lateral del copiloto (se abre desde la cabecera; en el globo, desde el botón flotante). */
+  copilotOpen: boolean;
   notice: string | null;
 }
 
@@ -95,6 +97,7 @@ export type MissionAction =
   | { type: 'selectEvaProfile'; parkingId: string; profile: RouteProfile }
   | { type: 'setCrew'; crew: CrewConfig }
   | { type: 'setCrewStatusOpen'; open: boolean }
+  | { type: 'setCopilotOpen'; open: boolean }
   | { type: 'applyQuantumGoals'; goals: string[]; summary: QuantumSummary }
   | { type: 'loadDemo'; goals: string[] }
   | { type: 'resetMission' }

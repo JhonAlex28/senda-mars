@@ -24,6 +24,7 @@ export const initialMissionState: MissionState = {
   },
   quantumSummary: null,
   crewStatusOpen: false,
+  copilotOpen: false,
   notice: null,
 };
 
@@ -152,6 +153,8 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       return { ...state, crew: action.crew };
     case 'setCrewStatusOpen':
       return { ...state, crewStatusOpen: action.open };
+    case 'setCopilotOpen':
+      return { ...state, copilotOpen: action.open };
     case 'applyQuantumGoals':
       return invalidatePlan(
         { ...state, goals: action.goals, quantumSummary: action.summary },
