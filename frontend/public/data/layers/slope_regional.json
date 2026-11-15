@@ -1,0 +1,20 @@
+{
+  "layer": "slope_regional",
+  "scale": "regional",
+  "bbox_lonlat": [
+    137.35995863662836,
+    -4.820100514012099,
+    137.43014035283812,
+    -4.5798631008325374
+  ],
+  "shape": [
+    1424,
+    416
+  ],
+  "units": "degrees",
+  "thresholds_deg": [
+    15,
+    25
+  ],
+  "source": "gale_regional_slope_filtered.tif"
+}

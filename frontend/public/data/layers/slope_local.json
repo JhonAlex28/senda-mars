@@ -1,0 +1,20 @@
+{
+  "layer": "slope_local",
+  "scale": "local",
+  "bbox_lonlat": [
+    137.37203798970677,
+    -4.812609965455096,
+    137.40596477607644,
+    -4.7787844027145745
+  ],
+  "shape": [
+    2005,
+    2011
+  ],
+  "units": "degrees",
+  "thresholds_deg": [
+    10,
+    20
+  ],
+  "source": "gale_test_area_slope_filtered.tif"
+}

@@ -1,0 +1,27 @@
+{
+  "scale": "local",
+  "crs_proj4": "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=3396190 +units=m +no_defs",
+  "origin_xy": [
+    8142686.0,
+    -283261.0
+  ],
+  "cell_size_m": 1.0,
+  "shape": [
+    2005,
+    2011
+  ],
+  "bbox_lonlat": [
+    137.37203798970677,
+    -4.812609965455096,
+    137.40596477607644,
+    -4.7787844027145745
+  ],
+  "sources": [
+    {
+      "name": "MSL Gale Merged DEM 1m",
+      "mission": "MRO HiRISE + CTX, MGS MOLA",
+      "resolution_m": 1,
+      "url": "https://planetarymaps.usgs.gov/mosaic/Mars/MSL/MSL_Gale_DEM_Mosaic_1m_v3.tif"
+    }
+  ]
+}
