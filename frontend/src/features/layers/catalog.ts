@@ -99,9 +99,10 @@ export const LAYERS: LayerDef[] = [
     id: 'minerals',
     name: 'Minerals',
     icon: 'science',
-    provenance: 'measured',
-    source: 'MO THEMIS-IR Day + Mount Sharp Strata',
-    resolution: '100 m / 18 m',
+    // Unidades pintadas por franjas de altura del DEM (modelo de estratos), con textura THEMIS real
+    provenance: 'modeled',
+    source: 'Mount Sharp units by elevation band (model) + MO THEMIS-IR Day texture',
+    resolution: 'DEM cells / THEMIS 100 m',
     raster: true,
     available: true,
     defaultVisible: false,
