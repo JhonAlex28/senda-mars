@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 
 from senda.adapters.inbound.http.dependencies import planner_ctx, simulate_uc
 from senda.adapters.inbound.http.presenters import assumptions
-from senda.adapters.inbound.http.schemas import (DiversionOut, RouteOut, SimRowOut, SimulateRequest,
+from senda.adapters.inbound.http.schemas import (DiversionOut, EvaRouteOut, SimRowOut, SimulateRequest,
                                                  SimulateResponse, _lonlat)
 from senda.application.planner_context import PlannerContext
 from senda.application.use_cases.simulate_eva import SimulateEva, StopInput
@@ -26,5 +26,5 @@ def simulate(req: SimulateRequest, uc: SimulateEva = Depends(simulate_uc),
     return SimulateResponse(
         scenario=req.scenario,
         timeline=[SimRowOut.from_domain(row, spec) for row in r.rows],
-        replanned_route=RouteOut.from_domain(out.replanned, spec) if out.replanned else None,
+        replanned_route=EvaRouteOut.from_domain(out.replanned, spec) if out.replanned else None,
         diversion=diversion, assumptions=assumptions(ctx, ctx.local()))

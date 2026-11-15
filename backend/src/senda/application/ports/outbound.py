@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Protocol
 
 from senda.domain.models.environment import EnvironmentSnapshot
+from senda.domain.models.geo import BoundingBox
 from senda.domain.models.params import MissionParams
 from senda.domain.models.target import ScienceTarget
 from senda.domain.models.terrain import Scale, TerrainGrid
@@ -20,8 +21,10 @@ class EnvironmentRepository(Protocol):
 
 
 class TerrainProvider(Protocol):
-    """local = boxwork (EVA, classes_human); regional = corredor (rover, classes_rover)."""
+    """Contrato con Mec. A: una grilla por escala.
+    local = boxwork (EVA, classes_human); regional = Zona de Exploración (rover, classes_rover)."""
     def get_grid(self, scale: Scale) -> TerrainGrid: ...
+    def site_bounds(self) -> BoundingBox: ...   # área de misión = unión de las grillas
 
 
 class MissionParamsRepository(Protocol):

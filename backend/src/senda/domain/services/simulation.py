@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from senda.domain.models.params import SOL_S, ProfileWeights
-from senda.domain.models.route import RoutePlan
+from senda.domain.models.route import EvaRoute
 from senda.domain.models.terrain import CLASS_CAUTION
 from senda.domain.services.eva_planner import EvaContext
 from senda.domain.services.grid_graph import direction_of
@@ -51,7 +51,7 @@ class SimulationResult:
 
 
 def simulate_eva(nominal: EvaContext, scenario_ctx: EvaContext, effect: ScenarioEffect,
-                 plan: RoutePlan, at_index: int, return_weights: ProfileWeights,
+                 plan: EvaRoute, at_index: int, return_weights: ProfileWeights,
                  max_duration_min: float, staging_id: str,
                  shelters: list[Shelter] | None = None) -> SimulationResult:
     p = nominal.params

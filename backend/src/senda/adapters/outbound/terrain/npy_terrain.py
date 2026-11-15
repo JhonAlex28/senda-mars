@@ -12,6 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
+from senda.domain.models.geo import BoundingBox
 from senda.domain.models.grid import GridSpec
 from senda.domain.models.terrain import Scale, TerrainGrid
 from senda.domain.services.terrain_analysis import (classify_slope, default_confidence, derive_risk,
@@ -78,3 +79,9 @@ class CompositeTerrainProvider:
             factor = math.ceil(math.sqrt(n / self._max_cells)) if n > self._max_cells else 1
             self._cache[scale] = downsample(grid, factor)
         return self._cache[scale]
+
+    def site_bounds(self) -> BoundingBox:
+        """Área de misión = unión de los bboxes de todas las escalas (doc §0.1)."""
+        boxes = [self.get_grid(s).spec.bbox for s in Scale]
+        return BoundingBox(min(b.min_lon for b in boxes), min(b.min_lat for b in boxes),
+                           max(b.max_lon for b in boxes), max(b.max_lat for b in boxes))

@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from senda.domain.models.params import SOL_S, EvaParams, ProfileWeights
-from senda.domain.models.route import RouteMetrics, RoutePlan, RouteProfile, Segment, Stop
+from senda.domain.models.route import RouteMetrics, EvaRoute, RouteProfile, Segment, Stop
 from senda.domain.models.terrain import TerrainGrid
 from senda.domain.services.grid_graph import direction_of
 from senda.domain.services.metabolic import (eva_step_arrays, min_energy_kj_per_m,
@@ -66,7 +66,7 @@ class EvaContext:
 
 
 def plan_eva(ctx: EvaContext, profile: RouteProfile, weights: ProfileWeights,
-             waypoints: list[Waypoint], max_duration_min: float) -> RoutePlan:
+             waypoints: list[Waypoint], max_duration_min: float) -> EvaRoute:
     """A* encadenado por waypoints con el costo del perfil; métricas con energía real."""
     cells, wp_idx, _ = chain_astar(ctx.search(weights), [w.cell for w in waypoints],
                                    ctx.h_per_cell(weights))
@@ -75,7 +75,7 @@ def plan_eva(ctx: EvaContext, profile: RouteProfile, weights: ProfileWeights,
 
 def evaluate_route(ctx: EvaContext, profile: RouteProfile, cells: list[Cell],
                    wp_idx: list[int], waypoints: list[Waypoint],
-                   max_duration_min: float, o2_multiplier: float = 1.0) -> RoutePlan:
+                   max_duration_min: float, o2_multiplier: float = 1.0) -> EvaRoute:
     p = ctx.params
     dem = ctx.terrain.dem
     cs = ctx.terrain.spec.cell_size_m
@@ -153,6 +153,7 @@ def evaluate_route(ctx: EvaContext, profile: RouteProfile, cells: list[Cell],
         dose_msv=dose, science_score=science,
         o2_margin_at_end=(p.o2_capacity_l - o2_total) / p.o2_capacity_l,
         feasible=not reasons)
-    return RoutePlan(profile=profile, cells=cells, metrics=metrics, segments=segments, stops=stops,
-                     step_energy_kj=step_e, step_time_s=step_t, elevation_m=elevation,
-                     cum_dist_m=cum_d, pnr_index=pnr, infeasible_reasons=reasons)
+    return EvaRoute(profile=profile, cells=cells, metrics=metrics, segments=segments, stops=stops,
+                    step_energy_kj=step_e, step_time_s=step_t, elevation_m=elevation,
+                    cum_dist_m=cum_d, pnr_index=pnr, infeasible_reasons=reasons,
+                    reserve_l=reserve, waypoint_index=list(wp_idx))

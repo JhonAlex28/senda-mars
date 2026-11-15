@@ -5,8 +5,7 @@ base --(rover)--> staging --(EVA, 3 perfiles)--> staging --(rover)--> base, + ti
 from __future__ import annotations
 
 from senda.application.planner_context import PlannerContext
-from senda.application.use_cases.plan_routes import PlanRoutes
-from senda.application.use_cases.plan_traverse import PlanTraverse
+from senda.application.use_cases.mission_legs import PlanEvaRoutes, PlanRoverLeg
 from senda.domain.models.mission import MissionPlan, Warning
 from senda.domain.models.route import RouteProfile
 from senda.domain.services.mission_timeline import build_timeline
@@ -28,11 +27,11 @@ class PlanMission:
                    else self._ctx.default_staging())
         staging_ll = (staging.location.lon, staging.location.lat)
 
-        traverse = PlanTraverse(self._ctx)
+        traverse = PlanRoverLeg(self._ctx)
         out = traverse.execute(base, staging_ll)
         back = traverse.execute(staging_ll, base, battery_used_before_kwh=out.metrics.energy_kwh)
 
-        eva = PlanRoutes(self._ctx).execute(target_ids, profiles, staging.id, staging.id, scenario)
+        eva = PlanEvaRoutes(self._ctx).execute(target_ids, profiles, staging.id, staging.id, scenario)
         by_profile = {r.profile: r for r in eva.routes}
         chosen = by_profile.get(timeline_profile) or eva.routes[0]
 

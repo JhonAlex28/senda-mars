@@ -8,7 +8,7 @@ import numpy as np
 
 from senda.application.planner_context import PlannerContext
 from senda.domain.errors import InvalidRequest, NoRouteFound
-from senda.domain.models.route import RoutePlan, RouteProfile
+from senda.domain.models.route import EvaRoute, RouteProfile
 from senda.domain.services.eva_planner import Waypoint, evaluate_route
 from senda.domain.services.pathfinding import chain_astar
 from senda.domain.services.scenarios import SCENARIOS, effect_of
@@ -28,8 +28,8 @@ class StopInput:
 @dataclass(frozen=True)
 class SimulationOutput:
     result: SimulationResult
-    plan: RoutePlan                     # ruta que se simuló (tras replanificar si hubo)
-    replanned: RoutePlan | None
+    plan: EvaRoute                     # ruta que se simuló (tras replanificar si hubo)
+    replanned: EvaRoute | None
     staging_id: str
 
 
@@ -59,7 +59,7 @@ class SimulateEva:
         plan = evaluate_route(nominal, profile, cells, wp_idx, wps, params.window.eva_max_duration_min)
 
         eff = effect_of(scenario, params.eva)
-        replanned: RoutePlan | None = None
+        replanned: EvaRoute | None = None
         if eff.blocked_path:
             scenario_ctx, replanned = self._replan_blocked(profile, cells, wps, wp_idx, at, staging_cell)
             plan = replanned

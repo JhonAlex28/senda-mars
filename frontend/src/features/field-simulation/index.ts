@@ -1,3 +1,2 @@
-// API pública de la feature field-simulation (componentes HUD/alertas: Full stack).
-export { simulationApi } from './api/simulationApi';
-export type * from './types';
+export { ExecutionView } from './components/ExecutionView';
+export { buildItinerary, type Leg } from './lib/itinerary';

@@ -6,6 +6,12 @@ export interface Rubric {
   total: number;
 }
 
+export interface ScienceTask {
+  tool: string;
+  duration_min: number;
+  protocol: string;
+}
+
 export interface Target {
   id: string;
   name: string;
@@ -14,5 +20,7 @@ export interface Target {
   elevation_m: number;
   category: string;
   description: string;
+  is_base: boolean;
   rubric: Rubric;
+  task: ScienceTask | null;
 }

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from senda.domain.models.route import RoutePlan, RouteProfile, TraversePlan
+from senda.domain.models.route import EvaRoute, RouteProfile, RoverRoute
 
 
 @dataclass(frozen=True)
@@ -26,9 +26,9 @@ class MissionPlan:
     base_lonlat: tuple[float, float]
     staging_id: str
     staging_lonlat: tuple[float, float]
-    traverse_out: TraversePlan
-    traverse_back: TraversePlan
-    eva_routes: list[RoutePlan]
+    traverse_out: RoverRoute
+    traverse_back: RoverRoute
+    eva_routes: list[EvaRoute]
     timeline_profile: RouteProfile
     timeline: list[SolActivity]
     feasible: bool

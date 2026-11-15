@@ -1,4 +1,5 @@
-"""Grilla de terreno usada por el planificador (una por escala)."""
+"""Grilla de terreno usada por el planificador (una por escala).
+Fila 0 = borde norte; columna 0 = borde oeste (ver GridSpec)."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -7,12 +8,15 @@ from typing import Any
 
 import numpy as np
 
+from senda.domain.models.geo import BoundingBox, GeoPoint
 from senda.domain.models.grid import GridSpec
+
+Cell = tuple[int, int]
 
 
 class Scale(str, Enum):
     LOCAL = "local"         # boxwork, EVA a pie (1–4 m/celda)
-    REGIONAL = "regional"   # corredor base -> boxwork, rover (10–20 m/celda)
+    REGIONAL = "regional"   # Zona de Exploración / corredor desde la base, rover (10–200 m/celda)
 
 
 # Clases de terreno (uint8), iguales para humano y rover; cambian los umbrales.
@@ -46,3 +50,46 @@ class TerrainGrid:
             arr = getattr(self, name)
             if arr.shape != self.spec.shape:
                 raise ValueError(f"{name}.shape {arr.shape} != grid {self.spec.shape}")
+
+    # ---- ayudas por punto (usadas por parking.py y los mappers) ------------
+    @property
+    def rows(self) -> int:
+        return self.spec.rows
+
+    @property
+    def cols(self) -> int:
+        return self.spec.cols
+
+    @property
+    def cell_size_m(self) -> float:
+        return self.spec.cell_size_m
+
+    @property
+    def bbox(self) -> BoundingBox:
+        return self.spec.bbox
+
+    @property
+    def slope_deg(self) -> np.ndarray:
+        cached = self.__dict__.get("_slope")
+        if cached is None:
+            from senda.domain.services.terrain_analysis import slope_deg
+            cached = np.nan_to_num(slope_deg(self.dem, self.spec.cell_size_m), nan=90.0)
+            object.__setattr__(self, "_slope", cached)
+        return cached
+
+    def cell_of(self, p: GeoPoint) -> Cell:
+        """Celda que contiene el punto (recortada al borde si cae fuera)."""
+        r, c = self.spec.lonlat_to_cell(p.lon, p.lat)
+        return min(max(r, 0), self.rows - 1), min(max(c, 0), self.cols - 1)
+
+    def point_of(self, cell: Cell) -> GeoPoint:
+        return self.spec.cell_to_geopoint(cell)
+
+    def contains(self, p: GeoPoint) -> bool:
+        return self.spec.contains(self.spec.lonlat_to_cell(p.lon, p.lat))
+
+    def elevation(self, cell: Cell) -> float:
+        return float(self.dem[cell])
+
+    def slope(self, cell: Cell) -> float:
+        return float(self.slope_deg[cell])

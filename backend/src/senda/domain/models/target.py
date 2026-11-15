@@ -19,6 +19,14 @@ class Rubric:
 
 
 @dataclass(frozen=True)
+class ScienceTask:
+    """Tarea científica planificada en el objetivo (lo que hace el astronauta al llegar)."""
+    tool: str
+    duration_min: float
+    protocol: str
+
+
+@dataclass(frozen=True)
 class ScienceTarget:
     id: str
     name: str
@@ -27,13 +35,20 @@ class ScienceTarget:
     rubric: Rubric
     description: str
     category: str
+    is_base: bool = False              # staging del SEV (T01)
+    task: ScienceTask | None = None    # eva_sampling
     # Campos que usa el planificador (targets_v0.geojson, doc §4.3)
     score_s: float = 0.0               # S = total_15 / 15
-    eva_duration_min: float = 0.0      # eva_sampling.duration_min
-    eva_tool: str = ""
     shielding_pct: float = 0.0         # shielding_reduction_pct
-    is_base: bool = False              # staging del SEV (T01)
     is_shelter: bool = False           # refugio alternativo (T08)
+
+    @property
+    def task_minutes(self) -> float:
+        return self.task.duration_min if self.task else 0.0
+
+    @property
+    def eva_duration_min(self) -> float:
+        return self.task_minutes
 
     @property
     def science_points(self) -> int:

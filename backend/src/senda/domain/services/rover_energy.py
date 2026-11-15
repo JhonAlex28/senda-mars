@@ -18,15 +18,18 @@ from senda.domain.services.terrain_analysis import nogo_mask
 J_PER_KWH = 3.6e6
 
 
-def min_energy_kwh_per_m(p: RoverParams) -> float:
+def min_energy_kwh_per_m(p: RoverParams, speed_factor: float = 1.0) -> float:
     """Cota inferior por metro: solo la carga hotel a la velocidad nominal."""
-    return p.hotel_kw * 1000.0 / (p.v_nominal_kmh / 3.6) / J_PER_KWH
+    return p.hotel_kw * 1000.0 / (p.v_nominal_kmh / 3.6 * speed_factor) / J_PER_KWH
 
 
-def rover_step_arrays(t: TerrainGrid, p: RoverParams) -> tuple[np.ndarray, np.ndarray]:
+def rover_step_arrays(t: TerrainGrid, p: RoverParams, speed_factor: float = 1.0,
+                      blocked: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray]:
     rows, cols = t.spec.shape
     cs = t.spec.cell_size_m
     nogo = nogo_mask(t.classes, p.nogo_dilation_cells)
+    if blocked is not None:
+        nogo = nogo | blocked
     dem = t.dem.astype(np.float64)
     energy = np.empty((8, rows, cols), dtype=np.float64)
     time = np.empty((8, rows, cols), dtype=np.float64)
@@ -36,7 +39,7 @@ def rover_step_arrays(t: TerrainGrid, p: RoverParams) -> tuple[np.ndarray, np.nd
         dz = neighbor(dem, dr, dc, np.nan) - dem
         nb_cls = neighbor(t.classes, dr, dc, 255)
         nb_nogo = neighbor(nogo, dr, dc, True)
-        v = np.where(nb_cls == CLASS_CAUTION, p.v_caution_kmh, p.v_nominal_kmh) / 3.6
+        v = np.where(nb_cls == CLASS_CAUTION, p.v_caution_kmh, p.v_nominal_kmh) / 3.6 * speed_factor
         theta = np.arctan(np.nan_to_num(dz) / d)
         traction = p.mass_kg * MARS_G * (p.crr * np.cos(theta) + np.sin(theta)) * d / p.drivetrain_eff
         e = (np.maximum(traction, 0.0) + p.hotel_kw * 1000.0 * d / v) / J_PER_KWH

@@ -6,9 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from senda.adapters.inbound.http.routers import (environment, health, mission, routes, safety,
-                                                 simulate, targets, traverse)
+                                                 simulate, targets, terrain)
 from senda.container import get_container
-from senda.domain.errors import InvalidRequest, NoRouteFound, TargetNotFound
+from senda.domain.errors import InvalidRequest, NoRouteFound, OutsideSite, TargetNotFound
 
 API_PREFIX = "/api/v1"
 
@@ -27,15 +27,13 @@ def create_app() -> FastAPI:
         return JSONResponse(status_code=404, content={"detail": str(e)})
 
     @app.exception_handler(InvalidRequest)
-    async def _invalid(_: Request, e: InvalidRequest) -> JSONResponse:
-        return JSONResponse(status_code=422, content={"detail": str(e)})
-
     @app.exception_handler(NoRouteFound)
-    async def _no_route(_: Request, e: NoRouteFound) -> JSONResponse:
+    @app.exception_handler(OutsideSite)
+    async def _unprocessable(_: Request, e: Exception) -> JSONResponse:
         return JSONResponse(status_code=422, content={"detail": str(e)})
 
     app.include_router(health.router)
-    for r in (targets.router, environment.router, routes.router, traverse.router,
+    for r in (targets.router, environment.router, terrain.router, routes.router,
               mission.router, simulate.router, safety.router):
         app.include_router(r, prefix=API_PREFIX)
     return app
