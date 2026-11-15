@@ -69,7 +69,8 @@ function PlanView({ projection, site, readiness }: ViewProps) {
       <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[260px_1fr_380px]">
         <aside className="scroll-thin flex min-h-0 flex-col gap-md overflow-y-auto">
           <LayersPanel />
-          <MarsWeatherCard />
+          <MarsWeatherCard readiness={readiness} />
+          <SuppliesCard pct={route?.resource.remaining_pct ?? null} hint="Rover battery left at the end of the chosen path" />
         </aside>
         <PlanningMap projection={projection} site={site} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto pr-xs">
@@ -79,9 +80,6 @@ function PlanView({ projection, site, readiness }: ViewProps) {
           {ready && <LaunchCard readiness={readiness} />}
         </aside>
       </div>
-      <WeatherStrip readiness={readiness}>
-        <SuppliesCard pct={route?.resource.remaining_pct ?? null} hint="Rover battery left at the end of the chosen path" />
-      </WeatherStrip>
     </>
   );
 }
