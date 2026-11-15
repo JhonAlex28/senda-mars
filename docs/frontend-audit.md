@@ -211,3 +211,19 @@ Por eso la UI **no muestra** el punto de no retorno, la reserva ni los motivos d
 - **Crew config** en la planificación (solo parámetros) y **Crew status** en Go (HUD del casco, con vitales marcados como simulados).
 - Iconos por tipo científico: agua, minerales, taladro y geología. Capa "Target names" para tableta.
 - Textos más cortos en paneles, contingencias y resumen.
+
+## 9. Estado: ronda 2 aplicada (2026-11-15)
+- **Capas:** "Science targets" tiene subcapas plegadas: Names y los 4 tipos (Water, Minerals, Drill sample, Geology), activables una por una.
+- **Pantalla:**
+  - paneles laterales equilibrados (320 px · mapa · 320 px);
+  - vista 3D bloqueada ("Soon");
+  - título "Mount Sharp Exploration".
+- **Waypoints como objetivos:**
+  - los puntos W1… aparecen en la lista Goals y se reordenan como un objetivo;
+  - **el orden de la lista es el orden de la ruta** (`order` en `/routes/traverse`);
+  - el botón **Optimize** pide el recorrido eficiente (vecino más cercano + 2-opt) y reescribe la lista.
+- **Fin de misión:** "New mission" o "Mars" deja la interfaz limpia (sin objetivos, waypoints, zonas ni rutas). Se conservan la base, la tripulación y el historial.
+- **Motor de seguridad en Go:**
+  - las contingencias salen de `GET /scenarios`: Path blocked, Dust storm, Suit leak, **Crew injury** y **Solar particle event**;
+  - en EVA se evalúan con `POST /simulate` (que ahora acepta `path` sin `cells`). Si el motor da `rtb` o desvío, se vuelve al vehículo con la alerta del motor;
+  - durante cada EVA se muestran en vivo la **reserva de retorno** y las alertas nominales (PNR, ventana EVA…).
