@@ -6,6 +6,7 @@ devolvió el planificador; los planes completos y los cambios de vista se guarda
 from __future__ import annotations
 
 import json
+import unicodedata
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
@@ -231,9 +232,9 @@ class MissionTools:
         ids = args.get("target_ids") or None
         if ids is not None and not (isinstance(ids, list) and all(isinstance(i, str) for i in ids)):
             raise InvalidToolInput("target_ids must be a list of target ids")
-        if ids:   # el modelo a veces copia "T05 Valle de la Luna": vale el id inicial
+        if ids:   # el modelo a veces copia "T05 Valle de la Luna" o solo el nombre del sitio
             bases = {t.id for t in self._targets.execute() if t.is_base}
-            ids = [i.strip().split()[0].strip(",;:") for i in ids if i.strip()]
+            ids = [self._resolve_id(i) for i in ids if i.strip()]
             ids = [i for i in ids if i not in bases] or None
         day = args.get("day")
         if day not in (None, "", "today", "tomorrow"):
@@ -376,6 +377,28 @@ class MissionTools:
 
     def _names(self) -> dict[str, ScienceTarget]:
         return {t.id: t for t in self._targets.execute()}
+
+    def _resolve_id(self, raw: str) -> str:
+        """Id válido a partir de lo que mande el modelo: "S03", "S03 Yellowknife Bay" o
+        "Yellowknife Bay". Si no reconoce nada devuelve el id tal cual y el error lista los
+        válidos (el catálogo cambia más rápido que el reentrenamiento del modelo)."""
+        targets = self._names()
+        first = raw.strip().split()[0].strip(",;:").upper()
+        if first in targets:
+            return first
+        wanted = _fold(raw)
+        for t in targets.values():
+            name = _fold(t.name)
+            short = _fold(t.name.split("(")[0].split("—")[0].split("–")[0])
+            if wanted and (wanted in name or (short and short in wanted)):
+                return t.id
+        return first
+
+
+def _fold(text: str) -> str:
+    """Minúsculas, sin tildes ni signos: para comparar nombres de sitios."""
+    plain = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    return " ".join("".join(ch if ch.isalnum() else " " for ch in plain.lower()).split())
 
 
 def _outing_summary(plan: OutingPlan, targets: dict[str, ScienceTarget]) -> dict[str, Any]:

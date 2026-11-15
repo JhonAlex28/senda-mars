@@ -90,8 +90,8 @@ def build_tools(mission: dict[str, Any]) -> RecordingTools:
     c = get_container()
     calendar, crew = exam_calendar()
     assess, targets = AssessReadiness(c.environment_repo), ListTargets(c.target_repo)
-    outing = PlanOuting(assess, targets, PlanTraverse(c.target_repo, c.terrain),
-                        PlanEva(c.target_repo, c.terrain))
+    outing = PlanOuting(assess, targets, PlanTraverse(c.planner),
+                        PlanEva(c.planner))
     context = MissionIn(**mission).to_context()
     return RecordingTools(assess, GetEnvironment(c.environment_repo), targets, outing,
                           c.knowledge, context, calendar, crew)

@@ -1,0 +1,1031 @@
+{
+ "model": "senda-copilot-v2",
+ "date": "2026-11-15T18:22:43",
+ "summary": {
+  "cases": 47,
+  "all_checks_pass_pct": 89.4,
+  "overall": {
+   "routing": 93.6,
+   "args": 88.9,
+   "language": 100.0,
+   "grounded": 100.0
+  },
+  "by_category": {
+   "calendar": {
+    "routing": 100.0,
+    "args": 100.0,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "conditions": {
+    "routing": 100.0,
+    "args": null,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "current_plan": {
+    "routing": 75.0,
+    "args": null,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "explain": {
+    "routing": 100.0,
+    "args": 100.0,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "how_to": {
+    "routing": 83.3,
+    "args": 66.7,
+    "language": 100.0,
+    "grounded": null
+   },
+   "off_topic": {
+    "routing": 100.0,
+    "args": null,
+    "language": 100.0,
+    "grounded": null
+   },
+   "plan": {
+    "routing": 92.3,
+    "args": 88.9,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "targets": {
+    "routing": 100.0,
+    "args": null,
+    "language": 100.0,
+    "grounded": 100.0
+   },
+   "view": {
+    "routing": 100.0,
+    "args": 100.0,
+    "language": 100.0,
+    "grounded": null
+   }
+  },
+  "avg_seconds": 11.7
+ },
+ "cases": [
+  {
+   "id": "plan-01",
+   "category": "plan",
+   "message": "Prepara la salida de mañana, tengo 3 horas",
+   "seconds": 77.6,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "day": "tomorrow"
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 362.4 min de los 180 disponibles: Valle de la Luna (T05). Rover por la ruta segura (333.1 min, vuelve con 70.1% de batería); en las caminatas el oxígeno más bajo queda en 93.2%. Quedaron fuera Namib Dune (S06, por falta de tiempo), Rocknest sand shadow (S02, por falta de tiempo), Murray Buttes (S07, por falta de tiempo), Kimberley · Windjana drill (S04, por falta de tiempo), Hottah conglomerate (S01, por falta de tiempo), Altadena (T02, por falta de tiempo), Vera Rubin Ridge · Highfield drill (S08, por falta de tiempo), Pahrump Hills · Confidence Hills drill (S05, por falta de tiempo), Mont Mercou · Nontron drill (S10, por falta de tiempo), Glen Torridon (S09, por falta de tiempo), Yellowknife Bay (S03, por falta de tiempo), Gediz Vallis · pure sulfur field (S11, por falta de tiempo), Monte Grande polygons (T07, por falta de tiempo), Nevado Sajama (T06, por falta de tiempo). Lo guardé en el calendario para mañana (sol 5075)."
+  },
+  {
+   "id": "plan-02",
+   "category": "plan",
+   "message": "Hazme una ruta para mañana, ¿a qué lugares debo ir?",
+   "seconds": 56.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180,
+      "day": "tomorrow"
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 362.4 min de los 180 disponibles: Valle de la Luna (T05). Rover por la ruta segura (333.1 min, vuelve con 70.1% de batería); en las caminatas el oxígeno más bajo queda en 93.2%. Quedaron fuera Namib Dune (S06, por falta de tiempo), Rocknest sand shadow (S02, por falta de tiempo), Murray Buttes (S07, por falta de tiempo), Kimberley · Windjana drill (S04, por falta de tiempo), Hottah conglomerate (S01, por falta de tiempo), Altadena (T02, por falta de tiempo), Vera Rubin Ridge · Highfield drill (S08, por falta de tiempo), Pahrump Hills · Confidence Hills drill (S05, por falta de tiempo), Mont Mercou · Nontron drill (S10, por falta de tiempo), Glen Torridon (S09, por falta de tiempo), Yellowknife Bay (S03, por falta de tiempo), Gediz Vallis · pure sulfur field (S11, por falta de tiempo), Monte Grande polygons (T07, por falta de tiempo), Nevado Sajama (T06, por falta de tiempo). Lo guardé en el calendario para mañana (sol 5075)."
+  },
+  {
+   "id": "plan-03",
+   "category": "plan",
+   "message": "Tengo 2 horas y hay una tormenta de polvo, organiza la salida",
+   "seconds": 54.0,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 120,
+      "speed_factor": 0.7
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 506.5 min de los 120 disponibles: Valle de la Luna (T05). Rover por la ruta segura (475.6 min, vuelve con 66.5% de batería); en las caminatas el oxígeno más bajo queda en 92.9%. Quedaron fuera Namib Dune (S06, por falta de tiempo), Rocknest sand shadow (S02, por falta de tiempo), Murray Buttes (S07, por falta de tiempo), Kimberley · Windjana drill (S04, por falta de tiempo), Hottah conglomerate (S01, por falta de tiempo), Altadena (T02, por falta de tiempo), Vera Rubin Ridge · Highfield drill (S08, por falta de tiempo), Pahrump Hills · Confidence Hills drill (S05, por falta de tiempo), Mont Mercou · Nontron drill (S10, por falta de tiempo), Glen Torridon (Aberlady & Kilmarie drills) (S09, por falta de tiempo), Yellowknife Bay (S03, por falta de tiempo), Gediz Vallis · pure sulfur field (S11, por falta de tiempo), Monte Grande polygons (T07, por falta de tiempo), Nevado Sajama (T06, por falta de tiempo). Calculé todo con la tormenta de polvo (velocidad al 70%)."
+  },
+  {
+   "id": "plan-04",
+   "category": "plan",
+   "message": "Planifica una EVA a S03",
+   "seconds": 1.4,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "target_ids": [
+       "S03"
+      ]
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 78.9 min: Yellowknife Bay (S03). Rover por la ruta segura (45.4 min, vuelve con 95.9% de batería); en las caminatas el oxígeno más bajo queda en 92.5%."
+  },
+  {
+   "id": "plan-05",
+   "category": "plan",
+   "message": "Plan an outing to the two highest priority targets",
+   "seconds": 10.9,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "target_ids": [
+       "T05",
+       "T06"
+      ],
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "Done, I loaded a 362.4-minute outing on the map: Valle de la Luna (T05). Rover on the safest route (333.1 min, back with 70.1% battery); the lowest oxygen on the walks is 93.2%. Left out: Nevado Sajama (T06, not enough time)."
+  },
+  {
+   "id": "plan-06",
+   "category": "plan",
+   "message": "Arma la misión de hoy con los objetivos más importantes",
+   "seconds": 5.5,
+   "scores": {
+    "routing": false,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {}
+    }
+   ],
+   "reply": "Objetivos por prioridad:\n1. Valle de la Luna (T05): prioridad 14/15, tarea de 25 min\n2. Nevado Sajama (T06): prioridad 14/15, tarea de 25 min\n3. Yellowknife Bay (S03): prioridad 13/15, tarea de 30 min\n4. Glen Torridon (S09): prioridad 13/15, tarea de 30 min\n5. Mont Mercou · Nontron drill (S10): prioridad 13/15, tarea de 45 min\n6. Gediz Vallis · pure sulfur field (S11): prioridad 13/15, tarea de 25 min\n7. Monte Grande polygons (T07): prioridad 13/15, tarea de 20 min\n8. Pahrump Hills · Confidence Hills drill (S05): prioridad 12/15, tarea de 30 min\n9. Vera Rubin Ridge · Highfield drill (S08): prioridad 11/15, tarea de 25 min\n10. Altadena (T02): prioridad 11/15, tarea de 30 min\n11. Hottah conglomerate (S01): prioridad 10/15, tarea de 20 min\n12. Kimberley · Windjana drill (S04): prioridad 10/15, tarea de 25 min\n13. Murray Buttes (S07): prioridad 10/15, tarea de 40 min\n14. Rocknest sand shadow (S02): prioridad 9/15, tarea de 15 min\n15. Namib Dune (S06): prioridad 8/15, tarea de 20 min\n¿Quieres que prepare una salida con ellos?"
+  },
+  {
+   "id": "plan-07",
+   "category": "plan",
+   "message": "Quiero ir a Valle de la Luna y Nevado Sajama",
+   "seconds": 5.2,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "target_ids": [
+       "T05",
+       "T06"
+      ]
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 388.7 min: Valle de la Luna (T05) y Nevado Sajama (T06). Rover por la ruta segura (27743 m, vuelve con 70% de batería); en las caminatas el oxígeno más bajo queda en 87.6%."
+  },
+  {
+   "id": "plan-07b",
+   "category": "plan",
+   "message": "Llévanos a Yellowknife Bay y a Murray Buttes",
+   "seconds": 4.0,
+   "scores": {
+    "routing": true,
+    "args": false,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "target_ids": [
+       "S03",
+       "S08"
+      ]
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 312.9 min: Yellowknife Bay (S03) y Vera Rubin Ridge · Highfield drill (S08). Rover por la ruta científica (250.9 min, vuelve con 77.5% de batería); en las caminatas el oxígeno más bajo queda en 92.5%."
+  },
+  {
+   "id": "plan-08",
+   "category": "plan",
+   "message": "We have 90 minutes, what can we visit?",
+   "seconds": 57.9,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 90
+     }
+    }
+   ],
+   "reply": "Done, I loaded a 362.4-minute outing on the map out of the 90 available: Valle de la Luna (T05). Rover on the safest route (333.1 min, 27656 m, 18.3° slope, 83% safety); the lowest oxygen on the walks is 93.2%. Left out: Namib Dune (S06, not enough time), Rocknest sand shadow (S02, not enough time), Murray Buttes (S07, not enough time), Kimberley · Windjana drill (S04, not enough time), Hottah conglomerate (S01, not enough time), Altadena (T02, not enough time), Vera Rubin Ridge · Highfield drill (S08, not enough time), Pahrump Hills · Confidence Hills drill (S05, not enough time), Mont Mercou · Nontron drill (S10, not enough time), Glen Torridon (S09, not enough time), Yellowknife Bay (S03, not enough time), Gediz Vallis · pure sulfur field (S11, not enough time), Monte Grande polygons (T07, not enough time), Nevado Sajama (T06, not enough time). I accounted for all the targets by priority."
+  },
+  {
+   "id": "plan-09",
+   "category": "plan",
+   "message": "Un astronauta tiene fuga en el traje, planifica algo corto",
+   "seconds": 60.4,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 30,
+      "o2_multiplier": 1.5
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 362.4 min de los 30 disponibles: Valle de la Luna (T05). Rover por la ruta segura (333.1 min, vuelve con 70.1% de batería); en las caminatas el oxígeno más bajo queda en 89.8%. Quedaron fuera Namib Dune (S06, por falta de tiempo), Rocknest sand shadow (S02, por falta de tiempo), Murray Buttes (S07, por falta de tiempo), Kimberley · Windjana drill (S04, por falta de tiempo), Hottah conglomerate (S01, por falta de tiempo), Altadena (T02, por falta de tiempo), Vera Rubin Ridge · Highfield drill (S08, por falta de tiempo), Pahrump Hills · Confidence Hills drill (S05, por falta de tiempo), Mont Mercou · Nontron drill (S10, por falta de tiempo), Glen Torridon (S09, por falta de tiempo), Yellowknife Bay (S03, por falta de tiempo), Gediz Vallis · pure sulfur field (S11, por falta de tiempo), Monte Grande polygons (T07, por falta de tiempo), Nevado Sajama (T06, por falta de tiempo). Calculé todo con la fuga del traje (oxígeno ×1,5)."
+  },
+  {
+   "id": "plan-10",
+   "category": "plan",
+   "message": "Dame la ruta más rápida para hoy, tengo hora y media",
+   "seconds": 61.9,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 90,
+      "profile": "fast"
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 359.4 min de los 90 disponibles: Valle de la Luna (T05). Rover por la ruta rápida (330.1 min, vuelve con 70.5% de batería); en las caminatas el oxígeno más bajo queda en 93.2%. Quedaron fuera Namib Dune (S06, por falta de tiempo), Rocknest sand shadow (S02, por falta de tiempo), Murray Buttes (S07, por falta de tiempo), Kimberley · Windjana drill (S04, por falta de tiempo), Hottah conglomerate (S01, por falta de tiempo), Altadena (T02, por falta de tiempo), Vera Rubin Ridge · Highfield drill (S08, por falta de tiempo), Pahrump Hills · Confidence Hills drill (S05, por falta de tiempo), Mont Mercou · Nontron drill (S10, por falta de tiempo), Glen Torridon (S09, por falta de tiempo), Yellowknife Bay (S03, por falta de tiempo), Gediz Vallis · pure sulfur field (S11, por falta de tiempo), Monte Grande polygons (T07, por falta de tiempo), Nevado Sajama (T06, por falta de tiempo)."
+  },
+  {
+   "id": "plan-11",
+   "category": "plan",
+   "message": "Organiza la jornada de exploración",
+   "seconds": 55.1,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 362.4 min de los 180 disponibles: Valle de la Luna (T05). Rover por la ruta segura (333.1 min, vuelve con 70.1% de batería); en las caminatas el oxígeno más bajo queda en 93.2%. Quedaron fuera Namib Dune (S06, por falta de tiempo), Rocknest sand shadow (S02, por falta de tiempo), Murray Buttes (S07, por falta de tiempo), Kimberley · Windjana drill (S04, por falta de tiempo), Hottah conglomerate (S01, por falta de tiempo), Altadena (T02, por falta de tiempo), Vera Rubin Ridge · Highfield drill (S08, por falta de tiempo), Pahrump Hills · Confidence Hills drill (S05, por falta de tiempo), Mont Mercou · Nontron drill (S10, por falta de tiempo), Glen Torridon (S09, por falta de tiempo), Yellowknife Bay (S03, por falta de tiempo), Gediz Vallis · pure sulfur field (S11, por falta de tiempo), Monte Grande polygons (T07, por falta de tiempo), Nevado Sajama (T06, por falta de tiempo)."
+  },
+  {
+   "id": "plan-12",
+   "category": "plan",
+   "message": "Plan tomorrow's EVA, there is a dust storm coming",
+   "seconds": 6.8,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "day": "tomorrow",
+      "speed_factor": 0.7
+     }
+    }
+   ],
+   "reply": "Done, I loaded a 1044.7-minute outing on the map: Valle de la Luna (T05), Nevado Sajama (T06), Monte Grande polygons (T07), Gediz Vallis · pure sulfur field (S11), Yellowknife Bay (S03), Glen Torridon (S09), Mont Mercou · Nontron drill (S10), Pahrump Hills · Confidence Hills drill (S05), Vera Rubin Ridge · Highfield drill (S08), Altadena (T02), Hottah conglomerate (S01), Kimberley · Windjana drill (S04), Murray Buttes (S07), Rocknest sand shadow (S02), Namib Dune (S06). Rover on the safest route (33499 m, 19° slope, 80% safety); the lowest oxygen on the walks is 82.8%. I planned everything with the dust storm (70% speed). I saved it in the calendar for tomorrow (sol 5075); today's data is used."
+  },
+  {
+   "id": "view-01",
+   "category": "view",
+   "message": "Cambia a la ruta científica",
+   "seconds": 0.8,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "scientific"
+     }
+    }
+   ],
+   "reply": "Listo: cambié a la ruta científica."
+  },
+  {
+   "id": "view-02",
+   "category": "view",
+   "message": "Inicia la simulación",
+   "seconds": 0.3,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "screen": "go"
+     }
+    }
+   ],
+   "reply": "Listo: inicié la simulación."
+  },
+  {
+   "id": "view-03",
+   "category": "view",
+   "message": "Switch to the safest route",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "safe"
+     }
+    }
+   ],
+   "reply": "Done: switched to the safest route."
+  },
+  {
+   "id": "view-04",
+   "category": "view",
+   "message": "Muéstrame las caminatas",
+   "seconds": 0.5,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "screen": "walk"
+     }
+    }
+   ],
+   "reply": "Listo: abrí la pantalla de caminatas."
+  },
+  {
+   "id": "view-05",
+   "category": "view",
+   "message": "Usa la ruta rápida y arranca la misión",
+   "seconds": 0.4,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "profile": "fast",
+      "screen": "go"
+     }
+    }
+   ],
+   "reply": "Listo: inicié la simulación con la ruta rápida."
+  },
+  {
+   "id": "current-01",
+   "category": "current_plan",
+   "message": "¿Cuánto oxígeno le queda a la caminata?",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_current_plan",
+     "args": {}
+    }
+   ],
+   "reply": "Oxígeno al terminar cada caminata: P1 72.4%, P2 84.3%. La más exigente es P1; todas vuelven con la reserva de seguridad."
+  },
+  {
+   "id": "current-02",
+   "category": "current_plan",
+   "message": "¿Qué ruta elegí para el rover?",
+   "seconds": 0.9,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_current_plan",
+     "args": {}
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 168 min: Valle de la Luna (T05), Nevado Sajama (T06) y Altadena (T02). Rover por la ruta segura (32.5 min, vuelve con 90.2% de batería)."
+  },
+  {
+   "id": "current-03",
+   "category": "current_plan",
+   "message": "How long is the whole plan?",
+   "seconds": 0.9,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_current_plan",
+     "args": {}
+    }
+   ],
+   "reply": "Done, I loaded a 168-minute outing on the map: Monte Grande polygons (T07). Rover on the safest route (32.5 min, back with 90.2% battery); the lowest oxygen on foot is 72.4%."
+  },
+  {
+   "id": "current-04",
+   "category": "current_plan",
+   "message": "¿Con cuánta batería vuelve el rover?",
+   "seconds": 1.4,
+   "scores": {
+    "routing": false,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "mobility_and_resources"
+     }
+    }
+   ],
+   "reply": "El modelo Rover tiene 30 kWh de capacidad y corre a 2,5 m/s nominales. Usa 0,35 kWh por km rodando, más la energía de subir pendientes (3000 kg, 3,721 m/s2, 80% de eficiencia) y 0,4 kW de consumo del alojamiento. Máxima pendiente 18 grados."
+  },
+  {
+   "id": "weather-01",
+   "category": "conditions",
+   "message": "¿Cómo está el clima en este momento?",
+   "seconds": 1.4,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {}
+    }
+   ],
+   "reply": "Sol 5074, 09:30: temperatura -23.4 °C; viento 4.2 m/s; polvo 0.45 τ; radiación 0.64 mSv/sol. Veredicto GO: no hay pronóstico. Es la medición del sol actual, no del forecast."
+  },
+  {
+   "id": "weather-02",
+   "category": "conditions",
+   "message": "¿Podemos salir hoy?",
+   "seconds": 1.1,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {}
+    }
+   ],
+   "reply": "Sol 5074, 09:30: temperatura -23.4 °C; viento 4.2 m/s; polvo 0.45 τ; radiación 0.64 mSv/sol. Veredicto GO: se puede salir. Es la medición del sol actual, no un pronóstico."
+  },
+  {
+   "id": "weather-03",
+   "category": "conditions",
+   "message": "What's the radiation level right now?",
+   "seconds": 1.2,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {}
+    }
+   ],
+   "reply": "Sol 5074, 09:30: cold -23.4 °C; wind 4.2 m/s; dust 0.45 τ; radiation 0.64 mSv/sol. Verdict GO: it is safe to go out. This is the current sol's reading, not a forecast."
+  },
+  {
+   "id": "weather-04",
+   "category": "conditions",
+   "message": "¿Hay mucho polvo afuera?",
+   "seconds": 1.1,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "get_mission_conditions",
+     "args": {}
+    }
+   ],
+   "reply": "Sol 5074, 09:30: temperatura -23.4 °C; viento 4.2 m/s; polvo 0.45 τ; radiación 0.64 mSv/sol. Veredicto GO: se puede salir. Es la medición del sol actual, no un pronóstico."
+  },
+  {
+   "id": "targets-01",
+   "category": "targets",
+   "message": "¿Cuáles son los objetivos más importantes?",
+   "seconds": 4.9,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {}
+    }
+   ],
+   "reply": "Objetivos por prioridad:\n1. Valle de la Luna (T05): prioridad 14/15, tarea de 25 min\n2. Nevado Sajama (T06): prioridad 14/15, tarea de 25 min\n3. Yellowknife Bay (S03): prioridad 13/15, tarea de 30 min\n4. Glen Torridon (S09): prioridad 13/15, tarea de 30 min\n5. Mont Mercou · Nontron drill (S10): prioridad 13/15, tarea de 45 min\n6. Gediz Vallis · pure sulfur field (S11): prioridad 13/15, tarea de 25 min\n7. Monte Grande polygons (T07): prioridad 13/15, tarea de 20 min\n8. Pahrump Hills · Confidence Hills drill (S05): prioridad 12/15, tarea de 30 min\n9. Vera Rubin Ridge · Highfield drill (S08): prioridad 11/15, tarea de 25 min\n10. Altadena (T02): prioridad 11/15, tarea de 30 min\n11. Hottah conglomerate (S01): prioridad 10/15, tarea de 20 min\n12. Kimberley · Windjana drill (S04): prioridad 10/15, tarea de 25 min\n13. Murray Buttes (S07): prioridad 10/15, tarea de 40 min\n14. Rocknest sand shadow (S02): prioridad 9/15, tarea de 15 min\n¿Quieres que prepare una salida con ellos?"
+  },
+  {
+   "id": "targets-02",
+   "category": "targets",
+   "message": "Which rocks can we sample here?",
+   "seconds": 2.8,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {}
+    }
+   ],
+   "reply": "Targets and their priorities:\r\n1. Valle de la Luna (drill, Monte Grande hollow) (T05): priority 14, 25 min task\r\n2. Nevado Sajama (drill, ridge) (T06): priority 14, 25 min task\r\n3. Yellowknife Bay (John Klein & Cumberland drills) (S03): priority 13, 30 min task\r\n4. Glen Torridon (Aberlady & Kilmarie drills) (S09): priority 13, 30 min task\r\n5. Mont Mercou · Nontron drill (S10): priority 13, 45 min task\r\n6. Gediz Vallis · pure sulfur field (S11): priority 13, 25 min task\nWant me to plan an outing with them?"
+  },
+  {
+   "id": "targets-03",
+   "category": "targets",
+   "message": "¿Qué hay que hacer en T05?",
+   "seconds": 1.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "list_science_targets",
+     "args": {}
+    }
+   ],
+   "reply": "Objetivo: Valle de la Luna (drill, Monte Grande hollow) (T05). Categoría: Drill site in hollow (eroded boxwork interior). Prioridad: 14/15. Tarea: 25 min. Descripción: Drill in the Monte Grande hollow; paired with Nevado Sajama to learn why boxwork ridges resist erosion."
+  },
+  {
+   "id": "howto-01",
+   "category": "how_to",
+   "message": "¿Cómo marco una zona peligrosa en el mapa?",
+   "seconds": 1.0,
+   "scores": {
+    "routing": true,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "map_and_weather"
+     }
+    }
+   ],
+   "reply": "Con la opción Try a scenario, puedes probar la misión con polvo, hora del día y destello solar, y las cifras son estimaciones, no mediciones reales. El botón Back to normal vuelve a la tarjeta real."
+  },
+  {
+   "id": "howto-02",
+   "category": "how_to",
+   "message": "Dame los pasos para planificar una caminata",
+   "seconds": 0.9,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "using_senda"
+     }
+    }
+   ],
+   "reply": "SENDA se usa en cuatro pasos, mostrados en el bar de arriba del mapa: **Goals → Rover → Spacewalks → Start**. Un verde en cada paso marca que está terminado."
+  },
+  {
+   "id": "howto-03",
+   "category": "how_to",
+   "message": "How do I start the simulation?",
+   "seconds": 0.7,
+   "scores": {
+    "routing": false,
+    "args": false,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "adjust_view",
+     "args": {
+      "screen": "go"
+     }
+    }
+   ],
+   "reply": "There is no plan on screen yet. Shall I prepare one for you?"
+  },
+  {
+   "id": "howto-04",
+   "category": "how_to",
+   "message": "¿Cómo veo la foto satelital?",
+   "seconds": 1.3,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "map_and_weather"
+     }
+    }
+   ],
+   "reply": "Con la opción Try a scenario, puedes probar la misión con polvo, hora del día y destello solar. Sus cifras son estimaciones, no mediciones reales; cambian el chequeo final (un destello solar fuerza NO GO) pero no las rutas. La barra Battery to come back muestra el batería del rover al terminar la ruta."
+  },
+  {
+   "id": "howto-05",
+   "category": "how_to",
+   "message": "¿Qué puedes hacer por mí?",
+   "seconds": 1.4,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "copilot"
+     }
+    }
+   ],
+   "reply": "El copilote funciona como compañero dentro de SENDA. Dime lo que necesitas y lo hago en el sistema; el resultado aparece en el mapa y en los paneles. Puedo: plan una salida completa (clima, objetivos, rover y caminatas), cambiar la ruta o la pantalla, decirte el clima actual, describir el plan en pantalla, listar los objetivos científicos y explicar cómo funciona SENDA. Las cifras siempre salen del planificador."
+  },
+  {
+   "id": "howto-06",
+   "category": "how_to",
+   "message": "¿Cómo cambio la base de lugar?",
+   "seconds": 0.9,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "using_senda"
+     }
+    }
+   ],
+   "reply": "SENDA se usa en cuatro pasos, mostrados en la barra de arriba del mapa: **Goals → Rover → Spacewalks → Start**. A continuación, dime dónde quieres ir y lo que hago."
+  },
+  {
+   "id": "explain-01",
+   "category": "explain",
+   "message": "¿Cómo calcula SENDA el porcentaje de seguridad de una ruta?",
+   "seconds": 0.9,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "route_profiles"
+     }
+    }
+   ],
+   "reply": "safety_pct = 100 × (1 − media de la distancia sobre 10 grados) × (1 − 0.5 × riesgo de la pendiente máxima). El 0.5 multiplica el riesgo de la pendiente máxima por la seguridad de la ruta."
+  },
+  {
+   "id": "explain-02",
+   "category": "explain",
+   "message": "¿Qué diferencia hay entre la ruta segura y la científica?",
+   "seconds": 1.3,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "route_profiles"
+     }
+    }
+   ],
+   "reply": "Las tres salen del algoritmo A* con costos distintos: fast solo mira el tiempo y acepta más pendiente; safe penaliza fuerte la pendiente (peso 6) y pasar a menos de 40 m de una zona de peligro, con una penalización x2; scientific tiene un peso medio de 1,5 y reduce el costo cerca de los objetivos científicos, pasándolos con el menor giro."
+  },
+  {
+   "id": "explain-03",
+   "category": "explain",
+   "message": "How is the oxygen of the suit calculated?",
+   "seconds": 1.0,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "mobility_and_resources"
+     }
+    }
+   ],
+   "reply": "Oxygen is calculated with the Pandolf equation: oxygen = energy / 20.1 kJ per liter, scaled to Mars gravity (0.38 g) with a 1.25 suit factor. Each science task costs 220 W."
+  },
+  {
+   "id": "explain-04",
+   "category": "explain",
+   "message": "¿Cuándo dice NO GO el sistema?",
+   "seconds": 1.4,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "explain_system",
+     "args": {
+      "topic": "readiness"
+     }
+    }
+   ],
+   "reply": "El veredicto es el peor de cuatro chequeos: frío (caution bajo −40 °C, no_go bajo −60 °C, REMS), viento (10 y 20 m/s, REMS), polvo (tau 1 y 3.5, Mastcam) y radiación (1 y 10 mSv por sol, RAD). Es una foto del sol actual, no un pronóstico. El plan para mañana usa el de hoy."
+  },
+  {
+   "id": "offtopic-01",
+   "category": "off_topic",
+   "message": "¿Cuál es la capital de Francia?",
+   "seconds": 0.8,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "No puedo ayudarte con eso. Mi trabajo es la misión en el cráter Gale: rutas, caminatas, clima y objetivos."
+  },
+  {
+   "id": "offtopic-02",
+   "category": "off_topic",
+   "message": "Write me a poem about cats",
+   "seconds": 0.6,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "I can't help with that. My job is the Gale crater mission: routes, weather, resources and targets."
+  },
+  {
+   "id": "offtopic-03",
+   "category": "off_topic",
+   "message": "¿Quién ganó el mundial de fútbol?",
+   "seconds": 0.8,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "No puedo ayudarte con eso. Mi trabajo es la misión en el cráter Gale: rutas, caminatas, clima y objetivos."
+  },
+  {
+   "id": "offtopic-04",
+   "category": "off_topic",
+   "message": "Recomiéndame una película",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": null
+   },
+   "tools": [],
+   "reply": "No puedo ayudarte con eso. Mi trabajo es la misión en el cráter Gale: rutas, caminatas, clima y objetivos."
+  },
+  {
+   "id": "calendar-01",
+   "category": "calendar",
+   "message": "¿Qué hay en el calendario para mañana?",
+   "seconds": 0.8,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "list_saved_plans",
+     "args": {
+      "day": "tomorrow"
+     }
+    }
+   ],
+   "reply": "Planes guardados (1):\n- Altadena and the ridge (mañana, sol 5075): T02, T04, 100 min\n¿Abro alguno?"
+  },
+  {
+   "id": "calendar-02",
+   "category": "calendar",
+   "message": "Guarda lo que tengo para mañana",
+   "seconds": 0.8,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "save_plan",
+     "args": {
+      "day": "tomorrow",
+      "title": "Planes de hoy"
+     }
+    }
+   ],
+   "reply": "Listo: guardé el plan para mañana (sol 5075, titulado «Planes de hoy»). Lo verás en My plans."
+  },
+  {
+   "id": "calendar-03",
+   "category": "calendar",
+   "message": "Load tomorrow's saved plan",
+   "seconds": 0.7,
+   "scores": {
+    "routing": true,
+    "args": null,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "open_saved_plan",
+     "args": {
+      "day": "tomorrow"
+     }
+    }
+   ],
+   "reply": "I opened “Altadena and the ridge” (sol 5075, 100 min). It is on the map now."
+  },
+  {
+   "id": "calendar-04",
+   "category": "calendar",
+   "message": "Necesito el plan de mañana, tenemos 3 horas",
+   "seconds": 56.9,
+   "scores": {
+    "routing": true,
+    "args": true,
+    "language": true,
+    "grounded": true
+   },
+   "tools": [
+    {
+     "name": "plan_outing",
+     "args": {
+      "day": "tomorrow",
+      "time_available_min": 180
+     }
+    }
+   ],
+   "reply": "Listo, cargué en el mapa una salida de 362.4 min de los 180 disponibles: Valle de la Luna (T05). Rover por la ruta segura (333.1 min, vuelve con 70.1% de batería); en las caminatas el oxígeno más bajo queda en 93.2%. Quedaron fuera Namib Dune (S06, por falta de tiempo), Rocknest sand shadow (S02, por falta de tiempo), Murray Buttes (S07, por falta de tiempo), Kimberley · Windjana drill (S04, por falta de tiempo), Hottah conglomerate (S01, por falta de tiempo), Altadena (T02, por falta de tiempo), Vera Rubin Ridge · Highfield drill (S08, por falta de tiempo), Pahrump Hills · Confidence Hills drill (S05, por falta de tiempo), Mont Mercou · Nontron drill (S10, por falta de tiempo), Glen Torridon (Aberlady & Kilmarie drills, S09, por falta de tiempo), Yellowknife Bay (S03, por falta de tiempo), Gediz Vallis · pure sulfur field (S11, por falta de tiempo), Monte Grande polygons (T07, por falta de tiempo), Nevado Sajama (T06, por falta de tiempo). Lo guardé en el calendario para mañana (sol 5075)."
+  }
+ ]
+}

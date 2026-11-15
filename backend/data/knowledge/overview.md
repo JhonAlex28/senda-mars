@@ -1,7 +1,7 @@
 # What SENDA is
 
-SENDA is a planning system for crewed surface operations on Mars at the Mount Sharp boxwork
-unit, Gale crater (a 2 km x 2 km site). It answers three questions for the crew:
+SENDA is a planning system for crewed surface operations on Mars in the Gale crater
+Exploration Zone around Mount Sharp. It answers three questions for the crew:
 
 1. Can we go out today? (EVA readiness: go / caution / no_go)
 2. Where should the rover park and which science targets should we visit?

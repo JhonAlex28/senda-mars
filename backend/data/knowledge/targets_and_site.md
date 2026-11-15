@@ -1,8 +1,12 @@
 # Science targets and the site
 
-Site: Mount Sharp boxwork unit, Gale crater, 2 km x 2 km, elevations about -3735 m to -3605 m.
-The base (T01, Rustic Canyon crater) is in the north-east; the terrain ramps up towards the
-boxwork ridges in the south-west, with steep buttes and a band of rough ground across the way.
+Site: the Gale crater Exploration Zone around Mount Sharp. The base is B00, the Human Landing
+Zone (Gale EZ base). Science targets follow Curiosity's traverse: S01-S11 (Hottah, Rocknest,
+Yellowknife Bay, Kimberley, Pahrump Hills, Namib Dune, Murray Buttes, Vera Rubin Ridge,
+Glen Torridon, Mont Mercou, Gediz Vallis) plus the boxwork targets T02 Altadena, T05 Valle de
+la Luna, T06 Nevado Sajama and T07 Monte Grande polygons. The rover drives the long legs on
+the regional terrain; spacewalks go from a parking spot to nearby targets. Target ids change
+when the catalogue is updated: always use the ids from the current target list.
 
 Each target has a priority rubric scored out of 15: novelty + habitability + human_only
 (how much it benefits from a human rather than a robot), each 1-5. Targets also have a

@@ -14,7 +14,7 @@
         "parking": "P1",
         "targets": [
           "T02",
-          "T03"
+          "S03"
         ],
         "profile": "safe",
         "duration_min": 74.0,
@@ -73,12 +73,12 @@
     {
       "id": "plan-04",
       "category": "plan",
-      "message": "Planifica una EVA a T03",
+      "message": "Planifica una EVA a S03",
       "expect": {
         "tool": "plan_outing",
         "args": {
           "target_ids": [
-            "T03"
+            "S03"
           ]
         }
       }
@@ -109,6 +109,20 @@
           "target_ids": [
             "T05",
             "T06"
+          ]
+        }
+      }
+    },
+    {
+      "id": "plan-07b",
+      "category": "plan",
+      "message": "Llévanos a Yellowknife Bay y a Murray Buttes",
+      "expect": {
+        "tool": "plan_outing",
+        "args": {
+          "target_ids": [
+            "S03",
+            "S07"
           ]
         }
       }

@@ -259,3 +259,12 @@ def test_chat_accepts_the_plan_summary_from_the_frontend():
     body = json.loads(res.json()["reply"])
     assert body["spacewalks"][0]["oxygen_left_pct"] == 88.0
     assert body["total_duration_min"] == 90.5
+
+
+def test_target_names_from_the_new_catalogue_resolve_to_their_ids():
+    # el modelo se entrenó con el catálogo anterior: si manda el nombre del sitio, vale igual
+    tools = _tools()
+    _, body = _run(tools, "plan_outing", target_ids=["Yellowknife Bay"])
+    assert body["targets"][0]["id"] == "S03"
+    result, _ = _run(tools, "plan_outing", target_ids=["T03"])   # id que ya no existe
+    assert result.is_error and "Valid target ids:" in result.content
