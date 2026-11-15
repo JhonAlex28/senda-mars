@@ -1,6 +1,6 @@
 import { runBrowserQaoaSolver } from '@/features/route-planning';
 import { GoalList, type Target } from '@/features/targets';
-import { SITES } from '@/features/globe/sites';
+import { SITES } from '@/features/globe';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { useMission } from '../state/MissionContext';
