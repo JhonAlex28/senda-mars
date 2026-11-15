@@ -10,14 +10,17 @@ export function MarsWeatherCard() {
   const { state, dispatch } = useMission();
   const { tau, lmstHour, speActive } = state.env;
 
-  // Diurnal Gale Crater REMS temperature curve (-68C at 06:00, +2C at 14:00) damped by dust opacity
+  // Diurnal Gale Crater REMS temperature curve (-84C pre-dawn to +4C afternoon; REMS range -90..+6C)
   const diurnalPhase = Math.sin(((lmstHour - 6) / 14) * Math.PI);
-  const baseTemp = -68 + 70 * Math.max(0, diurnalPhase);
+  const baseTemp = -84 + 88 * Math.max(0, diurnalPhase);
   const dustDamping = (tau - 0.62) * 8;
   const tempC = Math.round(baseTemp - dustDamping);
-  const pressurePa = Math.round(740 + 6 * Math.cos(((lmstHour - 12) / 12) * Math.PI));
+  // Gale Crater REMS seasonal/diurnal CO2 pressure cycle (680-1150 Pa; mean ~845 Pa)
+  const pressurePa = Math.round(845 + 18 * Math.cos(((lmstHour - 12) / 12) * Math.PI));
   const windMs = Number((4.2 + tau * 4.8).toFixed(1));
-  const radMsv = speActive ? 1.85 : Number((0.67 - Math.min(0.08, (tau - 0.62) * 0.03)).toFixed(2));
+  // Curiosity RAD surface GCR dose (0.64-0.67 mSv/sol), inversely modulated by atmospheric column pressure
+  const radBaseline = 0.67 - ((pressurePa - 820) / 100) * 0.02;
+  const radMsv = speActive ? 1.85 : Number(Math.max(0.64, radBaseline - Math.min(0.03, (tau - 0.62) * 0.015)).toFixed(2));
   const sevRangeKm = Math.round(100 * Math.exp(-0.21 * Math.max(0, tau - 0.62)));
 
   const dustBadge =
@@ -107,6 +110,9 @@ export function MarsWeatherCard() {
       >
         {speActive ? '⚠ SPE SOLAR FLARE ACTIVE (SEV CABIN)' : '☀ SIMULATE SPE RADIATION FLARE'}
       </button>
+      <div className="font-mono text-[9px] text-on-surface-variant/80">
+        MSL REMS (-90..+6°C, 680–1150 Pa) · RAD (0.64–0.67 mSv/sol)
+      </div>
     </Card>
   );
 }
