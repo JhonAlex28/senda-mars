@@ -11,6 +11,7 @@ from senda.application.planner_context import PlannerContext
 from senda.domain.errors import InvalidRequest, NoRouteFound
 from senda.domain.models.geo import GeoPoint
 from senda.domain.models.route import EvaRoute, RouteProfile, RoverRoute
+from senda.domain.models.terrain import TerrainGrid
 from senda.domain.services.eva_planner import Waypoint, plan_eva
 from senda.domain.services.rover_planner import plan_traverse
 
@@ -20,6 +21,7 @@ class EvaPlanResult:
     routes: list[EvaRoute]
     waypoints: list[Waypoint]
     staging_id: str
+    grid: TerrainGrid                  # grilla usada (local 1 m o recorte regional 10 m)
 
 
 class PlanEvaRoutes:
@@ -27,20 +29,19 @@ class PlanEvaRoutes:
         self._ctx = ctx
 
     def execute(self, target_ids: list[str], profiles: list[RouteProfile],
-                start_target_id: str | None = None, end_target_id: str | None = None,
-                scenario: str = "none") -> EvaPlanResult:
+                staging: GeoPoint, staging_id: str, scenario: str = "none") -> EvaPlanResult:
+        """staging (SEV estacionado) → objetivos → staging."""
         if not target_ids:
             raise InvalidRequest("target_ids must not be empty")
         if not profiles:
             raise InvalidRequest("profiles must not be empty")
-        start = self._ctx.target(start_target_id) if start_target_id else self._ctx.default_staging()
-        end = self._ctx.target(end_target_id) if end_target_id else start
-        wps = [self._ctx.waypoint(start)]
-        wps += [self._ctx.waypoint(self._ctx.target(t)) for t in target_ids if t not in (start.id, end.id)]
-        wps.append(self._ctx.waypoint(end))
+        targets = [self._ctx.target(t) for t in target_ids]
+        grid = self._ctx.eva_grid([staging, *(t.location for t in targets)])
+        home = Waypoint(id=staging_id, cell=self._ctx.eva_cell(grid, staging, staging_id))
+        wps = [home, *(self._ctx.waypoint(t, grid) for t in targets), home]
 
         params = self._ctx.params
-        eva_ctx = self._ctx.eva_context(wps[-1].cell, scenario)
+        eva_ctx = self._ctx.eva_context(home.cell, scenario, grid=grid)
         routes: list[EvaRoute] = []
         for prof in dict.fromkeys(profiles):
             try:
@@ -48,7 +49,7 @@ class PlanEvaRoutes:
                                        params.window.eva_max_duration_min))
             except ValueError as e:
                 raise NoRouteFound(f"EVA {prof.value}: {e}") from e
-        return EvaPlanResult(routes=routes, waypoints=wps, staging_id=end.id)
+        return EvaPlanResult(routes=routes, waypoints=wps, staging_id=staging_id, grid=grid)
 
 
 class PlanRoverLeg:

@@ -23,15 +23,26 @@ class PlanMission:
                 scenario: str = "none") -> MissionPlan:
         params = self._ctx.params
         base = base_lonlat or params.base_lonlat
-        staging = (self._ctx.target(staging_target_id) if staging_target_id
-                   else self._ctx.default_staging())
-        staging_ll = (staging.location.lon, staging.location.lat)
+        targets = [self._ctx.target(t) for t in target_ids]
+        dropped: list[str] = []
+        if staging_target_id:
+            st = self._ctx.target(staging_target_id)
+            staging_pt, staging_id = st.location, st.id
+            eva_ids = [t.id for t in targets if t.id != st.id]
+        else:
+            # el SEV estaciona donde lo propone R-4; esta misión hace la EVA del primer
+            # estacionamiento (los demás se planifican con /routes/traverse + /routes/eva)
+            parkings = self._ctx.parkings_for(targets)
+            staging_pt, staging_id = parkings[0].location, parkings[0].id
+            eva_ids = list(parkings[0].target_ids)
+            dropped = [t for pk in parkings[1:] for t in pk.target_ids]
+        staging_ll = (staging_pt.lon, staging_pt.lat)
 
         traverse = PlanRoverLeg(self._ctx)
         out = traverse.execute(base, staging_ll)
         back = traverse.execute(staging_ll, base, battery_used_before_kwh=out.metrics.energy_kwh)
 
-        eva = PlanEvaRoutes(self._ctx).execute(target_ids, profiles, staging.id, staging.id, scenario)
+        eva = PlanEvaRoutes(self._ctx).execute(eva_ids, profiles, staging_pt, staging_id, scenario)
         by_profile = {r.profile: r for r in eva.routes}
         chosen = by_profile.get(timeline_profile) or eva.routes[0]
 
@@ -45,10 +56,14 @@ class PlanMission:
         if not chosen.metrics.feasible:
             warnings.append(Warning("EVA_INFEASIBLE",
                                     f"EVA ({chosen.profile.value}): {', '.join(chosen.infeasible_reasons)}"))
+        if dropped:
+            warnings.append(Warning("OTHER_PARKINGS",
+                                    f"Targets {', '.join(dropped)} need another parking; "
+                                    "plan them with /routes/traverse + /routes/eva."))
         if base_lonlat is not None:
             warnings.append(Warning("CUSTOM_BASE", "Base overridden by request."))
         feasible = out.metrics.feasible and back.metrics.feasible and chosen.metrics.feasible
-        return MissionPlan(base_lonlat=base, staging_id=staging.id, staging_lonlat=staging_ll,
+        return MissionPlan(base_lonlat=base, staging_id=staging_id, staging_lonlat=staging_ll,
                            traverse_out=out, traverse_back=back, eva_routes=eva.routes,
                            timeline_profile=chosen.profile, timeline=timeline,
-                           feasible=feasible, warnings=warnings)
+                           feasible=feasible, warnings=warnings, eva_grid=eva.grid)

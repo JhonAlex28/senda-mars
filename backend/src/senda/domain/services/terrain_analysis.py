@@ -137,3 +137,30 @@ def downsample(grid, factor: int, caution_deg: float | None = None,
     return _replace(grid, spec=spec, dem=dem.astype(np.float32), classes=classes,
                     risk=risk.astype(np.float32),
                     confidence=blocks(grid.confidence).min(axis=2).astype(np.float32))
+
+
+def crop(grid, r0: int, r1: int, c0: int, c1: int):
+    """Ventana [r0:r1, c0:c1] de una grilla, alineada a sus celdas (misma resolución)."""
+    from dataclasses import replace as _replace
+
+    from senda.domain.models.grid import GridSpec
+
+    r0, c0 = max(0, r0), max(0, c0)
+    r1, c1 = min(grid.spec.rows, r1), min(grid.spec.cols, c1)
+    cs = grid.spec.cell_size_m
+    spec = GridSpec(origin_x=grid.spec.origin_x + c0 * cs, origin_y=grid.spec.origin_y - r0 * cs,
+                    cell_size_m=cs, rows=r1 - r0, cols=c1 - c0, radius_m=grid.spec.radius_m)
+    win = (slice(r0, r1), slice(c0, c1))
+    return _replace(grid, spec=spec, dem=grid.dem[win].copy(), classes=grid.classes[win].copy(),
+                    risk=grid.risk[win].copy(), confidence=grid.confidence[win].copy())
+
+
+def for_walking(grid, caution_deg: float, nogo_deg: float):
+    """Reclasifica una grilla de rover con los umbrales HUMANOS (EVA fuera del 1 m local).
+    Riesgo = clip(pendiente / nogo, 0, 1): la misma fórmula que usa Mec. A en su grilla local."""
+    from dataclasses import replace as _replace
+
+    s = slope_deg(grid.dem, grid.spec.cell_size_m)
+    risk = np.clip(np.nan_to_num(s, nan=nogo_deg) / nogo_deg, 0.0, 1.0).astype(np.float32)
+    return _replace(grid, classes=classify_slope(grid.dem, grid.spec.cell_size_m, caution_deg, nogo_deg),
+                    risk=risk)

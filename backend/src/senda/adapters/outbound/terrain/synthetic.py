@@ -13,13 +13,13 @@ import math
 
 import numpy as np
 
-from senda.domain.models.geo import BoundingBox
+from senda.domain.models.geo import BoundingBox, GeoPoint
 from senda.domain.models.grid import GridSpec
 from senda.domain.models.terrain import CLASS_NOGO, Scale, TerrainGrid
 from senda.domain.services.terrain_analysis import classify_slope, derive_risk
 
-LOCAL_BBOX = BoundingBox(137.37204, -4.8126, 137.40596, -4.7788)        # env.json → site
-REGIONAL_BBOX = BoundingBox(137.36, -4.82, 137.43, -4.58)               # doc §4.2
+LOCAL_BBOX = BoundingBox(137.37204, -4.8126, 137.40596, -4.7788)        # boxwork (grilla local)
+REGIONAL_BBOX = BoundingBox(137.34, -4.822, 137.462, -4.578)            # env.json → site (v1)
 BASE_ELEV_M = -4500.0                                                    # a verificar con DEM
 
 
@@ -30,7 +30,8 @@ class SyntheticTerrainProvider:
                  rover_slopes: tuple[float, float] = (15.0, 25.0),
                  base_lonlat: tuple[float, float] = (137.42009295, -4.59310427)) -> None:
         """anchors: (lon, lat, elev_m) de los objetivos, para que el DEM sea coherente."""
-        self._anchors = anchors
+        # solo los objetivos del boxwork ajustan el DEM local (y el más bajo marca su pie)
+        self._anchors = [a for a in anchors if LOCAL_BBOX.contains(GeoPoint(a[0], a[1]))] or anchors
         self._local_cell = local_cell_m
         self._regional_cell = regional_cell_m
         self._human = human_slopes

@@ -17,6 +17,6 @@ def plan_mission(req: MissionRequest, uc: PlanMission = Depends(plan_mission_uc)
     m = uc.execute(req.target_ids, req.profiles, req.staging_target_id,
                    tuple(req.base) if req.base else None, req.departure.sol,
                    ltst_to_hours(req.departure.ltst), req.timeline_profile, req.scenario)
-    local, regional = ctx.local(), ctx.regional()
-    return MissionResponse.from_domain(m, grid_info(local), grid_info(regional), local.spec, regional.spec,
-                                       assumptions(ctx, local, regional))
+    eva_grid, regional = m.eva_grid or ctx.local(), ctx.regional()
+    return MissionResponse.from_domain(m, grid_info(eva_grid), grid_info(regional), eva_grid.spec,
+                                       regional.spec, assumptions(ctx, eva_grid, regional))

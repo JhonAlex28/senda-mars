@@ -16,8 +16,9 @@ def simulate(req: SimulateRequest, uc: SimulateEva = Depends(simulate_uc),
              ctx: PlannerContext = Depends(planner_ctx)) -> SimulateResponse:
     out = uc.execute(req.route.profile, [tuple(c) for c in req.route.cells],
                      [StopInput(s.target_id, s.path_index) for s in req.route.stops],
-                     req.scenario, req.scenario_at_index)
-    spec = ctx.local().spec
+                     req.scenario, req.scenario_at_index,
+                     [tuple(p) for p in req.route.path] if req.route.path else None)
+    spec = out.grid.spec
     r = out.result
     diversion = None
     if r.diverted_at_index is not None:
@@ -27,4 +28,4 @@ def simulate(req: SimulateRequest, uc: SimulateEva = Depends(simulate_uc),
         scenario=req.scenario,
         timeline=[SimRowOut.from_domain(row, spec) for row in r.rows],
         replanned_route=EvaRouteOut.from_domain(out.replanned, spec) if out.replanned else None,
-        diversion=diversion, assumptions=assumptions(ctx, ctx.local()))
+        diversion=diversion, assumptions=assumptions(ctx, out.grid))

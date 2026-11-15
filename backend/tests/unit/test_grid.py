@@ -56,3 +56,20 @@ def test_downsample_reclassifies_metric_roughness():
     assert nogo_mask(fixed.classes, 0).mean() < nogo_mask(worst.classes, 0).mean()
     assert fixed.classes[0, 0] == CLASS_NODATA
     assert np.isclose(fixed.risk[1, 1], g.risk[4:8, 4:8].mean())
+
+
+def test_crop_keeps_georeferencing_and_for_walking_uses_human_thresholds():
+    import numpy as np
+
+    from senda.domain.services.terrain_analysis import crop, for_walking, slope_deg
+    from tests.fixtures.synthetic import synthetic_grid
+
+    g = synthetic_grid()
+    c = crop(g, 5, 25, 7, 30)
+    assert c.spec.shape == (20, 23)
+    assert c.spec.cell_to_lonlat((0, 0)) == g.spec.cell_to_lonlat((5, 7))
+    assert np.array_equal(c.dem, g.dem[5:25, 7:30])
+    w = for_walking(c, 10.0, 20.0)
+    s = slope_deg(w.dem, w.spec.cell_size_m)
+    assert ((s > 20.0) == (w.classes == 2)).all()
+    assert float(w.risk.max()) <= 1.0

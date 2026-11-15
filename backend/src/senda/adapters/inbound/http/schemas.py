@@ -245,6 +245,7 @@ class RouteOut(BaseModel):
     pnr_index: int | None = Field(None, description="Primer punto sin retorno seguro (null = ninguno)")
     reserve_min: float | None = Field(None, description="Reserva mínima de retorno en la ruta (L o kWh)")
     infeasible_reasons: list[str] = []
+    terrain_cell_m: float | None = Field(None, description="Resolución del terreno usado: 4 m boxwork, 10 m regional")
 
     @classmethod
     def from_domain(cls, r: RoutePlan) -> "RouteOut":
@@ -273,6 +274,7 @@ class RouteOut(BaseModel):
             pnr_index=r.pnr_index,
             reserve_min=None if r.reserve_min is None else round(r.reserve_min, 3),
             infeasible_reasons=r.infeasible_reasons,
+            terrain_cell_m=r.terrain_cell_m,
         )
 
 
@@ -636,6 +638,7 @@ class SimRouteIn(BaseModel):
     """Basta con enviar la EvaRouteOut devuelta por /routes (se usan cells y stops)."""
     profile: RouteProfile = RouteProfile.SAFE
     cells: list[tuple[int, int]] = Field(min_length=2)
+    path: list[LonLat] | None = Field(None, description="Si viene, ubica la EVA en su grilla (local o regional)")
     stops: list[SimStopIn] = Field(default_factory=list)
 
     model_config = {"extra": "ignore"}

@@ -110,6 +110,7 @@ class RoutePlan:
     pnr_index: int | None = None
     reserve_min: float | None = None          # reserva mínima de retorno (L o kWh)
     infeasible_reasons: list[str] = field(default_factory=list)
+    terrain_cell_m: float | None = None       # resolución del terreno usado (4 = boxwork, 10 = regional)
 
 
 @dataclass(frozen=True)

@@ -5,16 +5,24 @@ from senda.adapters.inbound.http.dependencies import list_scenarios_uc, return_f
 from senda.adapters.inbound.http.png import field_png, mask_png
 from senda.adapters.inbound.http.schemas import ReturnFieldResponse, ScenarioOut
 from senda.application.use_cases.return_field import GetReturnField, ListScenarios
+from senda.domain.models.geo import GeoPoint
 
 router = APIRouter(tags=["safety"])
 PREFIX = "/api/v1"
+LON = Query(None, description="EVA: longitud del SEV estacionado (por defecto, el del boxwork)")
+LAT = Query(None, description="EVA: latitud del SEV estacionado")
+
+
+def _staging(lon: float | None, lat: float | None) -> GeoPoint | None:
+    return GeoPoint(lon, lat) if lon is not None and lat is not None else None
 
 
 @router.get("/return-field", response_model=ReturnFieldResponse)
 def return_field(leg: str = Query("eva", pattern="^(eva|rover)$"), scenario: str = "none",
+                 lon: float | None = LON, lat: float | None = LAT,
                  uc: GetReturnField = Depends(return_field_uc)) -> ReturnFieldResponse:
-    f = uc.execute(leg, scenario)
-    q = f"leg={leg}&scenario={f.scenario}"
+    f = uc.execute(leg, scenario, _staging(lon, lat))
+    q = f"leg={leg}&scenario={f.scenario}" + (f"&lon={lon}&lat={lat}" if _staging(lon, lat) else "")
     b = f.bbox
     return ReturnFieldResponse(leg=leg, scenario=f.scenario,
                                png_url=f"{PREFIX}/return-field/image.png?{q}",
@@ -25,15 +33,17 @@ def return_field(leg: str = Query("eva", pattern="^(eva|rover)$"), scenario: str
 
 @router.get("/return-field/image.png", response_class=Response)
 def return_field_png(leg: str = Query("eva", pattern="^(eva|rover)$"), scenario: str = "none",
+                     lon: float | None = LON, lat: float | None = LAT,
                      uc: GetReturnField = Depends(return_field_uc)) -> Response:
-    f = uc.execute(leg, scenario)
+    f = uc.execute(leg, scenario, _staging(lon, lat))
     return Response(field_png(f.values, f.max_value), media_type="image/png")
 
 
 @router.get("/return-field/safe-mask.png", response_class=Response)
 def safe_mask_png(leg: str = Query("eva", pattern="^(eva|rover)$"), scenario: str = "none",
+                  lon: float | None = LON, lat: float | None = LAT,
                   uc: GetReturnField = Depends(return_field_uc)) -> Response:
-    f = uc.execute(leg, scenario)
+    f = uc.execute(leg, scenario, _staging(lon, lat))
     return Response(mask_png(f.safe_mask), media_type="image/png")
 
 

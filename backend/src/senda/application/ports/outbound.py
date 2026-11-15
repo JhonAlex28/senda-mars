@@ -27,6 +27,7 @@ class TerrainProvider(Protocol):
     local = boxwork (EVA, classes_human); regional = Zona de Exploración (rover, classes_rover)."""
     def get_grid(self, scale: Scale) -> TerrainGrid: ...
     def site_bounds(self) -> BoundingBox: ...   # área de misión = unión de las grillas
+    def native_grid(self, scale: Scale) -> TerrainGrid: ...   # sin submuestrear (recortes EVA)
 
 
 class MissionParamsRepository(Protocol):

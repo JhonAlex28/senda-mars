@@ -41,7 +41,7 @@ def _assistant_model(s: Settings) -> AssistantModel | None:
 
 
 def build_container(s: Settings) -> Container:
-    targets = JsonTargetRepository(s.data_dir / "targets_v0.geojson")
+    targets = JsonTargetRepository(s.data_dir / "targets_v1.geojson")
     params = JsonMissionParamsRepository(s.data_dir / "env.json", s.data_dir / "mission_params.json")
     p = params.get()
     human = (p.eva.slope_caution_deg, p.eva.slope_nogo_deg)

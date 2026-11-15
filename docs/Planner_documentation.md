@@ -6,6 +6,8 @@
 >
 > **Etiquetas de dato** (mismo criterio que `kind` en `env.json`): **medido** (instrumento NASA), **modelado** (derivado con un modelo publicado), **supuesto** (decisión nuestra, declarada en la UI), **a verificar** (falta confirmar contra una fuente primaria; no presentarlo como dato).
 
+> **Actualización v1 (2026-11-15):** el catálogo pasó a `targets_v1.geojson`, con la base **B00** y 15 objetivos reales de Curiosity (S01–S11, T02, T05–T07). **T01 y T08 ya no existen.** El SEV estaciona donde propone R-4 (`P1…Pn`), no en un objetivo `is_base`. Donde este documento diga T01 como staging, aplica §4.7.
+
 ---
 
 ## 0. Contexto del proyecto
@@ -448,6 +450,49 @@ Los DTOs viven en `adapters/inbound/http/schemas.py`. El frontend los espeja en 
 6. El Full stack dibuja las rutas en el mapa, el comparador y el cronograma. Si el usuario pulsa "Ejecutar", llama a `POST /simulate` con la ruta elegida.
 
 ---
+
+### 4.7 Actualización v1: objetivos, terreno ampliado y EVA en todo el sitio
+**Objetivos.** El Estudiante entregó `backend/data/targets_v1.geojson`, versión final; es el que carga `container.py`.
+- **B00** (`is_base`) es la **base** (LZ Calef, 137.42009295, −4.59310427, −4 497.77 m). Ya no es el staging de la EVA.
+- Coordenadas: los 15 objetivos coinciden con NASA MMGIS `MSL_waypoints.json`, y el DEM coincide con su elevación con ±1 m (`tests/integration/test_dem_terrain.py`).
+- Se quitaron del v0 los campos de blindaje y geoquímica sin fuente. Por eso `shielding_pct = 0` y no hay refugios `is_shelter`: en `sep_event`, la EVA se desvía al SEV.
+- Del patch del Estudiante **no** se aplicaron su `synthetic.py` ni los archivos del frontend, que están a cargo del Full stack.
+
+**Terreno v1.1 (Mec. A, `tools/terrain/` reproducible).**
+
+| Grilla | Resolución | Tamaño | Cubre |
+|---|---|---|---|
+| Regional | 10 m | 1442 × 724 | `[137.3399, −4.8211, 137.4620, −4.5778]`: la base y los 15 objetivos |
+| Local | 1 m | Sin cambios | Solo el boxwork, ~2 × 2 km |
+
+- **Cobertura máxima posible:** la fuente (USGS MSL Gale Merged DEM 1 m, `.vrt` oficial) cubre lon 137.124–137.681 y lat −4.130 a −5.099, unos **33 × 57 km**.
+- **Desde la base hay** 17.5 km al W, 15.4 km al E, 27.5 km al N y 30 km al S. Un radio de 15 km cabe completo; uno de 20 km queda recortado en E–W.
+- **Un radio de 100 km no es posible con esta fuente.** Haría falta el DEM global HRSC+MOLA de 200 m, como una tercera escala del mismo contrato.
+
+**Selección de grilla para la EVA** (`PlannerContext.eva_grid`):
+
+| Caso | Grilla usada | Umbrales | `terrain_cell_m` |
+|---|---|---|---|
+| Todos los puntos (SEV + objetivos) dentro del boxwork | Local (1 m, planificada a 4 m) | Humanos de Mec. A | 4 |
+| Algún punto fuera | Recorte de la **regional a 10 m nativos** (puntos + 500 m de margen, sin submuestrear) | Reclasificada con humanos: 10/20°, riesgo = pendiente / 20 | 10 |
+
+- Con 10 m, la EVA pierde el relieve métrico (crestas y escalones de unos pocos metros) que sí ve el DEM de 1 m. Hasta que Mec. A entregue recortes de 1 m para S01–S11, esas EVA son **orientativas**.
+- `POST /simulate` acepta `route.path` (`[lon, lat]`) para ubicar la EVA en su grilla.
+- `GET /return-field` acepta `lon` y `lat` del SEV estacionado. Si no se dan, usa el estacionamiento del boxwork.
+- **`/mission/plan`:** sin `staging_target_id`, estaciona en el primer `P` propuesto y planifica la EVA de sus objetivos. Los demás objetivos se listan en el warning `OTHER_PARKINGS`.
+
+**Orden de visita (`parking.order_tour`).** `/routes/traverse` ordena los estacionamientos con vecino más cercano y 2-opt desde la base, y los renumera P1…Pn en ese orden.
+- Visitar en orden de prioridad hacía subir y bajar el Monte Sharp: con los 15 objetivos gastaba unos 92 kWh, por encima de los 70 kWh utilizables, y el asistente descartaba 6 objetivos.
+- Con el tour ordenado son 33.6 km y 32.6 kWh, y caben todos.
+
+**Rendimiento.**
+- Traverse con los 15 objetivos (12 estacionamientos): unos 5.4 s. Casi todo es A\* (39 tramos × 3 perfiles), apenas por encima de la meta de 5 s.
+- EVA en recorte regional: menos de 0.3 s.
+- Optimización pendiente: precomputar `flat` por contexto en `grid_astar` o usar `numba`.
+
+**Integración con `main`.**
+- El asistente (`PlanOuting`) y Quantum Lab usan los mismos `PlanTraverse` y `PlanEva` sobre este motor.
+- `TraverseIn.speed_kmh` escala la velocidad nominal del SEV, con tope en `v_max`. Cualquier `vehicle_id` se planifica como el SEV presurizado (§0.4).
 
 ## 5. Parámetros seguros: vehículo vs humano
 

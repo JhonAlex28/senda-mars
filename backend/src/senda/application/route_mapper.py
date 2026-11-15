@@ -53,7 +53,7 @@ def _build(grid: TerrainGrid, mode: TravelMode, profile: RouteProfile, cells, wp
                      duration_min=t_min + dwell_min_total, max_slope_deg=max_slope, obstacles=obstacles,
                      safety_pct=round(safety), resource=Resource(name, unit, used + dwell_used, capacity),
                      return_ok=return_ok, pnr_index=pnr_index, reserve_min=reserve_min,
-                     infeasible_reasons=reasons)
+                     infeasible_reasons=reasons, terrain_cell_m=grid.spec.cell_size_m)
 
 
 def eva_to_plan(grid: TerrainGrid, route: EvaRoute, waypoints: list[Waypoint], kj_per_l: float,

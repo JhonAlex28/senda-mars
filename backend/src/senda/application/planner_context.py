@@ -1,7 +1,12 @@
 """Caché de contextos de planificación (arrays por grilla, punto de retorno y escenario).
 
 Los .npy se cargan una vez (TerrainProvider) y los arrays de costo / campos de retorno se
-calculan una vez por (staging, condiciones, hazards) y se reutilizan entre requests.
+calculan una vez por (grilla, staging, condiciones, hazards) y se reutilizan entre requests.
+
+Grilla de la EVA (`eva_grid`):
+  * todos los puntos dentro del boxwork → grilla LOCAL (DEM de 1 m, planificada a 4 m);
+  * si no → recorte de la grilla REGIONAL a su resolución nativa (10 m) alrededor del
+    estacionamiento y los objetivos, reclasificado con los umbrales humanos (10/20°).
 """
 from __future__ import annotations
 
@@ -24,10 +29,18 @@ from senda.domain.services.return_field import cost_to_source
 from senda.domain.services.rover_planner import RoverContext
 from senda.domain.services.scenarios import effect_of
 from senda.domain.services.simulation import Shelter
-from senda.domain.services.terrain_analysis import nogo_mask, science_raster, snap_to_passable
+from senda.domain.services.parking import propose_parkings
+from senda.domain.services.terrain_analysis import (crop, for_walking, nogo_mask, science_raster,
+                                                    snap_to_passable)
 
 Cell = tuple[int, int]
 MAX_CACHED = 24   # contextos por tipo (cada uno ocupa ~decenas de MB con grillas grandes)
+EVA_MARGIN_M = 500.0   # margen del recorte regional alrededor de los puntos de la EVA
+
+
+def grid_key(grid: TerrainGrid) -> tuple:
+    s = grid.spec
+    return (grid.scale.value, round(s.origin_x, 3), round(s.origin_y, 3), s.cell_size_m, s.rows, s.cols)
 
 
 class _LRU(OrderedDict):
@@ -67,7 +80,9 @@ class PlannerContext:
         self._eva = _LRU()
         self._rover = _LRU()
         self._shelters: dict[tuple, list[Shelter]] = {}
-        self._science: np.ndarray | None = None
+        self._science: dict[tuple, np.ndarray] = {}
+        self._crops: _LRU = _LRU()
+        self._eva_staging: tuple[GeoPoint, str] | None = None
 
     # ---- datos básicos -----------------------------------------------------
     @property
@@ -98,11 +113,30 @@ class PlannerContext:
     def all_targets(self) -> list[ScienceTarget]:
         return self._targets.list_all()
 
-    def default_staging(self) -> ScienceTarget:
-        for t in sorted(self.all_targets(), key=lambda t: t.id):
-            if t.is_base:
-                return t
-        raise InvalidRequest("No staging target (is_base=true) in targets file")
+    def base_target(self) -> ScienceTarget | None:
+        return next((t for t in sorted(self.all_targets(), key=lambda t: t.id) if t.is_base), None)
+
+    def science_targets(self) -> list[ScienceTarget]:
+        return [t for t in self.all_targets() if not t.is_base]
+
+    def parkings_for(self, targets: list[ScienceTarget]):
+        """Estacionamientos del SEV que propone el planificador para esos objetivos (R-4)."""
+        grid = self.regional()
+        blocked = {(int(r), int(c)) for r, c in np.argwhere(
+            nogo_mask(grid.classes, self.params.rover.nogo_dilation_cells))}
+        return propose_parkings(grid, targets, blocked)
+
+    def default_eva_staging(self) -> tuple[GeoPoint, str]:
+        """Staging EVA por defecto: el estacionamiento de los objetivos del boxwork (o del primero)."""
+        if self._eva_staging is None:
+            local = self.local()
+            science = self.science_targets()
+            if not science:
+                raise InvalidRequest("No science targets in targets file")
+            boxwork = [t for t in science if local.contains(t.location)] or science[:1]
+            pk = self.parkings_for(boxwork)[0]
+            self._eva_staging = (pk.location, pk.id)
+        return self._eva_staging
 
     def shelter_targets(self) -> list[ScienceTarget]:
         return [t for t in self.all_targets() if t.is_shelter]
@@ -118,58 +152,93 @@ class PlannerContext:
         return snapped
 
     def local_cell(self, p: GeoPoint, what: str) -> Cell:
-        return self.cell_for(self.local(), p.lon, p.lat, self.params.eva.nogo_dilation_cells, what)
+        return self.eva_cell(self.local(), p, what)
+
+    def eva_cell(self, grid: TerrainGrid, p: GeoPoint, what: str) -> Cell:
+        return self.cell_for(grid, p.lon, p.lat, self.params.eva.nogo_dilation_cells, what)
 
     def regional_cell(self, p: GeoPoint, what: str) -> Cell:
         return self.cell_for(self.regional(), p.lon, p.lat, self.params.rover.nogo_dilation_cells, what)
 
-    def waypoint(self, t: ScienceTarget) -> Waypoint:
-        return Waypoint(id=t.id, cell=self.local_cell(t.location, t.id), task_min=t.task_minutes,
+    def waypoint(self, t: ScienceTarget, grid: TerrainGrid | None = None) -> Waypoint:
+        grid = grid or self.local()
+        return Waypoint(id=t.id, cell=self.eva_cell(grid, t.location, t.id), task_min=t.task_minutes,
                         shielding_pct=t.shielding_pct, science_points=t.science_points)
 
+    # ---- grilla de la EVA --------------------------------------------------
+    def eva_grid(self, points: list[GeoPoint]) -> TerrainGrid:
+        """Local (1 m) si todos los puntos están en el boxwork; si no, recorte regional (10 m)."""
+        local = self.local()
+        if all(local.contains(p) for p in points):
+            return local
+        native = self._terrain.native_grid(Scale.REGIONAL)
+        for p in points:
+            if not native.contains(p):
+                raise OutsideSite(p.lon, p.lat)
+        cells = [native.spec.lonlat_to_cell(p.lon, p.lat) for p in points]
+        m = int(np.ceil(EVA_MARGIN_M / native.spec.cell_size_m))
+        r0, r1 = min(c[0] for c in cells) - m, max(c[0] for c in cells) + m + 1
+        c0, c1 = min(c[1] for c in cells) - m, max(c[1] for c in cells) + m + 1
+        e = self.params.eva
+
+        def build() -> TerrainGrid:
+            return for_walking(crop(native, r0, r1, c0, c1), e.slope_caution_deg, e.slope_nogo_deg)
+
+        with self._lock:
+            return self._crops.get_or((r0, r1, c0, c1), build)
+
     # ---- contextos cacheados ----------------------------------------------
-    def science(self) -> np.ndarray:
-        if self._science is None:
-            grid = self.local()
+    def science(self, grid: TerrainGrid | None = None) -> np.ndarray:
+        grid = grid or self.local()
+        key = grid_key(grid)
+        if key not in self._science:
             pts = []
             for t in self.all_targets():
                 c = grid.spec.lonlat_to_cell(t.location.lon, t.location.lat)
                 if grid.spec.contains(c):
                     pts.append((c, t.score_s))
-            self._science = science_raster(grid.spec.shape, grid.spec.cell_size_m, pts,
-                                           self.params.eva.science_radius_m)
-        return self._science
+            self._science[key] = science_raster(grid.spec.shape, grid.spec.cell_size_m, pts,
+                                                self.params.eva.science_radius_m)
+        return self._science[key]
 
     def eva_ctx(self, staging: Cell, speed_factor: float = 1.0, risk_multiplier: float = 1.0,
                 hazards: tuple[Hazard, ...] = (), keep: tuple[Cell, ...] = (),
-                blocked: np.ndarray | None = None) -> EvaContext:
-        """Contexto EVA con retorno al `staging` (el SEV estacionado)."""
+                blocked: np.ndarray | None = None, grid: TerrainGrid | None = None) -> EvaContext:
+        """Contexto EVA con retorno al `staging` (el SEV estacionado) en `grid` (local por defecto)."""
+        grid = grid or self.local()
+
         def build() -> EvaContext:
-            terrain = self.local()
+            terrain = grid
             if risk_multiplier != 1.0:
                 terrain = replace(terrain, risk=np.clip(terrain.risk * risk_multiplier, 0, 1).astype(np.float32))
             mask = hazard_mask(terrain, hazards, [staging, *keep])
             if blocked is not None:
                 mask = blocked if mask is None else (mask | blocked)
-            return EvaContext.build(terrain, self.params.eva, self.science(), staging, speed_factor, mask)
+            return EvaContext.build(terrain, self.params.eva, self.science(grid), staging, speed_factor, mask)
 
         if blocked is not None:
             return build()
-        key = (staging, round(speed_factor, 4), round(risk_multiplier, 4), hazards, keep)
+        # `keep` solo importa si hay peligros (celdas que nunca se bloquean)
+        key = (grid_key(grid), staging, round(speed_factor, 4), round(risk_multiplier, 4), hazards,
+               keep if hazards else ())
         with self._lock:
             return self._eva.get_or(key, build)
 
     def eva_context(self, staging: Cell, scenario: str = "none",
-                    blocked: np.ndarray | None = None) -> EvaContext:
+                    blocked: np.ndarray | None = None, grid: TerrainGrid | None = None) -> EvaContext:
         eff = effect_of(scenario, self.params.eva)
-        return self.eva_ctx(staging, eff.speed_factor, eff.risk_multiplier, blocked=blocked)
+        return self.eva_ctx(staging, eff.speed_factor, eff.risk_multiplier, blocked=blocked, grid=grid)
 
     def shelters(self, scenario_ctx: EvaContext, scenario: str) -> list[Shelter]:
-        key = (scenario_ctx.staging, scenario)
+        """Refugios alternativos (is_shelter) dentro de la grilla de esa EVA."""
+        grid = scenario_ctx.terrain
+        key = (grid_key(grid), scenario_ctx.staging, scenario)
         if key not in self._shelters:
             out = []
             for t in self.shelter_targets():
-                cell = self.waypoint(t).cell
+                if not grid.contains(t.location):
+                    continue
+                cell = self.waypoint(t, grid).cell
                 out.append(Shelter(id=t.id, cell=cell,
                                    return_o2=cost_to_source(scenario_ctx.energy, cell) / self.params.eva.kj_per_l_o2))
             self._shelters[key] = out
@@ -183,7 +252,7 @@ class PlannerContext:
             return RoverContext.build(grid, self.params.rover, base, speed_factor,
                                       hazard_mask(grid, hazards, [base, *keep]))
 
-        key = (base, round(speed_factor, 4), hazards, keep)
+        key = (base, round(speed_factor, 4), hazards, keep if hazards else ())
         with self._lock:
             return self._rover.get_or(key, build)
 

@@ -76,14 +76,17 @@ class CompositeTerrainProvider:
 
     def get_grid(self, scale: Scale) -> TerrainGrid:
         if scale not in self._cache:
-            use_real = self._root is not None and NpyTerrainProvider.available(self._root, scale)
-            src = self._real if use_real else self._fallback
-            grid = src.get_grid(scale)
+            grid = self.native_grid(scale)
             n = grid.spec.rows * grid.spec.cols
             factor = math.ceil(math.sqrt(n / self._max_cells)) if n > self._max_cells else 1
             caution, nogo = self._slopes.get(scale, (None, None))
             self._cache[scale] = downsample(grid, factor, caution, nogo)
         return self._cache[scale]
+
+    def native_grid(self, scale: Scale) -> TerrainGrid:
+        """Grilla a su resolución original (sin submuestrear), para recortes pequeños (EVA)."""
+        use_real = self._root is not None and NpyTerrainProvider.available(self._root, scale)
+        return (self._real if use_real else self._fallback).get_grid(scale)
 
     def site_bounds(self) -> BoundingBox:
         """Área de misión = unión de los bboxes de todas las escalas (doc §0.1)."""

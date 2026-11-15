@@ -21,7 +21,7 @@ from senda.domain.models.route import (Conditions, Hazard, RoutePlan, RouteProfi
                                        TraversePlan, TravelMode, Waypoint)
 from senda.domain.models.target import ScienceTarget
 from senda.domain.services import eva_planner as eva
-from senda.domain.services.parking import propose_parkings
+from senda.domain.services.parking import order_tour, propose_parkings
 from senda.domain.services.pathfinding import chain_astar
 from senda.domain.services.rover_planner import plan_rover_chain
 from senda.domain.services.terrain_analysis import nogo_mask
@@ -52,9 +52,10 @@ class _Planner:
     def eva_routes(self, waypoints: list[Waypoint], hazards: list[Hazard], cond: Conditions,
                    profiles: list[RouteProfile] | None) -> list[RoutePlan]:
         p = self.ctx.params
-        grid = self.ctx.local()
-        cells = [self.ctx.local_cell(w.location, w.ref_id or w.kind.value) for w in waypoints]
-        ectx = self.ctx.eva_ctx(cells[-1], cond.speed_factor, hazards=tuple(hazards), keep=tuple(cells))
+        grid = self.ctx.eva_grid([w.location for w in waypoints])
+        cells = [self.ctx.eva_cell(grid, w.location, w.ref_id or w.kind.value) for w in waypoints]
+        ectx = self.ctx.eva_ctx(cells[-1], cond.speed_factor, hazards=tuple(hazards), keep=tuple(cells),
+                                grid=grid)
         wps = [eva.Waypoint(id=w.ref_id or w.kind.value, cell=c, task_min=w.dwell_min,
                             shielding_pct=self._shielding(w), science_points=self._points(w))
                for w, c in zip(waypoints, cells)]
@@ -124,7 +125,7 @@ class PlanTraverse:
         if hz is not None:
             blocked_mask = blocked_mask | hz
         blocked = {(int(r), int(c)) for r, c in np.argwhere(blocked_mask)}
-        parkings = propose_parkings(grid, targets, blocked)
+        parkings = order_tour(base, propose_parkings(grid, targets, blocked))
         home = Waypoint(base, StopKind.BASE, "base")
         waypoints = [home, *(Waypoint(pk.location, StopKind.PARKING, pk.id) for pk in parkings), home]
         return TraversePlan(parkings, self._p.rover_routes(waypoints, hazards, conditions, None))
