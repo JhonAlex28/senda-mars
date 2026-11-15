@@ -393,7 +393,7 @@ export async function optimizeRouteWithIbmQuantum(params: {
 }): Promise<QuantumRouteResult> {
   if (params.mode === 'ibm-quantum-runtime') {
     try {
-      const apiBase = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+      const apiBase = import.meta.env.VITE_API_URL ?? '';
       const resp = await fetch(`${apiBase}/api/v1/quantum/optimize-route`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
