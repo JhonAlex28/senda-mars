@@ -215,3 +215,43 @@ def test_adjust_view_reads_values_by_meaning():
     assert body["screen"] == "go" and body["profile"] is None
     _, body = _run(tools, "adjust_view", screen="simulation", profile="scientific")
     assert body == {"applied": True, "profile": "scientific", "screen": "go"}
+
+
+def test_current_plan_reports_what_is_on_screen():
+    _, empty = _run(_tools(MissionContext(goals=("T03",))), "get_current_plan")
+    assert empty["has_plan"] is False and empty["selected_targets"] == ["T03"]
+
+    on_screen = {"rover": {"profile": "safe", "battery_left_pct": 91.0}, "spacewalks": []}
+    _, body = _run(_tools(MissionContext(has_plan=True, screen="walk", plan=on_screen)),
+                   "get_current_plan")
+    assert body["has_plan"] and body["screen"] == "walk" and body["rover"]["profile"] == "safe"
+
+    tools = _tools()
+    _run(tools, "plan_outing", target_ids=["T03"])
+    _, fresh = _run(tools, "get_current_plan")   # lo recién planificado manda sobre lo anterior
+    assert fresh["source"] == "planned in this conversation" and fresh["targets"][0]["id"] == "T03"
+
+
+def test_chat_accepts_the_plan_summary_from_the_frontend():
+    plan = {"rover": {"profile": "safe", "duration_min": 32.5, "distance_m": 3351, "safety_pct": 98,
+                      "resource_left_pct": 90.2, "return_ok": True},
+            "spacewalks": [{"parking": "P1", "targets": ["T03"], "profile": "scientific",
+                            "duration_min": 58.0, "distance_m": 510, "safety_pct": 81,
+                            "resource_left_pct": 88.0, "return_ok": True}]}
+
+    class _AskPlan:
+        def __init__(self):
+            self.n = 0
+
+        def next_turn(self, system, messages, tools):
+            self.n += 1
+            if self.n == 1:
+                return AssistantMessage("", (ToolCall("p", "get_current_plan", {}),))
+            return AssistantMessage(messages[-1].results[0].content)
+
+    res = _post({"messages": [{"role": "user", "content": "¿Cuánto oxígeno queda?"}],
+                 "mission": {"has_plan": True, "screen": "walk", "plan": plan}},
+                lambda ctx: ChatWithAssistant(_AskPlan(), _tools(ctx)))
+    body = json.loads(res.json()["reply"])
+    assert body["spacewalks"][0]["oxygen_left_pct"] == 88.0
+    assert body["total_duration_min"] == 90.5

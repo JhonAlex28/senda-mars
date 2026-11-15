@@ -65,6 +65,13 @@ SPECS: tuple[ToolSpec, ...] = (
         }},
     ),
     ToolSpec(
+        "get_current_plan",
+        "The plan the user has on screen right now: targets, chosen rover route with time, "
+        "distance and battery left, and each spacewalk with time and oxygen left. Use it for "
+        "questions about the current plan.",
+        {"type": "object", "properties": {}},
+    ),
+    ToolSpec(
         "get_mission_conditions",
         "Current Martian environment and the EVA readiness verdict (go / caution / no_go) "
         "with each measurement and its instrument. Only for questions about the weather or "
@@ -87,12 +94,14 @@ class MissionContext:
     goals: tuple[str, ...] = ()
     hazards: tuple[Hazard, ...] = ()
     has_plan: bool = False
+    screen: str = "plan"                      # plan | walk | go | globe
+    plan: dict[str, Any] | None = None        # resumen del plan en pantalla (cifras del planificador)
 
     def describe(self) -> str:
         goals = ", ".join(self.goals) or "none"
         plan = "a plan is loaded" if self.has_plan else "no plan loaded yet"
-        return (f"Current screen: selected targets: {goals}; danger zones marked: "
-                f"{len(self.hazards)}; {plan}.")
+        return (f"Current screen: {self.screen}; selected targets: {goals}; danger zones "
+                f"marked: {len(self.hazards)}; {plan}.")
 
 
 @dataclass(frozen=True)
@@ -143,6 +152,7 @@ class MissionTools:
         self._handlers: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
             "plan_outing": self._plan_outing,
             "adjust_view": self._adjust_view,
+            "get_current_plan": self._current_plan,
             "get_mission_conditions": self._conditions,
             "list_science_targets": self._list_targets,
             "explain_system": self._explain,
@@ -203,6 +213,17 @@ class MissionTools:
         self.log.view = ViewChange(profile, screen)
         return {"applied": True, "profile": profile.value if profile else None,
                 "screen": screen}
+
+    def _current_plan(self, _: dict[str, Any]) -> dict[str, Any]:
+        # Si en esta conversación ya se planificó, ese plan es el que está en pantalla
+        if self.log.outing and self.log.outing.planned:
+            return {"source": "planned in this conversation",
+                    **_outing_summary(self.log.outing, self._names())}
+        if not self._context.plan:
+            return {"has_plan": False, "screen": self._context.screen,
+                    "selected_targets": list(self._context.goals),
+                    "hint": "No routes yet. Offer to plan the outing with plan_outing."}
+        return {"has_plan": True, "screen": self._context.screen, **self._context.plan}
 
     def _conditions(self, _: dict[str, Any]) -> dict[str, Any]:
         readiness = self._assess.execute()

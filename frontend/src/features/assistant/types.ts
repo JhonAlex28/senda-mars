@@ -8,12 +8,30 @@ export interface ChatMessage {
   content: string;
 }
 
+/** Resumen de un tramo ya calculado por el planificador (lo que el usuario ve en pantalla). */
+export interface LegSummary {
+  profile: RouteProfile;
+  duration_min: number;
+  distance_m: number;
+  safety_pct: number;
+  resource_left_pct: number;
+  return_ok: boolean;
+}
+
+export interface PlanSummary {
+  rover: LegSummary | null;
+  spacewalks: (LegSummary & { parking: string; targets: string[] })[];
+  parkings_without_spacewalk: string[];
+}
+
 /** Lo que el usuario tiene en pantalla: el asistente parte de ahí. */
 export interface MissionSnapshot {
   base: GeoPoint | null;
   goals: string[];
   hazards: Hazard[];
   has_plan: boolean;
+  screen: 'globe' | 'plan' | 'walk' | 'go';
+  plan: PlanSummary | null;
 }
 
 export interface Outing {

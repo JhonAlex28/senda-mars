@@ -303,16 +303,59 @@ class QuantumOptimizeIn(BaseModel):
 # ---------- Asistente ----------
 
 
+class LegSummaryIn(BaseModel):
+    profile: RouteProfile
+    duration_min: float
+    distance_m: float
+    safety_pct: float
+    resource_left_pct: float
+    return_ok: bool
+
+
+class SpacewalkSummaryIn(LegSummaryIn):
+    parking: str = Field(max_length=20)
+    targets: list[str] = Field(default=[], max_length=20)
+
+
+class PlanSummaryIn(BaseModel):
+    """Resumen del plan en pantalla (cifras que ya calculó el planificador)."""
+    rover: LegSummaryIn | None = None
+    spacewalks: list[SpacewalkSummaryIn] = Field(default=[], max_length=20)
+    parkings_without_spacewalk: list[str] = Field(default=[], max_length=20)
+
+    def to_dict(self) -> dict[str, Any]:
+        out: dict[str, Any] = {}
+        if self.rover:
+            r = self.rover
+            out["rover"] = {"profile": r.profile.value, "duration_min": round(r.duration_min, 1),
+                            "distance_m": round(r.distance_m), "safety_pct": r.safety_pct,
+                            "battery_left_pct": round(r.resource_left_pct, 1),
+                            "return_ok": r.return_ok}
+        out["spacewalks"] = [{"parking": w.parking, "targets": w.targets,
+                              "profile": w.profile.value, "duration_min": round(w.duration_min, 1),
+                              "distance_m": round(w.distance_m), "safety_pct": w.safety_pct,
+                              "oxygen_left_pct": round(w.resource_left_pct, 1),
+                              "return_ok": w.return_ok} for w in self.spacewalks]
+        if self.parkings_without_spacewalk:
+            out["parkings_without_spacewalk"] = self.parkings_without_spacewalk
+        legs = ([self.rover] if self.rover else []) + list(self.spacewalks)
+        out["total_duration_min"] = round(sum(x.duration_min for x in legs), 1)
+        return out
+
+
 class MissionIn(BaseModel):
     """Lo que el usuario tiene en pantalla: el asistente parte de ahí."""
     base: PointIn | None = None
     goals: list[str] = Field(default=[], max_length=20)
     hazards: list[HazardIn] = Field(default=[], max_length=20)
     has_plan: bool = False
+    screen: Literal["globe", "plan", "walk", "go"] = "plan"
+    plan: PlanSummaryIn | None = None
 
     def to_context(self) -> MissionContext:
         return MissionContext(self.base.to_domain() if self.base else None, tuple(self.goals),
-                              tuple(h.to_hazard() for h in self.hazards), self.has_plan)
+                              tuple(h.to_hazard() for h in self.hazards), self.has_plan,
+                              self.screen, self.plan.to_dict() if self.plan else None)
 
 
 class ChatMessageIn(BaseModel):

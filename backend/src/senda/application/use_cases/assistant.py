@@ -33,10 +33,12 @@ speed_factor 0.7, suit leak = o2_multiplier 1.5). Pass target_ids only if the us
 targets.
 - adjust_view: to switch the route profile (safe, scientific, fast) or the screen (plan, \
 walk, go = start the simulation) of the plan already on screen.
+- get_current_plan: questions about the plan already on screen (route, time, battery, oxygen).
 - get_mission_conditions: only when the user asks about the weather or conditions and does \
 not ask for a plan.
 - list_science_targets: questions about the targets or places.
-- explain_system: any question about how SENDA works. Never explain from memory.
+- explain_system: any question about how SENDA works or how to use it (step-by-step
+instructions, buttons, layers, simulation, what you can do). Never explain from memory.
 
 Rules:
 - Every number, target and verdict you mention must come from a tool result. Never invent.

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useMission } from '@/features/mission';
-import type { EvaPlan } from '@/features/mission';
+import { selectedEva, selectedTraverse, useMission } from '@/features/mission';
+import type { EvaPlan, MissionState } from '@/features/mission';
+import type { RoutePlan } from '@/features/route-planning';
 import { ApiError } from '@/shared/api/httpClient';
 import { assistantApi } from '../api/assistantApi';
-import type { Availability, ChatMessage, ChatReply, Outing, ViewChange } from '../types';
+import type { Availability, ChatMessage, ChatReply, LegSummary, Outing, PlanSummary, ViewChange } from '../types';
 
 const HISTORY_LIMIT = 20;
 
@@ -74,6 +75,8 @@ export function useAssistant() {
         goals: state.goals,
         hazards: state.hazards,
         has_plan: !!state.traverse,
+        screen: state.phase,
+        plan: planSummary(state),
       });
       apply(reply.outing, reply.view);
       setHistory((h) => [...h, { order: text, reply }]);
@@ -99,5 +102,30 @@ export function useAssistant() {
     send,
     clear: () => setHistory([]),
     dismissError: () => setError(null),
+  };
+}
+
+function leg(r: RoutePlan): LegSummary {
+  return {
+    profile: r.profile,
+    duration_min: r.duration_min,
+    distance_m: r.distance_m,
+    safety_pct: r.safety_pct,
+    resource_left_pct: r.resource.remaining_pct,
+    return_ok: r.return_ok,
+  };
+}
+
+/** Lo que hay en pantalla, con las cifras que ya calculó el planificador (nada se recalcula). */
+function planSummary(state: MissionState): PlanSummary | null {
+  if (!state.traverse) return null;
+  const rover = selectedTraverse(state);
+  return {
+    rover: rover ? leg(rover) : null,
+    spacewalks: state.traverse.parkings.flatMap((p) => {
+      const walk = selectedEva(state, p.id);
+      return walk ? [{ ...leg(walk), parking: p.id, targets: p.target_ids }] : [];
+    }),
+    parkings_without_spacewalk: state.traverse.parkings.filter((p) => !state.evaPlans[p.id]).map((p) => p.id),
   };
 }
