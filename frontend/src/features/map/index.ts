@@ -1,5 +1,5 @@
 export { Clustered } from './components/Clustered';
-export { MapCanvas } from './components/MapCanvas';
+export { MapCanvas, type Raster } from './components/MapCanvas';
 export { MapLegend } from './components/MapLegend';
 export {
   BaseMarker,

@@ -1,7 +1,6 @@
 import { useEffect, type MouseEvent, type ReactNode } from 'react';
 import type { BBox, GeoPoint } from '@/shared/types/geo';
 import { Icon } from '@/shared/ui/Icon';
-import type { TerrainLayer } from '@/features/terrain';
 import { MapContext } from '../context/MapContext';
 import { usePanZoom } from '../hooks/usePanZoom';
 import type { Projection } from '../lib/projection';
@@ -9,9 +8,18 @@ import { ScaleBar } from './ScaleBar';
 
 const FOCUS_PADDING = 0.03;
 
+/** Imagen georreferenciada que se dibuja bajo las capas vectoriales (relieve, pendiente…). */
+export interface Raster {
+  key: string;
+  image: string;
+  bbox: BBox;
+  opacity: number;
+}
+
 interface MapCanvasProps {
   projection: Projection;
-  terrain: (TerrainLayer | null)[];
+  /** Se dibujan en orden: la primera queda abajo. */
+  rasters: Raster[];
   /** Al cambiar, la vista se encuadra en esta caja (animado). */
   focus: BBox | null;
   cursor?: string;
@@ -21,10 +29,10 @@ interface MapCanvasProps {
   children: ReactNode;
 }
 
-/** Lienzo del mapa: terreno sombreado + capas SVG en metros, con zoom y desplazamiento. */
+/** Lienzo del mapa: imágenes ráster + capas SVG en metros, con zoom y desplazamiento. */
 export function MapCanvas({
   projection,
-  terrain,
+  rasters,
   focus,
   cursor = 'grab',
   onMapClick,
@@ -70,19 +78,18 @@ export function MapCanvas({
           role="application"
           aria-label="Terrain map. Scroll to zoom, drag to move."
         >
-          {terrain.map((layer, i) => {
-            if (!layer) return null;
-            const r = projection.rectOf(layer.grid.bbox);
+          {rasters.map((raster) => {
+            const r = projection.rectOf(raster.bbox);
             return (
               <image
-                key={i}
-                href={layer.image}
+                key={raster.key}
+                href={raster.image}
                 x={r.x}
                 y={r.y}
                 width={r.w}
                 height={r.h}
                 preserveAspectRatio="none"
-                opacity={i === 0 ? 0.92 : 1}
+                opacity={raster.opacity}
               />
             );
           })}

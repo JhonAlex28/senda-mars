@@ -24,10 +24,6 @@ function ramp(t: number): RGB {
   return PALETTE[i].map((c, k) => c + (PALETTE[i + 1][k] - c) * f) as RGB;
 }
 
-function mix(a: RGB, b: RGB, f: number): RGB {
-  return a.map((c, k) => c + (b[k] - c) * f) as RGB;
-}
-
 /** Sombreado del relieve con luz desde el noroeste (azimut 315°, altura 45°). */
 function hillshade(grid: TerrainGrid, r: number, c: number): number {
   const { rows, cols, elevation_m: z, cell_size_m: size } = grid;
@@ -44,15 +40,21 @@ function hillshade(grid: TerrainGrid, r: number, c: number): number {
   return Math.max(0, shade);
 }
 
-/** Convierte la grilla en una imagen PNG (data URL) con relieve y zonas de pendiente marcadas. */
-export function renderTerrain(grid: TerrainGrid): string {
-  const { rows, cols, elevation_m: z, slope_deg: slope } = grid;
+function toDataUrl(cols: number, rows: number, paint: (img: ImageData) => void): string {
   const canvas = document.createElement('canvas');
   canvas.width = cols;
   canvas.height = rows;
   const ctx = canvas.getContext('2d');
   if (!ctx) return '';
+  const img = ctx.createImageData(cols, rows);
+  paint(img);
+  ctx.putImageData(img, 0, 0);
+  return canvas.toDataURL();
+}
 
+/** Capa "relieve": color por altura y sombreado (data URL PNG). */
+export function renderRelief(grid: TerrainGrid): string {
+  const { rows, cols, elevation_m: z } = grid;
   // Bucle en vez de Math.min(...z): con grillas grandes el spread desborda la pila
   let zMin = Infinity;
   let zMax = -Infinity;
@@ -61,19 +63,25 @@ export function renderTerrain(grid: TerrainGrid): string {
     if (v > zMax) zMax = v;
   }
   const zRange = zMax - zMin || 1;
-  const img = ctx.createImageData(cols, rows);
-
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const i = r * cols + c;
-      let color = ramp((z[i] - zMin) / zRange);
-      const light = 0.45 + 0.75 * hillshade(grid, r, c);
-      color = color.map((v) => v * light) as RGB;
-      if (slope[i] > DANGER_SLOPE_DEG) color = mix(color, DANGER, 0.55);
-      else if (slope[i] > CAUTION_SLOPE_DEG) color = mix(color, CAUTION, 0.3);
-      img.data.set([...color.map((v) => Math.min(255, v)), 255], i * 4);
+  return toDataUrl(cols, rows, (img) => {
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const i = r * cols + c;
+        const light = 0.45 + 0.75 * hillshade(grid, r, c);
+        const color = ramp((z[i] - zMin) / zRange).map((v) => Math.min(255, v * light));
+        img.data.set([...color, 255], i * 4);
+      }
     }
-  }
-  ctx.putImageData(img, 0, 0);
-  return canvas.toDataURL();
+  });
+}
+
+/** Capa "pendiente": transparente donde se camina bien, ámbar en precaución y rojo donde es peligroso. */
+export function renderSlope(grid: TerrainGrid): string {
+  const { rows, cols, slope_deg: slope } = grid;
+  return toDataUrl(cols, rows, (img) => {
+    for (let i = 0; i < rows * cols; i++) {
+      if (slope[i] > DANGER_SLOPE_DEG) img.data.set([...DANGER, 170], i * 4);
+      else if (slope[i] > CAUTION_SLOPE_DEG) img.data.set([...CAUTION, 95], i * 4);
+    }
+  });
 }

@@ -139,7 +139,7 @@ export function useSimulation({ legs, base, hazards }: SimulationInput) {
         hazards: [...hazards, ...s.extraHazards],
         conditions: s.conditions,
       });
-      const back = legFromRoute(route, { id: `${current.id}-back`, title: 'Return to the rover', parkingId: current.parkingId });
+      const back = legFromRoute(route, { id: `${current.id}-back`, title: 'Walk back to the rover', parkingId: current.parkingId });
       dispatch({ type: 'replace', legs: [back], dropRest: false, skip, note: 'Heading back to the rover.', icon: 'airport_shuttle' });
     });
 
@@ -161,10 +161,10 @@ export function useSimulation({ legs, base, hazards }: SimulationInput) {
         const roverStop = current.stops[current.stops.length - 1];
         roverAt = stopWaypoint(current, roverStop);
         const walk = await plan('eva', [fromHere(s), roverAt], 'safe', scenario);
-        newLegs.push(legFromRoute(walk, { id: `${current.id}-home`, title: 'Return to the rover', parkingId: current.parkingId }));
+        newLegs.push(legFromRoute(walk, { id: `${current.id}-home`, title: 'Walk back to the rover', parkingId: current.parkingId }));
       }
       const drive = await plan('rover', [{ ...roverAt, kind: 'waypoint', ref_id: '' }, baseWp], 'safe', scenario);
-      newLegs.push(legFromRoute(drive, { id: 'drive-home', title: 'Return to the base', parkingId: null }));
+      newLegs.push(legFromRoute(drive, { id: 'drive-home', title: 'Drive back to base', parkingId: null }));
 
       dispatch({ type: 'replace', legs: newLegs, dropRest: true, skip: pendingTargets, note: 'Returning to base early.', icon: 'home' });
     });

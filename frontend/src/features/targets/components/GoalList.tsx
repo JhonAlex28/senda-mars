@@ -67,7 +67,7 @@ export function GoalList({ goals, focusedId, disabled = false, onMove, onRemove,
             >
               {i + 1}
             </span>
-            <span className="truncate" title={t.name}>
+            <span className="min-w-0 break-words" title={t.name}>
               {t.name}
             </span>
           </button>

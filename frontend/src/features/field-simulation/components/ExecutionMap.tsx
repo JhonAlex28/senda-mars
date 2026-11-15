@@ -12,6 +12,7 @@ import {
   type Projection,
   type TargetState,
 } from '@/features/map';
+import { terrainRasters, useLayers } from '@/features/layers';
 import type { Hazard, Parking } from '@/features/route-planning';
 import type { Target } from '@/features/targets';
 import { TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
@@ -42,6 +43,7 @@ interface ExecutionMapProps {
 export function ExecutionMap({ projection, site, sim, targets, parkings, base, hazards }: ExecutionMapProps) {
   const { state, leg, here, dispatch } = sim;
   const [hover, setHover] = useState<GeoPoint | null>(null);
+  const { layers } = useLayers();
   const targetById = useMemo(() => new Map(targets.map((t) => [t.id, t])), [targets]);
   const name = (id: string) => targetById.get(id)?.name;
 
@@ -66,7 +68,7 @@ export function ExecutionMap({ projection, site, sim, targets, parkings, base, h
       <div className="relative min-h-0 flex-1">
         <MapCanvas
           projection={projection}
-          terrain={[site, detail]}
+          rasters={terrainRasters([site, detail], layers)}
           focus={focus}
           onPointerMoveGeo={setHover}
           overlay={

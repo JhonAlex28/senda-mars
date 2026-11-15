@@ -76,7 +76,7 @@ export function buildItinerary(traverse: RoutePlan, walks: Record<string, RouteP
     legs.push(
       legFromRoute(traverse, {
         id: `drive-${stop.ref_id}`,
-        title: toParking ? `Drive to ${stop.ref_id}` : 'Return to the base',
+        title: toParking ? `Drive to stop ${stop.ref_id}` : 'Drive back to base',
         parkingId: toParking ? stop.ref_id : null,
         from,
         to: stop.point_index,
@@ -85,7 +85,7 @@ export function buildItinerary(traverse: RoutePlan, walks: Record<string, RouteP
     from = stop.point_index;
     const walk = toParking ? walks[stop.ref_id] : undefined;
     if (walk) {
-      legs.push(legFromRoute(walk, { id: `walk-${stop.ref_id}`, title: `Walk from ${stop.ref_id}`, parkingId: stop.ref_id }));
+      legs.push(legFromRoute(walk, { id: `walk-${stop.ref_id}`, title: `Spacewalk from ${stop.ref_id}`, parkingId: stop.ref_id }));
     }
   }
   return legs;

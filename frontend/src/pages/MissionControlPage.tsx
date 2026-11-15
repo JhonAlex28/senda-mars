@@ -1,6 +1,7 @@
 import { useMemo, type ReactNode } from 'react';
 import { WeatherStrip, useReadiness, type Readiness } from '@/features/environment';
 import { ExecutionView, buildItinerary } from '@/features/field-simulation';
+import { LayersPanel } from '@/features/layers';
 import { createProjection, type Projection } from '@/features/map';
 import {
   BaseCard,
@@ -64,11 +65,12 @@ function PlanView({ projection, site, readiness }: ViewProps) {
     <>
       <div className="grid min-h-0 flex-1 grid-cols-[260px_1fr_380px] gap-md p-md">
         <aside className="scroll-thin flex min-h-0 flex-col gap-md overflow-y-auto">
-          <GoalsCard />
+          <LayersPanel />
         </aside>
         <PlanningMap projection={projection} site={site} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto pr-xs">
           <BaseCard site={site.grid.bbox} />
+          <GoalsCard />
           {state.phase === 'walk' ? <EvaPanel /> : <TraversePanel />}
           {ready && <LaunchCard readiness={readiness} />}
         </aside>

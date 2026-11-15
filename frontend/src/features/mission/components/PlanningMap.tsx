@@ -10,6 +10,7 @@ import {
   TargetMarker,
   type Projection,
 } from '@/features/map';
+import { terrainRasters, useLayers } from '@/features/layers';
 import { PROFILE_META, distinctProfiles } from '@/features/route-planning';
 import { TargetCard, type Target } from '@/features/targets';
 import { TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
@@ -35,6 +36,7 @@ interface PlanningMapProps {
 /** Mapa de las fases Plan y Walk: objetivos, base, peligros, rutas del rover y caminatas. */
 export function PlanningMap({ projection, site }: PlanningMapProps) {
   const { state, dispatch, targets, targetById } = useMission();
+  const { layers, shown } = useLayers();
   const [hover, setHover] = useState<GeoPoint | null>(null);
   const walking = state.phase === 'walk';
   const parking = activeParking(state);
@@ -53,8 +55,8 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const zoneTargets = new Set(walking ? parking?.target_ids : undefined);
   // Leyenda de las rutas que se ven: las caminatas del estacionamiento activo en Walk, las del rover en Plan
   const evaPlan = walking && parking ? state.evaPlans[parking.id] : undefined;
-  const shown = evaPlan ? { routes: evaPlan.routes, profile: evaPlan.profile } : state.traverse && { routes: state.traverse.routes, profile: state.traverseProfile };
-  const legend = shown ? distinctProfiles(shown.routes, shown.profile).map((p) => ({ label: PROFILE_META[p].label, swatch: PROFILE_META[p].swatch })) : [];
+  const legendRoutes = evaPlan ? { routes: evaPlan.routes, profile: evaPlan.profile } : state.traverse && { routes: state.traverse.routes, profile: state.traverseProfile };
+  const legend = legendRoutes ? distinctProfiles(legendRoutes.routes, legendRoutes.profile).map((p) => ({ label: PROFILE_META[p].label, swatch: PROFILE_META[p].swatch })) : [];
 
   const onMapClick = (p: GeoPoint) => {
     if (state.tool === 'base') dispatch({ type: 'moveBase', point: p });
@@ -67,7 +69,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
       <div className="relative min-h-0 flex-1">
         <MapCanvas
           projection={projection}
-          terrain={[site, evaTerrain]}
+          rasters={terrainRasters([site, evaTerrain], layers)}
           focus={evaBox ?? site.grid.bbox}
           cursor={state.tool === 'select' ? 'grab' : 'crosshair'}
           onMapClick={onMapClick}
@@ -76,7 +78,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
             <>
               <StepBanner />
               <MapToolbar />
-              <MapLegend items={legend} />
+              <MapLegend items={shown('routes') ? legend : []} />
               {focused && (
                 <div className="absolute right-md top-[72px] z-30">
                   <TargetCard
@@ -92,7 +94,8 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
             </>
           }
         >
-          {state.hazards.map((h, i) => (
+          {shown('hazards') &&
+            state.hazards.map((h, i) => (
             <HazardCircle
               key={i}
               center={h}
@@ -101,8 +104,9 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
             />
           ))}
 
-          <PlanRouteLayers />
+          {shown('routes') && <PlanRouteLayers />}
 
+          {shown('targets') && (
           <Clustered
             items={scienceTargets}
             highlight={(t) => state.goals.includes(t.id)}
@@ -122,8 +126,10 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
               );
             }}
           />
+          )}
 
-          {state.traverse?.parkings.map((p) => (
+          {shown('routes') &&
+            state.traverse?.parkings.map((p) => (
             <ParkingMarker
               key={p.id}
               point={p}

@@ -12,12 +12,12 @@ import { ContingencyDialog } from './ContingencyDialog';
 
 const SPEEDS = [1, 4, 15];
 
-/** Botón principal al detenerse en una parada que no es un objetivo. */
+/** Botón principal al detenerse en una parada: dice qué pasa al pulsarlo (a dónde se va), no solo "continuar". */
 function arrivalAction(stop: LegStop, nextLeg: Leg | undefined): { label: string; icon: string } {
-  if (stop.kind === 'base') return { label: 'Finish the mission', icon: 'flag' };
-  if (stop.kind === 'rover') return { label: 'Get in the rover', icon: 'airport_shuttle' };
-  if (nextLeg?.mode === 'eva') return { label: `Start walk at ${stop.refId}`, icon: 'directions_walk' };
-  return { label: 'Keep driving', icon: 'airport_shuttle' };
+  if (stop.kind === 'base' || !nextLeg) return { label: 'Finish the mission', icon: 'flag' };
+  if (nextLeg.mode === 'eva') return { label: `Start spacewalk at ${stop.refId}`, icon: 'directions_walk' };
+  if (nextLeg.parkingId) return { label: `Drive to stop ${nextLeg.parkingId}`, icon: 'airport_shuttle' };
+  return { label: 'Drive back to base', icon: 'home' };
 }
 
 interface ExecutionPanelProps {
@@ -55,7 +55,7 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
         <dl className="grid grid-cols-3 gap-xs text-center">
           <div className="min-w-0 rounded-md border border-outline-variant bg-surface p-xs">
             <dt className="font-label text-label-sm uppercase text-on-surface-variant">Next stop</dt>
-            <dd className="truncate font-body text-body-sm text-on-surface" title={next ? stopLabel(next, targetName) : undefined}>
+            <dd className="break-words font-body text-body-sm text-on-surface" title={next ? stopLabel(next, targetName) : undefined}>
               {next ? <Phrase>{stopLabel(next, targetName)}</Phrase> : '—'}
             </dd>
           </div>

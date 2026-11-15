@@ -1,3 +1,4 @@
+import { LayersProvider } from '@/features/layers';
 import { MissionProvider, useMission } from '@/features/mission';
 import { GlobePage } from '@/pages/GlobePage';
 import { MissionControlPage } from '@/pages/MissionControlPage';
@@ -10,7 +11,9 @@ function Screens() {
 export function App() {
   return (
     <MissionProvider>
-      <Screens />
+      <LayersProvider>
+        <Screens />
+      </LayersProvider>
     </MissionProvider>
   );
 }

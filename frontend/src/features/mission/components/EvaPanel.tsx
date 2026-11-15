@@ -33,7 +33,7 @@ export function EvaPanel() {
               <li key={id} className="flex items-center justify-between gap-sm rounded-md border border-outline bg-surface px-sm py-xs font-body text-body-sm">
                 <span className="flex min-w-0 items-center gap-xs">
                   <Icon name="diamond" className="text-[16px] text-accent" />
-                  <span className="truncate">{t?.name ?? id}</span>
+                  <span className="min-w-0 break-words">{t?.name ?? id}</span>
                 </span>
                 <Live className="shrink-0 font-mono text-mono-sm text-on-surface-variant">
                   🔬 {formatMinutes(t?.task?.duration_min ?? 0)}

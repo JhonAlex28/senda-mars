@@ -12,7 +12,7 @@ export function SuppliesCard({ pct, hint }: SuppliesCardProps) {
   return (
     <div className="flex min-w-0 flex-col justify-center gap-1 rounded-lg border border-outline bg-surface-container px-md py-xs" title={hint}>
       <div className="flex items-center justify-between gap-sm font-label text-label-sm text-on-surface-variant">
-        <span className="min-w-0 truncate">Battery to come back</span>
+        <span className="min-w-0 break-words">Battery to come back</span>
         <Live className={`shrink-0 font-mono ${TEXT_TONE[tone]}`}>{pct === null ? '—' : `${Math.round(pct)}%`}</Live>
       </div>
       <Meter value={pct ?? 0} tone={tone} label="Battery to come back" className="h-2" />

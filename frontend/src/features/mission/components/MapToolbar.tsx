@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
 import { Icon } from '@/shared/ui/Icon';
 import { Live } from '@/shared/ui/Text';
+import { Tooltip } from '@/shared/ui/Tooltip';
 import { useMission } from '../state/MissionContext';
 import type { MapTool } from '../state/types';
 
@@ -25,7 +25,7 @@ export function MapToolbar() {
       {TOOLS.map(({ tool, icon, title, text, active }) => {
         const on = state.tool === tool;
         return (
-          <Tip key={tool} title={title} text={text}>
+          <Tooltip key={tool} title={title} text={text}>
             <button
               type="button"
               aria-label={title}
@@ -42,12 +42,12 @@ export function MapToolbar() {
                 </Live>
               )}
             </button>
-          </Tip>
+          </Tooltip>
         );
       })}
 
       {hazards > 0 && (
-        <Tip title="Clear danger zones" text="Remove every danger zone from the map.">
+        <Tooltip title="Clear danger zones" text="Remove every danger zone from the map.">
           <button
             type="button"
             aria-label="Clear danger zones"
@@ -56,27 +56,8 @@ export function MapToolbar() {
           >
             <Icon name="delete_sweep" className="text-[20px]" />
           </button>
-        </Tip>
+        </Tooltip>
       )}
-    </div>
-  );
-}
-
-/**
- * Descripción al pasar el cursor o con foco de teclado.
- * Siempre está en el DOM (solo se oculta), así el traductor del navegador la traduce una vez y no la rehace.
- */
-function Tip({ title, text, children }: { title: string; text: string; children: ReactNode }) {
-  return (
-    <div className="group relative flex">
-      {children}
-      <div
-        role="tooltip"
-        className="pointer-events-none invisible absolute left-full top-1/2 z-30 ml-sm w-56 -translate-y-1/2 rounded-md border border-outline bg-surface-container px-sm py-xs opacity-0 shadow-xl transition-opacity duration-fast group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
-      >
-        <span className="block font-label text-label-sm uppercase text-on-surface">{title}</span>
-        <span className="block font-body text-body-sm text-on-surface-variant">{text}</span>
-      </div>
     </div>
   );
 }

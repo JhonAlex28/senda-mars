@@ -84,8 +84,8 @@ export function TargetMarker({ point, id, name, state, priority, focused, dimmed
       opacity={dimmed ? 0.45 : 1}
       role="button"
       aria-label={`${id} ${name}`}
+      className="group/marker"
     >
-      <title>{`${id} · ${name}`}</title>
       {focused && <circle r={r * 1.9} fill={COLORS.accent} fillOpacity={0.18} stroke={COLORS.accent} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />}
       <circle r={r} fill={COLORS.surface} stroke={ring} strokeWidth={2} vectorEffect="non-scaling-stroke" />
       <text y={3.2 * unit} textAnchor="middle" fill={COLORS.text} fontFamily="Space Mono" fontSize={8.5 * unit}>
@@ -99,6 +99,23 @@ export function TargetMarker({ point, id, name, state, priority, focused, dimmed
           </text>
         </g>
       )}
+      <HoverLabel text={name} offset={r + 5 * unit} />
+    </g>
+  );
+}
+
+/** Nombre que aparece sobre el marcador al pasar el cursor (el id solo, "T04", no dice nada). */
+function HoverLabel({ text, offset }: { text: string; offset: number }) {
+  const { unit } = useMap();
+  const fontSize = 10 * unit;
+  const width = text.length * fontSize * 0.56 + 12 * unit;
+  const height = 17 * unit;
+  return (
+    <g className="pointer-events-none opacity-0 transition-opacity duration-fast group-hover/marker:opacity-100" transform={`translate(0 ${-offset - height})`}>
+      <rect x={-width / 2} width={width} height={height} rx={4 * unit} fill={COLORS.surface} fillOpacity={0.95} stroke={COLORS.accent} strokeWidth={1} vectorEffect="non-scaling-stroke" />
+      <text y={height / 2 + fontSize * 0.36} textAnchor="middle" fill={COLORS.text} fontFamily="Space Grotesk" fontWeight={600} fontSize={fontSize}>
+        {text}
+      </text>
     </g>
   );
 }
