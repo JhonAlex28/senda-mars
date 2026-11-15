@@ -58,9 +58,9 @@ delivery/
 | Propiedad | Local | Regional |
 |---|---|---|
 | Resolución | 1 m/celda | 10 m/celda |
-| Filas | 2005 | 1424 |
-| Columnas | 2011 | 416 |
-| Celdas | 4 032 055 | 592 384 |
+| Filas | 2005 | 1442 |
+| Columnas | 2011 | 724 |
+| Celdas | 4 032 055 | 1 044 008 |
 | Cobertura válida | 100 % | 100 % |
 | Proyección | Equirectangular marciana | Equirectangular marciana |
 
@@ -85,9 +85,21 @@ Las coordenadas geográficas se expresan como `[longitud, latitud]`.
 ### Extensión regional
 
 ```json
-[137.35995863662836, -4.820100514012099,
- 137.43014035283812, -4.5798631008325374]
+[137.3398826168472, -4.821112750303586,
+ 137.46202579601996, -4.577838628249564]
 ```
+La grilla regional fue ampliada para incorporar los 15 objetivos
+científicos y la base de exploración definidos en targets_v1.geojson.
+
+Se verificó que los 16 puntos se encuentran dentro de la grilla,
+con elevaciones y valores de transitabilidad disponibles.
+
+La resolución permanece en 10 m/celda y la cobertura válida
+del DEM es del 100 %.
+
+Esta validación confirma la disponibilidad de datos geoespaciales,
+pero no garantiza la existencia de rutas transitables entre
+todos los objetivos.
 
 Estos límites corresponden a las extensiones efectivas de los rásteres, después de su alineación espacial mediante GDAL.
 

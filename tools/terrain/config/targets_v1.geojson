@@ -1,0 +1,746 @@
+{
+ "type": "FeatureCollection",
+ "metadata": {
+  "project": "SENDA — Safe Paths to Martian Science",
+  "version": "v1 (2026-11-15)",
+  "site": "Gale Crater Exploration Zone: landing zone → lower Mount Sharp boxwork",
+  "base": {
+   "lon": 137.42009295,
+   "lat": -4.59310427,
+   "elev_geoid_m": -4497.77
+  },
+  "crs": "Mars lon/lat planetocentric, °E",
+  "elevation": "metros respecto al geoide de Marte (MOLA areoid)",
+  "rule": "Todos los objetivos son lugares reales visitados por Curiosity; coordenadas = posición del rover en esos sols. eva_sampling es diseño de misión (assumed).",
+  "sources": [
+   "NASA MMGIS MSL_waypoints.json",
+   "Curiosity mission news and papers listed in each source_url"
+  ]
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.42009295,
+     -4.59310427
+    ]
+   },
+   "properties": {
+    "id": "B00",
+    "name": "Human Landing Zone (Gale EZ base)",
+    "type_en": "Mission base · landing zone",
+    "type_es": "Base de la misión · zona de aterrizaje",
+    "elev_geoid_m": -4497.77,
+    "is_base": true,
+    "kind": "assumed",
+    "desc_en": "Landing zone and habitat site of the Gale Crater Exploration Zone proposal (NASA Human Landing Sites workshop, 2015). All traverses start and end here.",
+    "desc_es": "Zona de aterrizaje y hábitat de la propuesta de Zona de Exploración del cráter Gale (taller de sitios de aterrizaje humano de la NASA, 2015). Todas las travesías salen y vuelven aquí.",
+    "rubric": {
+     "novelty": 0,
+     "habitability": 0,
+     "human_only": 0,
+     "total_15": 0,
+     "novedad": 0,
+     "habitabilidad": 0,
+     "solo_humano": 0
+    },
+    "coord_source": "Coordenadas de la LZ usadas por el equipo (Gale EZ)",
+    "dist_from_base_km": 0
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.4436633,
+     -4.59031849
+    ]
+   },
+   "properties": {
+    "id": "S01",
+    "name": "Hottah conglomerate",
+    "type_en": "Ancient streambed conglomerate",
+    "type_es": "Conglomerado de un antiguo lecho de río",
+    "sol": "39",
+    "elev_geoid_m": -4504.758,
+    "desc_en": "Tilted outcrop of rounded pebbles cemented in sandstone: the first proof Curiosity found of a stream that once flowed here, roughly ankle- to waist-deep (Williams et al. 2013, Science).",
+    "desc_es": "Afloramiento inclinado de guijarros redondeados cementados: la primera prueba que halló Curiosity de un río que corrió aquí, de entre el tobillo y la cintura de profundidad (Williams et al. 2013, Science).",
+    "rubric": {
+     "novelty": 3,
+     "habitability": 3,
+     "human_only": 4,
+     "total_15": 10,
+     "novedad": 3,
+     "habitabilidad": 3,
+     "solo_humano": 4
+    },
+    "S": 0.667,
+    "eva_sampling": {
+     "tool": "Rock hammer + hand lens + clast sieve",
+     "duration_min": 20,
+     "sample_mass_kg": 1.0,
+     "protocol": "Measure clast size and roundness on a 1 m transect to rebuild flow speed; bag 10 representative pebbles.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 1.4,
+    "bearing_from_base_deg": 83,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 39; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://photojournal.jpl.nasa.gov/catalog/PIA17062",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.4483392,
+     -4.59001956
+    ]
+   },
+   "properties": {
+    "id": "S02",
+    "name": "Rocknest sand shadow",
+    "type_en": "Wind-blown soil (ISRU water)",
+    "type_es": "Suelo arrastrado por el viento (agua para ISRU)",
+    "sol": "57-100",
+    "elev_geoid_m": -4517.896,
+    "desc_en": "First soil Curiosity scooped and baked. SAM released about 2% water by weight from the fine soil (1.5–3% across samples), and CheMin found a volcanic, basaltic mineralogy (Leshin et al. 2013; Bish et al. 2013, Science). Best nearby test site for extracting water from regolith.",
+    "desc_es": "Primer suelo que Curiosity recogió y calentó. SAM liberó cerca de 2% de agua en peso del suelo fino (1,5–3% según la muestra), y CheMin halló una mineralogía volcánica basáltica (Leshin et al. 2013; Bish et al. 2013, Science). Mejor sitio cercano para probar extracción de agua del regolito.",
+    "rubric": {
+     "novelty": 3,
+     "habitability": 2,
+     "human_only": 4,
+     "total_15": 9,
+     "novedad": 3,
+     "habitabilidad": 2,
+     "solo_humano": 4
+    },
+    "S": 0.6,
+    "eva_sampling": {
+     "tool": "Regolith scoop + sealed bake-out canister",
+     "duration_min": 15,
+     "sample_mass_kg": 2.0,
+     "protocol": "Collect 2 kg of surface fines for a water-extraction (ISRU) test at the base; record the dust layer depth.",
+     "kind": "assumed"
+    },
+    "isru_target": true,
+    "dist_from_base_km": 1.68,
+    "bearing_from_base_deg": 84,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 57-100; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.eurekalert.org/news-releases/491595",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.4491296,
+     -4.58948488
+    ]
+   },
+   "properties": {
+    "id": "S03",
+    "name": "Yellowknife Bay (John Klein & Cumberland drills)",
+    "type_en": "Ancient lake mudstone (habitable)",
+    "type_es": "Lutita de un antiguo lago (habitable)",
+    "sol": "166-279",
+    "elev_geoid_m": -4520.456,
+    "desc_en": "Sheepbed mudstone, drilled at John Klein (sol 182) and Cumberland (sol 279): an ancient lake with low-salinity, near-neutral water, clay minerals and chemical energy sources, the first rock proven habitable on Mars (Grotzinger et al. 2014, Science). Cumberland also held chlorinated organic molecules (Freissinet et al. 2015).",
+    "desc_es": "Lutita Sheepbed, perforada en John Klein (sol 182) y Cumberland (sol 279): un antiguo lago de agua poco salada y casi neutra, con arcillas y fuentes de energía química; la primera roca de Marte demostrada como habitable (Grotzinger et al. 2014, Science). En Cumberland además se hallaron moléculas orgánicas cloradas (Freissinet et al. 2015).",
+    "rubric": {
+     "novelty": 4,
+     "habitability": 5,
+     "human_only": 4,
+     "total_15": 13,
+     "novedad": 4,
+     "habitabilidad": 5,
+     "solo_humano": 4
+    },
+    "S": 0.867,
+    "eva_sampling": {
+     "tool": "Core drill + organic-clean sealed tube",
+     "duration_min": 30,
+     "sample_mass_kg": 1.5,
+     "protocol": "Core the mudstone next to the John Klein hole; keep the core cold and sealed for organics analysis.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 1.73,
+    "bearing_from_base_deg": 83,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 166-279; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.jpl.nasa.gov/news/nasa-rover-finds-conditions-once-suited-for-ancient-life-on-mars/",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.40201,
+     -4.63884285
+    ]
+   },
+   "properties": {
+    "id": "S04",
+    "name": "Kimberley · Windjana drill",
+    "type_en": "Potassium-rich sandstone",
+    "type_es": "Arenisca rica en potasio",
+    "sol": "603-630",
+    "elev_geoid_m": -4479.191,
+    "desc_en": "Sandstone at the Kimberley waypoint, drilled at Windjana (sol 621). Unexpectedly rich in potassium feldspar (sanidine, ~21 wt%) and magnetite (~12 wt%), a sign of evolved igneous sources in Gale's rim (Treiman et al. 2016, JGR Planets).",
+    "desc_es": "Arenisca del punto Kimberley, perforada en Windjana (sol 621). Inesperadamente rica en feldespato de potasio (sanidina, ~21% en peso) y magnetita (~12%), señal de rocas ígneas evolucionadas en el borde de Gale (Treiman et al. 2016, JGR Planets).",
+    "rubric": {
+     "novelty": 4,
+     "habitability": 3,
+     "human_only": 3,
+     "total_15": 10,
+     "novedad": 4,
+     "habitabilidad": 3,
+     "solo_humano": 3
+    },
+    "S": 0.667,
+    "eva_sampling": {
+     "tool": "Core drill + magnetic sample bag",
+     "duration_min": 25,
+     "sample_mass_kg": 1.0,
+     "protocol": "Core across a cross-bedded set; split the core to compare magnetite in fine and coarse layers.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 2.91,
+    "bearing_from_base_deg": 202,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 603-630; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://doi.org/10.1002/2015JE004932",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3774636,
+     -4.66269932
+    ]
+   },
+   "properties": {
+    "id": "S05",
+    "name": "Pahrump Hills · Confidence Hills drill",
+    "type_en": "Base of Mount Sharp (lake mudstone)",
+    "type_es": "Base del Monte Sharp (lutita lacustre)",
+    "sol": "740-790",
+    "elev_geoid_m": -4460.622,
+    "desc_en": "First drill hole at the base of Mount Sharp (Confidence Hills, sol 759), in the Murray formation: fine lake mudstone; its minerals point to less acidic water than expected. The lower mountain was built by long-lived lakes (Grotzinger et al. 2015, Science).",
+    "desc_es": "Primera perforación en la base del Monte Sharp (Confidence Hills, sol 759), en la formación Murray: lutita fina de lago; sus minerales indican agua menos ácida de lo esperado. La parte baja de la montaña se formó en lagos de larga duración (Grotzinger et al. 2015, Science).",
+    "rubric": {
+     "novelty": 4,
+     "habitability": 4,
+     "human_only": 4,
+     "total_15": 12,
+     "novedad": 4,
+     "habitabilidad": 4,
+     "solo_humano": 4
+    },
+    "S": 0.8,
+    "eva_sampling": {
+     "tool": "Core drill + stratigraphic log kit",
+     "duration_min": 30,
+     "sample_mass_kg": 1.2,
+     "protocol": "Log 5 m of layers up the outcrop; core the finest lamination for clays.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 4.82,
+    "bearing_from_base_deg": 211,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 740-790; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.jpl.nasa.gov/news/nasa-rover-drill-pulls-first-taste-from-mars-mountain",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3670962,
+     -4.67899471
+    ]
+   },
+   "properties": {
+    "id": "S06",
+    "name": "Namib Dune (Bagnold Dunes)",
+    "type_en": "Active sand dune (hazard + ISRU)",
+    "type_es": "Duna de arena activa (peligro + ISRU)",
+    "sol": "1204-1221",
+    "elev_geoid_m": -4423.76,
+    "desc_en": "First close-up study of an active dune on another planet (Gobabeb scoop). The ~4 m tall dark dune advances about 1 m per Earth year with today's wind, and the sand is sorted by grain size (Bagnold Dunes campaign). Hazard for walking and rover wheels; source of clean basaltic sand.",
+    "desc_es": "Primer estudio de cerca de una duna activa en otro planeta (muestra Gobabeb). La duna oscura, de ~4 m de alto, avanza cerca de 1 m por año terrestre con el viento actual, y la arena está ordenada por tamaño de grano (campaña Bagnold Dunes). Peligro para caminar y para las ruedas del rover; fuente de arena basáltica limpia.",
+    "rubric": {
+     "novelty": 3,
+     "habitability": 1,
+     "human_only": 4,
+     "total_15": 8,
+     "novedad": 3,
+     "habitabilidad": 1,
+     "solo_humano": 4
+    },
+    "S": 0.533,
+    "eva_sampling": {
+     "tool": "Trenching tool + grain-size sieve set",
+     "duration_min": 20,
+     "sample_mass_kg": 1.0,
+     "protocol": "Dig a 30 cm trench across the dune crest; measure grain layers and wind ripples; sieve 1 kg.",
+     "kind": "assumed"
+    },
+    "isru_target": true,
+    "dist_from_base_km": 5.97,
+    "bearing_from_base_deg": 212,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 1204-1221; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.jpl.nasa.gov/news/nasa-mars-rover-curiosity-tastes-scooped-sieved-sand/",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3533725,
+     -4.69015912
+    ]
+   },
+   "properties": {
+    "id": "S07",
+    "name": "Murray Buttes",
+    "type_en": "Eroded sandstone mesas",
+    "type_es": "Mesetas de arenisca erosionadas",
+    "sol": "1400-1455",
+    "elev_geoid_m": -4401.33,
+    "desc_en": "Mesas and buttes capped by sandstone from ancient wind-blown dunes, lying on top of the lake mudstone: the lake had dried out and a desert followed. Curiosity drove between them in 2016.",
+    "desc_es": "Mesetas coronadas por arenisca de antiguas dunas de viento, encima de la lutita del lago: el lago se secó y le siguió un desierto. Curiosity pasó entre ellas en 2016.",
+    "rubric": {
+     "novelty": 3,
+     "habitability": 2,
+     "human_only": 5,
+     "total_15": 10,
+     "novedad": 3,
+     "habitabilidad": 2,
+     "solo_humano": 5
+    },
+    "S": 0.667,
+    "eva_sampling": {
+     "tool": "Rope + geologic compass + hand lens",
+     "duration_min": 40,
+     "sample_mass_kg": 0.8,
+     "protocol": "Measure dune cross-bed directions on the butte wall to rebuild ancient wind directions; photo-log the contact with the lake mudstone.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 6.96,
+    "bearing_from_base_deg": 214,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 1400-1455; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.jpl.nasa.gov/news/mars-rover-views-spectacular-layered-rock-formations/",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3775706,
+     -4.72851354
+    ]
+   },
+   "properties": {
+    "id": "S08",
+    "name": "Vera Rubin Ridge · Highfield drill",
+    "type_en": "Hematite-cemented ridge",
+    "type_es": "Cresta cementada con hematita",
+    "sol": "2214-2224",
+    "elev_geoid_m": -4146.95,
+    "desc_en": "Erosion-resistant ridge rich in the iron oxide hematite, drilled at Highfield (sol 2224). Highfield holds ~9 wt% hematite; groundwater likely spread the cement that makes the ridge resist wind erosion (Rampe et al., LPSC 2020; NASA/JPL 2018). Good walking bedrock and a natural lookout.",
+    "desc_es": "Cresta resistente a la erosión, rica en hematita (óxido de hierro), perforada en Highfield (sol 2224). Highfield tiene ~9% en peso de hematita; probablemente el agua subterránea repartió el cemento que hace que la cresta resista la erosión del viento (Rampe et al., LPSC 2020; NASA/JPL 2018). Buena roca firme para caminar y mirador natural.",
+    "rubric": {
+     "novelty": 3,
+     "habitability": 4,
+     "human_only": 4,
+     "total_15": 11,
+     "novedad": 3,
+     "habitabilidad": 4,
+     "solo_humano": 4
+    },
+    "S": 0.733,
+    "eva_sampling": {
+     "tool": "Core drill + color calibration target",
+     "duration_min": 25,
+     "sample_mass_kg": 1.0,
+     "protocol": "Core gray and red bedrock 10 m apart to compare how groundwater changed the hematite.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 8.39,
+    "bearing_from_base_deg": 197,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 2214-2224; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.jpl.nasa.gov/news/curiosity-surveys-a-mystery-under-dusty-skies/",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3836534,
+     -4.7260789
+    ]
+   },
+   "properties": {
+    "id": "S09",
+    "name": "Glen Torridon (Aberlady & Kilmarie drills)",
+    "type_en": "Clay-bearing unit",
+    "type_es": "Unidad rica en arcillas",
+    "sol": "2361-2384",
+    "elev_geoid_m": -4157.94,
+    "desc_en": "Valley floor where Curiosity measured the highest clay content of the mission (Aberlady and Kilmarie drills, sols 2370 and 2384). Clays form in water and are good at preserving organic matter.",
+    "desc_es": "Fondo de valle donde Curiosity midió la mayor cantidad de arcilla de toda la misión (perforaciones Aberlady y Kilmarie, soles 2370 y 2384). Las arcillas se forman en agua y conservan bien la materia orgánica.",
+    "rubric": {
+     "novelty": 4,
+     "habitability": 5,
+     "human_only": 4,
+     "total_15": 13,
+     "novedad": 4,
+     "habitabilidad": 5,
+     "solo_humano": 4
+    },
+    "S": 0.867,
+    "eva_sampling": {
+     "tool": "Core drill + organic-clean sealed tube",
+     "duration_min": 30,
+     "sample_mass_kg": 1.5,
+     "protocol": "Core the clay-rich bedrock; seal immediately to protect organics and clay water.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 8.15,
+    "bearing_from_base_deg": 195,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 2361-2384; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.jpl.nasa.gov/news/nasas-curiosity-mars-rover-finds-a-clay-cache/",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.412544,
+     -4.73538556
+    ]
+   },
+   "properties": {
+    "id": "S10",
+    "name": "Mont Mercou · Nontron drill",
+    "type_en": "Clay–sulfate transition cliff",
+    "type_es": "Acantilado de transición arcilla–sulfato",
+    "sol": "3040-3079",
+    "elev_geoid_m": -4072.91,
+    "desc_en": "6 m tall cliff at the boundary between the clay unit and the sulfate unit, drilled at Nontron (the mission's 30th sample). This transition records Mars changing from wet to dry.",
+    "desc_es": "Acantilado de 6 m en el límite entre la unidad de arcillas y la de sulfatos, perforado en Nontron (muestra número 30 de la misión). Esta transición registra el cambio de un Marte húmedo a uno seco.",
+    "rubric": {
+     "novelty": 4,
+     "habitability": 4,
+     "human_only": 5,
+     "total_15": 13,
+     "novedad": 4,
+     "habitabilidad": 4,
+     "solo_humano": 5
+    },
+    "S": 0.867,
+    "eva_sampling": {
+     "tool": "Core drill + rope-assisted cliff log",
+     "duration_min": 45,
+     "sample_mass_kg": 1.2,
+     "protocol": "Log the cliff face bed by bed; take one core at the base and one 4 m higher to bracket the transition.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 8.43,
+    "bearing_from_base_deg": 183,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 3040-3079; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://www.nasa.gov/missions/mars-science-laboratory/nasas-curiosity-mars-rover-takes-selfie-with-mont-mercou",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.408864,
+     -4.78570678
+    ]
+   },
+   "properties": {
+    "id": "S11",
+    "name": "Gediz Vallis · pure sulfur field",
+    "type_en": "Elemental sulfur stones (first on Mars)",
+    "type_es": "Piedras de azufre puro (primeras en Marte)",
+    "sol": "4190-4210",
+    "elev_geoid_m": -3688.38,
+    "desc_en": "Field of white stones in Gediz Vallis channel. On 30 May 2024 a wheel cracked one open and revealed yellow crystals of pure elemental sulfur, never seen before on Mars. The nearby rock Mammoth Lakes was the mission's 41st drill sample.",
+    "desc_es": "Campo de piedras blancas en el canal Gediz Vallis. El 30 de mayo de 2024 una rueda partió una y reveló cristales amarillos de azufre elemental puro, nunca vistos antes en Marte. La roca cercana Mammoth Lakes fue la muestra perforada número 41.",
+    "rubric": {
+     "novelty": 5,
+     "habitability": 3,
+     "human_only": 5,
+     "total_15": 13,
+     "novedad": 5,
+     "habitabilidad": 3,
+     "solo_humano": 5
+    },
+    "S": 0.867,
+    "eva_sampling": {
+     "tool": "Rock hammer + sealed sample bags",
+     "duration_min": 25,
+     "sample_mass_kg": 1.0,
+     "protocol": "Break 3 white stones by hand; bag the sulfur crystals and their host rock separately; map the stone field.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 11.41,
+    "bearing_from_base_deg": 183,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity (NASA MMGIS waypoints), sols 4190-4210; ±~20 m del objetivo",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://phys.org/news/2024-07-nasa-curiosity-rover-martian.html",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.38354,
+     -4.79985
+    ]
+   },
+   "properties": {
+    "id": "T02",
+    "name": "Altadena (drill)",
+    "type_en": "Drill site (sulfate-bearing bedrock)",
+    "type_es": "perforación – borde de la unidad boxwork",
+    "sol": "4560-4570",
+    "elev_geoid_m": -3647.181,
+    "desc_en": "First drill hole in the boxwork unit (Curiosity's 43rd); sample analysed by CheMin and SAM.",
+    "desc_es": "Primera perforación en la unidad boxwork (perforación n.º 43 de Curiosity). Muestra entregada a CheMin y SAM para buscar minerales y compuestos orgánicos.",
+    "rubric": {
+     "novelty": 4,
+     "habitability": 4,
+     "human_only": 3,
+     "total_15": 11,
+     "novedad": 4,
+     "habitabilidad": 4,
+     "solo_humano": 3
+    },
+    "S": 0.73,
+    "eva_sampling": {
+     "tool": "Rotary Core Drill (2.5 cm diameter)",
+     "sample_mass_kg": 1.6,
+     "duration_min": 30,
+     "protocol": "Extract 8 cm intact stratigraphy core from unaltered sulfate bedrock.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 12.42,
+    "bearing_from_base_deg": 190,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity, waypoint sol 4560",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://science.nasa.gov/blog/curiosity-blog-sols-4568-4569-a-close-look-at-the-altadena-drill-hole-and-tailings/",
+    "is_base": false
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.38104,
+     -4.80784
+    ]
+   },
+   "properties": {
+    "id": "T05",
+    "name": "Valle de la Luna (drill, Monte Grande hollow)",
+    "type_en": "Drill site in hollow (eroded boxwork interior)",
+    "type_es": "perforación – hondonada (zona baja)",
+    "sol": "4687-4708",
+    "elev_geoid_m": -3610.432,
+    "desc_en": "Drill in the Monte Grande hollow; paired with Nevado Sajama to learn why boxwork ridges resist erosion.",
+    "desc_es": "Perforación dentro de la hondonada Monte Grande. Junto con Nevado Sajama forma un par hondonada–cresta para entender por qué las crestas resisten la erosión.",
+    "rubric": {
+     "novelty": 5,
+     "habitability": 5,
+     "human_only": 4,
+     "total_15": 14,
+     "novedad": 5,
+     "habitabilidad": 5,
+     "solo_humano": 4
+    },
+    "S": 0.93,
+    "eva_sampling": {
+     "tool": "Deep Rotary Core Drill + Organic-Clean Sealed Tube",
+     "sample_mass_kg": 2.2,
+     "duration_min": 25,
+     "protocol": "Paired Core A (Hollow Floor): preserve volatile sulfates & clay interlayer water for Earth return.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 12.91,
+    "bearing_from_base_deg": 190,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity, waypoint sol 4687",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://science.nasa.gov/blog/curiosity-blog-sols-4689-4694-drill-in-the-boxwork-unit-is-go/",
+    "is_base": false,
+    "paired_with": "T06"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.381,
+     -4.80801
+    ]
+   },
+   "properties": {
+    "id": "T06",
+    "name": "Nevado Sajama (drill, ridge)",
+    "type_en": "Drill site on ridge crest (cemented boxwork wall)",
+    "type_es": "perforación – cresta (zona alta)",
+    "sol": "4709-4805",
+    "elev_geoid_m": -3607.722,
+    "desc_en": "Ridge-top drill ~10 m from Valle de la Luna and ~2 m higher; fine veins record the fluids that hardened the ridge. Re-drilled as Nevado Sajama 2 (sol 4803).",
+    "desc_es": "Perforación en la cresta, ~10 m de Valle de la Luna y ~2 m más alta. Tiene vetas finas: los fluidos que endurecieron la cresta. Se volvió a perforar (Nevado Sajama 2, sol 4803).",
+    "rubric": {
+     "novelty": 5,
+     "habitability": 5,
+     "human_only": 4,
+     "total_15": 14,
+     "novedad": 5,
+     "habitabilidad": 5,
+     "solo_humano": 4
+    },
+    "S": 0.93,
+    "eva_sampling": {
+     "tool": "High-Torque Diamond Core Drill + Biosignature Cryo-Tube",
+     "sample_mass_kg": 2.4,
+     "duration_min": 25,
+     "protocol": "Paired Core B (Ridge Crest): sample central fracture vein + cemented halo for fluid-inclusion biosignatures.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 12.92,
+    "bearing_from_base_deg": 190,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity, waypoint sol 4711 (~10 m de Valle de la Luna)",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://science.nasa.gov/solar-system/curiosity-blog-sols-4716-4722-drilling-success-at-nevado-sajama",
+    "is_base": false,
+    "paired_with": "T05"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.38101,
+     -4.80776
+    ]
+   },
+   "properties": {
+    "id": "T07",
+    "name": "Monte Grande polygons",
+    "type_en": "Polygonal fracture network & calcium sulfate veins",
+    "type_es": "polígonos en el fondo de la hondonada",
+    "sol": "4741-4749",
+    "elev_geoid_m": -3611.533,
+    "desc_en": "Polygon-covered block on the hollow floor, never seen before inside a boxwork hollow; may record wet–dry cycles.",
+    "desc_es": "Bloque cubierto de polígonos en el fondo de la hondonada. Nunca se habían visto en una hondonada del boxwork; podrían indicar ciclos de humedad y secado.",
+    "rubric": {
+     "novelty": 4,
+     "habitability": 4,
+     "human_only": 5,
+     "total_15": 13,
+     "novedad": 4,
+     "habitabilidad": 4,
+     "solo_humano": 5
+    },
+    "S": 0.87,
+    "eva_sampling": {
+     "tool": "Precision Micro-Spatula & UV Fluorescence Imager",
+     "sample_mass_kg": 1.1,
+     "duration_min": 20,
+     "protocol": "Millimeter-scale selective extraction of white vein core vs. dark Fe-rich alteration rind.",
+     "kind": "assumed"
+    },
+    "isru_target": false,
+    "dist_from_base_km": 12.91,
+    "bearing_from_base_deg": 190,
+    "ez_zone": "25km",
+    "coord_source": "Posición de Curiosity, waypoint sol 4741",
+    "coord_kind": "measured",
+    "waypoints_source": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "source_url": "https://science.nasa.gov/blog/curiosity-blog-sols-4743-4749-polygons-in-the-hollow/",
+    "is_base": false
+   }
+  }
+ ]
+}
