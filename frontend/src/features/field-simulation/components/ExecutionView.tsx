@@ -72,7 +72,7 @@ export function ExecutionView({
 
   return (
     <>
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[260px_1fr_380px]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[320px_1fr_320px]">
         <aside className="flex min-h-0 flex-col gap-md">
           <ItineraryCard state={sim.state} targetName={targetName} />
         </aside>

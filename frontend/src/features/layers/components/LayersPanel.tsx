@@ -12,10 +12,14 @@ const PROVENANCE: Record<Provenance, { label: string; dot: string }> = {
   assumed: { label: 'Assumed', dot: 'bg-on-surface-variant' },
 };
 
-/** Panel de capas: encender/apagar, opacidad y, al pasar el cursor, de dónde viene cada dato. */
+/**
+ * Panel de capas: encender/apagar, opacidad y procedencia (tooltip). Las subcapas (p. ej. tipos de
+ * objetivo y nombres) van plegadas dentro de su capa padre y solo se abren si se necesitan.
+ */
 export function LayersPanel() {
-  const ready = LAYERS.filter((l) => l.available);
-  const soon = LAYERS.filter((l) => !l.available);
+  const top = LAYERS.filter((l) => !l.parent);
+  const ready = top.filter((l) => l.available);
+  const soon = top.filter((l) => !l.available);
 
   return (
     <Card title="Layers" action={<Icon name="layers" className="text-[18px] text-accent" />} className="gap-xs">
@@ -30,15 +34,16 @@ export function LayersPanel() {
   );
 }
 
-function LayerRow({ layer }: { layer: LayerDef }) {
+function LayerRow({ layer, sub = false, parentOn = true }: { layer: LayerDef; sub?: boolean; parentOn?: boolean }) {
   const { layers, toggle, setOpacity } = useLayers();
   const view = layers[layer.id];
-  const on = layer.available && view.visible;
+  const enabled = layer.available && parentOn;
+  const on = enabled && view.visible;
   const prov = PROVENANCE[layer.provenance];
+  const children = LAYERS.filter((l) => l.parent === layer.id);
 
   return (
-    <div className={`flex flex-col gap-xs rounded-md px-xs py-xs ${on ? 'bg-surface' : ''} ${layer.available ? '' : 'opacity-50'}`}>
-      {/* El tooltip abarca toda la fila: aparece a la derecha del panel, sin tapar los interruptores */}
+    <div className={`flex flex-col gap-xs rounded-md px-xs py-xs ${on && !sub ? 'bg-surface' : ''} ${enabled ? '' : 'opacity-50'}`}>
       <Tooltip
         title={layer.source}
         text={
@@ -51,13 +56,20 @@ function LayerRow({ layer }: { layer: LayerDef }) {
         }
         className="items-center gap-sm"
       >
-        <span tabIndex={0} className="flex min-w-0 flex-1 items-center gap-sm rounded outline-none focus-visible:ring-2 focus-visible:ring-accent">
-          <Icon name={layer.icon} className={`shrink-0 text-[18px] ${on ? 'text-accent' : 'text-on-surface-variant'}`} />
+        <span tabIndex={0} className="flex min-h-[36px] min-w-0 flex-1 items-center gap-sm rounded outline-none focus-visible:ring-2 focus-visible:ring-accent">
+          <span
+            className={`material-symbols-outlined notranslate shrink-0 ${sub ? 'text-[16px]' : 'text-[18px]'} ${layer.color ? '' : on ? 'text-accent' : 'text-on-surface-variant'}`}
+            style={layer.color ? { color: layer.color } : undefined}
+            translate="no"
+            aria-hidden="true"
+          >
+            {layer.icon}
+          </span>
           <span className={`truncate font-body text-body-sm ${on ? 'text-on-surface' : 'text-on-surface-variant'}`}>{layer.name}</span>
-          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${prov.dot}`} aria-label={prov.label} />
+          {!sub && <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${prov.dot}`} aria-label={prov.label} />}
         </span>
         {layer.available ? (
-          <Switch checked={view.visible} onChange={() => toggle(layer.id)} label={layer.name} />
+          <Switch checked={view.visible} onChange={() => toggle(layer.id)} label={layer.name} disabled={!parentOn} />
         ) : (
           <Icon name="lock" className="text-[16px] text-on-surface-variant" />
         )}
@@ -87,6 +99,21 @@ function LayerRow({ layer }: { layer: LayerDef }) {
             </>
           )}
         </div>
+      )}
+
+      {children.length > 0 && (
+        // Plegado por defecto: las subcapas solo se abren si se necesitan
+        <details className="group/sub pl-[26px]">
+          <summary className="flex min-h-[32px] cursor-pointer list-none items-center gap-xs font-label text-label-sm uppercase text-on-surface-variant">
+            <Icon name="chevron_right" className="text-[16px] transition-transform group-open/sub:rotate-90" />
+            Filter
+          </summary>
+          <div className="flex flex-col">
+            {children.map((c) => (
+              <LayerRow key={c.id} layer={c} sub parentOn={on} />
+            ))}
+          </div>
+        </details>
       )}
     </div>
   );

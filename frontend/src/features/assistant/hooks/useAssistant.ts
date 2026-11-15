@@ -71,7 +71,7 @@ export function useAssistant() {
     try {
       const reply = await assistantApi.chat(messages, {
         base: state.base,
-        goals: state.goals,
+        goals: state.goals.filter((g) => !state.waypoints.some((w) => w.id === g)),
         hazards: state.hazards,
         has_plan: !!state.traverse,
       });

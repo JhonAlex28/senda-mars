@@ -1,6 +1,7 @@
 export { Clustered } from './components/Clustered';
 export { MapCanvas, type Raster } from './components/MapCanvas';
 export { MapLegend } from './components/MapLegend';
+export { ViewModeSwitch } from './components/ViewModeSwitch';
 export {
   BaseMarker,
   CursorRing,

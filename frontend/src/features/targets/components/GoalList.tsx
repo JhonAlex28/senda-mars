@@ -1,10 +1,29 @@
 import { useState } from 'react';
 import { Icon } from '@/shared/ui/Icon';
+import { SCIENCE_TYPES, scienceType } from '../lib/scienceType';
 import { stars } from '../lib/stars';
 import type { Target } from '../types';
 
+/** Elemento de la lista: un objetivo científico o un punto de paso del vehículo (W1…). */
+export interface GoalItem {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  badge?: string;
+}
+
+export function targetItem(t: Target): GoalItem {
+  const type = SCIENCE_TYPES[scienceType(t)];
+  return { id: t.id, name: t.name, icon: type.icon, color: type.color, badge: stars(t.rubric) };
+}
+
+export function waypointItem(id: string): GoalItem {
+  return { id, name: `Waypoint ${id}`, icon: 'add_location_alt', color: '#22C55E' };
+}
+
 interface GoalListProps {
-  goals: Target[];
+  goals: GoalItem[];
   focusedId: string | null;
   disabled?: boolean;
   onMove: (from: number, to: number) => void;
@@ -12,7 +31,7 @@ interface GoalListProps {
   onFocus: (id: string) => void;
 }
 
-/** Objetivos elegidos, ordenables arrastrando (o con las flechas, desde el teclado). */
+/** Objetivos y waypoints en orden de visita: se reordenan arrastrando (o con las flechas). */
 export function GoalList({ goals, focusedId, disabled = false, onMove, onRemove, onFocus }: GoalListProps) {
   const [dragging, setDragging] = useState<number | null>(null);
   const [over, setOver] = useState<number | null>(null);
@@ -21,7 +40,7 @@ export function GoalList({ goals, focusedId, disabled = false, onMove, onRemove,
     return (
       <p className="rounded-md border border-dashed border-outline px-sm py-md text-center font-body text-body-sm text-on-surface-variant">
         <Icon name="touch_app" className="mb-xs block text-[22px] text-accent mx-auto" />
-        Tap a rock on the map
+        Tap a target or add a point
       </p>
     );
   }
@@ -49,7 +68,7 @@ export function GoalList({ goals, focusedId, disabled = false, onMove, onRemove,
             setDragging(null);
             setOver(null);
           }}
-          className={`group flex items-center justify-between gap-xs rounded-md border bg-surface px-sm py-xs transition-colors ${
+          className={`group flex min-h-[44px] items-center justify-between gap-xs rounded-md border bg-surface px-sm py-xs transition-colors ${
             disabled ? '' : 'cursor-grab active:cursor-grabbing'
           } ${over === i && dragging !== i ? 'border-accent' : 'border-outline'} ${dragging === i ? 'opacity-40' : ''} ${
             focusedId === t.id ? 'ring-1 ring-accent' : ''
@@ -67,12 +86,15 @@ export function GoalList({ goals, focusedId, disabled = false, onMove, onRemove,
             >
               {i + 1}
             </span>
+            <span className="material-symbols-outlined notranslate shrink-0 text-[16px]" style={{ color: t.color }} translate="no" aria-hidden="true">
+              {t.icon}
+            </span>
             <span className="min-w-0 break-words" title={t.name}>
               {t.name}
             </span>
           </button>
           <span className="flex shrink-0 items-center gap-xs">
-            <span className="text-body-sm text-accent">{stars(t.rubric)}</span>
+            {t.badge && <span className="text-body-sm text-accent">{t.badge}</span>}
             {!disabled && (
               <span className="flex items-center opacity-60 group-hover:opacity-100 group-focus-within:opacity-100">
                 <button

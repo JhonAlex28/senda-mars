@@ -10,6 +10,7 @@ import {
   TargetMarker,
   WaypointMarker,
   type Projection,
+  ViewModeSwitch,
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
 import { PROFILE_META, distinctProfiles } from '@/features/route-planning';
@@ -42,7 +43,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const { state, dispatch, targets, targetById } = useMission();
   const { layers, shown } = useLayers();
   const [hover, setHover] = useState<GeoPoint | null>(null);
-  const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
+  const viewMode = '2d' as '2d' | '3d'; // 3D bloqueado (Soon)
   const walking = state.phase === 'walk';
   const parking = activeParking(state);
   const activeRoverRoute = selectedTraverse(state);
@@ -65,7 +66,8 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
     ...(safe && shown('safeReturn') ? [{ key: 'safe-return', image: safe.image, bbox: safe.bbox, opacity: layers.safeReturn.opacity }] : []),
   ];
   const hazardRadius = HAZARD_RADIUS_M[walking ? 'walk' : 'plan'];
-  const scienceTargets = useMemo(() => targets.filter((t) => !t.is_base), [targets]);
+  // Objetivos visibles: sin la base y según los filtros por tipo de la capa "Science targets"
+  const scienceTargets = targets.filter((t) => !t.is_base && shown(`sci-${scienceType(t)}`));
   const focused = state.focusedTargetId ? targetById.get(state.focusedTargetId) : undefined;
   const zoneTargets = new Set(walking ? parking?.target_ids : undefined);
   // Leyenda de las rutas que se ven: las caminatas del estacionamiento activo en Walk, las del rover en Plan
@@ -82,27 +84,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   return (
     <main className="relative flex min-h-0 flex-col overflow-hidden rounded-lg border border-outline bg-surface">
       <div className="relative min-h-0 flex-1">
-        {/* 2D GIS / 3D DEM View Mode Toggle */}
-        <div className="absolute bottom-12 left-1/2 z-30 flex -translate-x-1/2 items-center rounded-full border border-outline bg-surface-container/95 p-0.5 font-mono text-mono-sm shadow-lg backdrop-blur-sm">
-          <button
-            type="button"
-            onClick={() => setViewMode('2d')}
-            className={`rounded-full px-md py-1 transition-colors ${
-              viewMode === '2d' ? 'bg-primary text-on-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            2D GIS
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('3d')}
-            className={`rounded-full px-md py-1 transition-colors ${
-              viewMode === '3d' ? 'bg-primary text-on-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            3D DEM
-          </button>
-        </div>
+        <ViewModeSwitch className="absolute bottom-12 left-1/2 -translate-x-1/2" />
 
         {viewMode === '3d' ? (
           <Terrain3DView
@@ -192,12 +174,12 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
           ))}
 
           {!walking &&
-            state.waypoints.map((w, i) => (
+            state.waypoints.map((w) => (
               <WaypointMarker
-                key={`${w.lon},${w.lat}`}
+                key={w.id}
                 point={w}
-                label={`W${i + 1}`}
-                onClick={state.tool === 'waypoint' ? () => dispatch({ type: 'removeWaypoint', index: i }) : undefined}
+                label={w.id}
+                onClick={state.tool === 'waypoint' ? () => dispatch({ type: 'removeWaypoint', id: w.id }) : undefined}
               />
             ))}
 

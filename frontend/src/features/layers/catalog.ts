@@ -1,3 +1,5 @@
+import { SCIENCE_TYPES, type ScienceType } from '@/features/targets/lib/scienceType';
+
 /** De dónde sale el dato de una capa (requisito RF-1: mostrar la procedencia). */
 export type Provenance = 'measured' | 'modeled' | 'assumed';
 
@@ -7,6 +9,10 @@ export type LayerId =
   | 'safeReturn'
   | 'targets'
   | 'targetNames'
+  | 'sci-water'
+  | 'sci-mineral'
+  | 'sci-drill'
+  | 'sci-geology'
   | 'routes'
   | 'hazards'
   | 'imagery'
@@ -27,6 +33,10 @@ export interface LayerDef {
   defaultVisible?: boolean;
   defaultOpacity: number;
   legend?: { label: string; swatch: string }[];
+  /** Subcapa: se dibuja plegada dentro de su capa padre y depende de ella. */
+  parent?: LayerId;
+  /** Color del icono (tipos de objetivo). */
+  color?: string;
 }
 
 /**
@@ -84,9 +94,10 @@ export const LAYERS: LayerDef[] = [
     available: true,
     defaultOpacity: 1,
   },
+  // Subcapas de "Science targets": nombres y un interruptor por tipo científico
   {
     id: 'targetNames',
-    name: 'Target names',
+    name: 'Names',
     icon: 'label',
     provenance: 'measured',
     source: 'Curiosity sites (NASA MMGIS)',
@@ -95,7 +106,23 @@ export const LAYERS: LayerDef[] = [
     available: true,
     defaultVisible: false,
     defaultOpacity: 1,
+    parent: 'targets',
   },
+  ...(Object.entries(SCIENCE_TYPES) as [ScienceType, (typeof SCIENCE_TYPES)[ScienceType]][]).map(
+    ([type, meta]): LayerDef => ({
+      id: `sci-${type}`,
+      name: meta.label,
+      icon: meta.icon,
+      color: meta.color,
+      provenance: 'measured',
+      source: 'Target type (catalog)',
+      resolution: 'Points',
+      raster: false,
+      available: true,
+      defaultOpacity: 1,
+      parent: 'targets',
+    }),
+  ),
   {
     id: 'routes',
     name: 'Routes',

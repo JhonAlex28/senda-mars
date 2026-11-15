@@ -62,7 +62,7 @@ export function MissionHeader() {
       <div className="flex flex-wrap items-center justify-between gap-sm px-xl py-sm">
         <SendaLogo />
         <div className="flex flex-col gap-xs">
-          <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp</h1>
+          <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
           {readiness && <ReadinessBadge readiness={readiness} />}
         </div>
         <div className="flex flex-wrap items-center gap-sm">

@@ -1,4 +1,4 @@
-import { GoalList, type Target } from '@/features/targets';
+import { GoalList, targetItem, waypointItem, type GoalItem } from '@/features/targets';
 import { SITES } from '@/features/globe';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
@@ -7,7 +7,14 @@ import { useMission } from '../state/MissionContext';
 /** "My goals": objetivos elegidos, ordenados por prioridad. */
 export function GoalsCard() {
   const { state, dispatch, targetById, procedureHistory, procedureHistoryError } = useMission();
-  const goals = state.goals.map((id) => targetById.get(id)).filter((t): t is Target => !!t);
+  const waypointIds = new Set(state.waypoints.map((w) => w.id));
+  const goals = state.goals
+    .map((id): GoalItem | null => {
+      if (waypointIds.has(id)) return waypointItem(id);
+      const t = targetById.get(id);
+      return t ? targetItem(t) : null;
+    })
+    .filter((g): g is GoalItem => !!g);
   const historyByMission = new Map<string, typeof procedureHistory>();
   for (const record of [...procedureHistory].reverse()) {
     const records = historyByMission.get(record.missionId) ?? [];
@@ -16,7 +23,7 @@ export function GoalsCard() {
   }
 
   return (
-    <Card title="My goals" action={<span title="Drag to reorder"><Icon name="drag_indicator" className="text-[18px] text-accent" /></span>}>
+    <Card title="Goals" action={<span title="Drag to reorder"><Icon name="drag_indicator" className="text-[18px] text-accent" /></span>}>
       <GoalList
         goals={goals}
         focusedId={state.focusedTargetId}

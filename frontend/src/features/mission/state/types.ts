@@ -10,6 +10,11 @@ export type MapTool = 'select' | 'hazard' | 'waypoint';
 /** Pasos guiados de la planificación (se derivan del estado, no se guardan). */
 export type PlanStep = 'goals' | 'traverse' | 'eva' | 'ready';
 
+/** Punto de paso del vehículo; se ordena en la lista de objetivos como uno más. */
+export interface UserWaypoint extends GeoPoint {
+  id: string;
+}
+
 export interface EvaPlan {
   routes: RoutePlan[];
   profile: RouteProfile;
@@ -48,8 +53,9 @@ export interface MissionState {
   base: GeoPoint | null;
   goals: string[]; // ids en orden de prioridad
   hazards: Hazard[];
-  /** Puntos de paso del vehículo marcados por el usuario (W1…Wn, en orden de creación). */
-  waypoints: GeoPoint[];
+  /** Puntos de paso del vehículo marcados por el usuario. Su id (W1…) también va en `goals`. */
+  waypoints: UserWaypoint[];
+  nextWaypoint: number; // contador para ids estables W1, W2…
   tool: MapTool;
   focusedTargetId: string | null;
   traverse: TraversePlan | null;
@@ -76,7 +82,11 @@ export type MissionAction =
   | { type: 'removeHazard'; index: number }
   | { type: 'clearHazards' }
   | { type: 'addWaypoint'; point: GeoPoint }
-  | { type: 'removeWaypoint'; index: number }
+  | { type: 'removeWaypoint'; id: string }
+  /** Orden optimizado por el backend: reescribe la lista y carga ese plan. */
+  | { type: 'optimizedPlanned'; plan: TraversePlan; goals: string[] }
+  /** Fin de la simulación: interfaz limpia (se conservan base, tripulación e historial). */
+  | { type: 'finishMission'; toGlobe?: boolean }
   | { type: 'setTool'; tool: MapTool }
   | { type: 'traversePlanned'; plan: TraversePlan }
   | { type: 'selectTraverseProfile'; profile: RouteProfile }

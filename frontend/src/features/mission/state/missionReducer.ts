@@ -7,6 +7,7 @@ export const initialMissionState: MissionState = {
   goals: [],
   hazards: [],
   waypoints: [],
+  nextWaypoint: 1,
   tool: 'select',
   focusedTargetId: null,
   traverse: null,
@@ -62,7 +63,9 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
     case 'toggleGoal': {
       const has = state.goals.includes(action.id);
       const goals = has ? state.goals.filter((g) => g !== action.id) : [...state.goals, action.id];
-      return invalidatePlan({ ...state, goals }, 'Goals changed.');
+      // Quitar un waypoint de la lista también lo quita del mapa
+      const waypoints = has ? state.waypoints.filter((w) => w.id !== action.id) : state.waypoints;
+      return invalidatePlan({ ...state, goals, waypoints }, 'Goals changed.');
     }
     case 'moveGoal':
       if (action.to < 0 || action.to >= state.goals.length) return state;
@@ -79,13 +82,45 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       );
     case 'clearHazards':
       return invalidatePlan({ ...state, hazards: [] }, 'Danger zones cleared.');
-    case 'addWaypoint':
-      return invalidatePlan({ ...state, waypoints: [...state.waypoints, action.point] }, 'Waypoint added.');
+    case 'addWaypoint': {
+      const id = `W${state.nextWaypoint}`;
+      return invalidatePlan(
+        {
+          ...state,
+          waypoints: [...state.waypoints, { ...action.point, id }],
+          goals: [...state.goals, id],
+          nextWaypoint: state.nextWaypoint + 1,
+        },
+        'Waypoint added.',
+      );
+    }
     case 'removeWaypoint':
       return invalidatePlan(
-        { ...state, waypoints: state.waypoints.filter((_, i) => i !== action.index) },
+        {
+          ...state,
+          waypoints: state.waypoints.filter((w) => w.id !== action.id),
+          goals: state.goals.filter((g) => g !== action.id),
+        },
         'Waypoint removed.',
       );
+    case 'optimizedPlanned':
+      return {
+        ...state,
+        goals: action.goals,
+        traverse: action.plan,
+        evaPlans: {},
+        activeParkingId: action.plan.parkings[0]?.id ?? null,
+        focusedTargetId: null,
+        notice: 'Order optimized.',
+      };
+    case 'finishMission':
+      return {
+        ...initialMissionState,
+        phase: action.toGlobe ? 'globe' : 'plan',
+        missionId: state.missionId,
+        base: state.base,
+        crew: state.crew,
+      };
     case 'setTool':
       return { ...state, tool: action.tool };
 
@@ -146,11 +181,13 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       return { ...state, notice: null };
 
     case 'planLoaded':
+      // El plan del asistente no trae waypoints de usuario: se descartan para que lista y mapa coincidan
       return {
         ...state,
         phase: 'walk',
         tool: 'select',
         goals: action.goals,
+        waypoints: [],
         hazards: action.hazards,
         traverse: action.traverse,
         traverseProfile: action.traverseProfile,

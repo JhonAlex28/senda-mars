@@ -64,7 +64,7 @@ function PlanView({ projection, site, readiness }: ViewProps) {
 
   return (
     <>
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[260px_1fr_380px]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[320px_1fr_320px]">
         <aside className="scroll-thin flex min-h-0 flex-col gap-md overflow-y-auto">
           <LayersPanel />
           <MarsWeatherCard readiness={readiness} />
@@ -111,8 +111,9 @@ function GoView({ projection, site, readiness }: ViewProps) {
       onCloseCrewStatus={() => dispatch({ type: 'setCrewStatusOpen', open: false })}
       quantumSummary={state.quantumSummary}
       renderFooter={(supplies: ReactNode) => <WeatherStrip readiness={readiness}>{supplies}</WeatherStrip>}
-      onReplan={() => dispatch({ type: 'setPhase', phase: 'plan' })}
-      onExit={() => dispatch({ type: 'backToGlobe' })}
+      // Al cerrar el resumen la interfaz queda limpia para otra misión (base, tripulación e historial se conservan)
+      onReplan={() => dispatch({ type: 'finishMission' })}
+      onExit={() => dispatch({ type: 'finishMission', toGlobe: true })}
     />
   );
 }

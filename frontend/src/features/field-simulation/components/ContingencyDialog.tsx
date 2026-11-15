@@ -1,17 +1,16 @@
-import type { TravelMode } from '@/features/route-planning';
 import { Dialog } from '@/shared/ui/Dialog';
 import { Icon } from '@/shared/ui/Icon';
 import { CONTINGENCIES, type ContingencyKind } from '../hooks/useSimulation';
 
 interface ContingencyDialogProps {
-  mode: TravelMode;
+  /** Opciones válidas para el tramo actual (EVA o vehículo) que ofrece el motor de seguridad. */
+  options: ContingencyKind[];
   onPick: (kind: ContingencyKind) => void;
   onClose: () => void;
 }
 
-/** Elegir la situación simulada; la app recalcula la ruta y los recursos. */
-export function ContingencyDialog({ mode, onPick, onClose }: ContingencyDialogProps) {
-  const options = (Object.keys(CONTINGENCIES) as ContingencyKind[]).filter((k) => mode === 'eva' || !CONTINGENCIES[k].evaOnly);
+/** Elegir la situación; en EVA la evalúa el motor de seguridad (/simulate) y se replanifica. */
+export function ContingencyDialog({ options, onPick, onClose }: ContingencyDialogProps) {
   return (
     <Dialog title="Contingency" icon="warning" onClose={onClose}>
       <div className="flex flex-col gap-sm">
@@ -29,6 +28,7 @@ export function ContingencyDialog({ mode, onPick, onClose }: ContingencyDialogPr
               </div>
               <div>
                 <span className="block font-headline text-title-md">{c.title}</span>
+                <span className="font-body text-body-sm text-on-surface-variant">{c.text}</span>
               </div>
             </button>
           );

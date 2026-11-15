@@ -262,13 +262,13 @@ export function MissionSummary({ state, roverCapacity, targetName, crew, quantum
               win.print();
             }}
           >
-            Print / PDF Dossier
+            PDF
           </Button>
           <Button variant="ghost" icon="public" onClick={onExit}>
-            View Mars
+            Mars
           </Button>
-          <Button icon="edit_road" onClick={onReplan}>
-            Plan another trip
+          <Button icon="add_circle" onClick={onReplan}>
+            New mission
           </Button>
         </div>
       </section>

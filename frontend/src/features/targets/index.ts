@@ -1,5 +1,5 @@
 // API pública de la feature: otras partes de la app solo importan desde aquí
-export { GoalList } from './components/GoalList';
+export { GoalList, targetItem, waypointItem, type GoalItem } from './components/GoalList';
 export { TargetCard } from './components/TargetCard';
 export { useTargets } from './hooks/useTargets';
 export { SCIENCE_TYPES, scienceType, type ScienceType } from './lib/scienceType';

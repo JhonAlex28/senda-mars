@@ -5,6 +5,7 @@ import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { Meter, toneForRemaining } from '@/shared/ui/Meter';
 import { Live, Phrase } from '@/shared/ui/Text';
+import type { EngineAlert } from '@/features/safety';
 import type { Simulation } from '../hooks/useSimulation';
 import { legRemaining, type Leg, type LegStop } from '../lib/itinerary';
 import { MODE_ICON, stopLabel } from '../lib/labels';
@@ -83,6 +84,8 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
         </p>
       </Card>
 
+      {sim.engineAlert && <SafetyAlert alert={sim.engineAlert} onClose={sim.clearEngineAlert} />}
+
       <Card title="Supplies" className="gap-xs">
         {[
           { label: 'Battery', pct: battery },
@@ -96,6 +99,23 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
             <Meter value={pct} tone={toneForRemaining(pct)} label={label} className="h-2" />
           </div>
         ))}
+        {sim.liveSafety && (
+          <div className="flex items-center justify-between gap-sm rounded-md bg-surface px-sm py-xs">
+            <span className="flex items-center gap-xs font-body text-body-sm text-on-surface-variant">
+              <Icon name="u_turn_left" className="text-[16px] text-accent" />
+              Return reserve
+            </span>
+            <Live className={`font-mono text-mono-sm font-bold ${sim.liveSafety.reserveL < 0 ? 'text-error' : 'text-on-surface'}`}>
+              {sim.liveSafety.reserveL.toFixed(0)} L
+            </Live>
+          </div>
+        )}
+        {sim.liveSafety?.alert && (
+          <p className={`flex items-center gap-xs font-body text-body-sm ${sim.liveSafety.alert.level === 'rtb' ? 'text-error' : 'text-warning'}`}>
+            <Icon name="warning" className="text-[16px]" />
+            <Phrase>{sim.liveSafety.alert.msg}</Phrase>
+          </p>
+        )}
       </Card>
 
 
@@ -148,7 +168,7 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
         {walking && (
           <ActionTile icon="airport_shuttle" label="To vehicle" disabled={taskRunning || !!busy} loading={busy === 'rover'} onClick={sim.returnToRover} />
         )}
-        <ActionTile icon="warning" label="Contingency" tone="warning" disabled={taskRunning || !!busy} loading={['blocked', 'dust', 'leak'].includes(busy ?? '')} onClick={() => setContingencyOpen(true)} />
+        <ActionTile icon="warning" label="Contingency" tone="warning" disabled={taskRunning || !!busy} loading={['blocked', 'dust', 'leak', 'injury', 'sep'].includes(busy ?? '')} onClick={() => setContingencyOpen(true)} />
         <ActionTile icon="home" label="To base" disabled={taskRunning || !!busy || state.arrived?.kind === 'base'} loading={busy === 'base'} onClick={sim.returnToBase} />
         </div>
       </div>
@@ -157,7 +177,7 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
 
       {contingencyOpen && (
         <ContingencyDialog
-          mode={leg.mode}
+          options={sim.contingencyOptions}
           onClose={() => setContingencyOpen(false)}
           onPick={(kind) => {
             setContingencyOpen(false);
@@ -210,5 +230,22 @@ function EventLog({ events }: { events: Simulation['state']['events'] }) {
         </li>
       ))}
     </ol>
+  );
+}
+
+/** Alerta del motor de seguridad tras una contingencia (código + mensaje, color por nivel). */
+function SafetyAlert({ alert, onClose }: { alert: EngineAlert; onClose: () => void }) {
+  const rtb = alert.level === 'rtb';
+  return (
+    <div role="alert" className={`flex items-start gap-sm rounded-lg border-2 p-sm ${rtb ? 'border-error bg-error/10' : 'border-warning bg-warning/10'}`}>
+      <Icon name={rtb ? 'u_turn_left' : 'warning'} className={`text-[22px] ${rtb ? 'text-error' : 'text-warning'}`} />
+      <div className="min-w-0 flex-1">
+        <p className={`font-headline text-title-md uppercase ${rtb ? 'text-error' : 'text-warning'}`}>{rtb ? 'Return now' : 'Caution'}</p>
+        <Phrase className="font-body text-body-sm text-on-surface">{alert.msg}</Phrase>
+      </div>
+      <button type="button" onClick={onClose} aria-label="Dismiss" className="flex h-11 w-11 items-center justify-center text-on-surface-variant hover:text-on-surface">
+        <Icon name="close" className="text-[18px]" />
+      </button>
+    </div>
   );
 }
