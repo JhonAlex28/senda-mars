@@ -12,6 +12,7 @@ import { ExecutionPanel } from './ExecutionPanel';
 import { ItineraryCard } from './ItineraryCard';
 import { MissionSummary } from './MissionSummary';
 import { ReplanToast } from './ReplanToast';
+import { CrewStatusModal } from './CrewStatusModal';
 
 import type { CrewConfig, QuantumSummary } from '@/features/mission/state/types';
 import type { RoverVehicleId } from '@/features/mission/state/vehicles';
@@ -26,8 +27,10 @@ interface ExecutionViewProps {
   projection: Projection;
   site: TerrainLayer;
   vehicleId?: RoverVehicleId;
-  vehicleSpeedKmh?: number;
   crew?: CrewConfig;
+  /** "Crew status" (botón de la cabecera): HUD del casco. */
+  crewStatusOpen?: boolean;
+  onCloseCrewStatus?: () => void;
   quantumSummary?: QuantumSummary | null;
   /** La página decide la franja inferior; aquí se le pasa la tarjeta de suministros en vivo. */
   renderFooter: (supplies: ReactNode) => ReactNode;
@@ -46,8 +49,9 @@ export function ExecutionView({
   projection,
   site,
   vehicleId = 'SEV_PRESSURIZED',
-  vehicleSpeedKmh = 8.0,
   crew,
+  crewStatusOpen = false,
+  onCloseCrewStatus,
   quantumSummary,
   renderFooter,
   onReplan,
@@ -74,12 +78,13 @@ export function ExecutionView({
         </aside>
         <ExecutionMap projection={projection} site={site} sim={sim} targets={targets} parkings={parkings} base={base} hazards={hazards} vehicleId={vehicleId} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto">
-          <ExecutionPanel sim={sim} targetName={targetName} vehicleId={vehicleId} vehicleSpeedKmh={vehicleSpeedKmh} crew={crew} />
+          <ExecutionPanel sim={sim} targetName={targetName} />
         </aside>
       </div>
 
-      {renderFooter(<SuppliesCard pct={batteryLeft} hint="Rover battery left right now" />)}
+      {renderFooter(<SuppliesCard pct={batteryLeft} hint="Vehicle battery now" />)}
 
+      {crewStatusOpen && crew && <CrewStatusModal sim={sim} crew={crew} onClose={() => onCloseCrewStatus?.()} />}
       {sim.lastReplan && <ReplanToast key={sim.state.events.length} result={sim.lastReplan} onClose={sim.clearReplan} />}
       {sim.state.finished && (
         <MissionSummary state={sim.state} roverCapacity={roverCapacity} targetName={targetName} crew={crew} quantumSummary={quantumSummary} onReplan={onReplan} onExit={onExit} />

@@ -9,7 +9,7 @@ import { ErrorNote } from './ErrorNote';
 import { ParkingChips } from './ParkingChips';
 import { VehicleSelectorCard } from './VehicleSelectorCard';
 
-/** Fase Plan: pedir el recorrido del rover, comparar las tres rutas y elegir dónde estacionar. */
+/** Fase Plan: pedir la ruta del vehículo, comparar las tres opciones y elegir la parada. */
 export function TraversePanel() {
   const { state, dispatch, targetById } = useMission();
   const { planTraverse, planEva, loading, error, clearError } = usePlanning();
@@ -25,13 +25,7 @@ export function TraversePanel() {
 
   return (
     <>
-      <VehicleSelectorCard
-        vehicleId={state.vehicleId}
-        speedKmh={state.vehicleSpeedKmh}
-        distanceM={activeRoute?.distance_m}
-        onChangeVehicle={(vehicleId) => dispatch({ type: 'setVehicle', vehicleId })}
-        onChangeSpeed={(speedKmh) => dispatch({ type: 'setVehicleSpeed', speedKmh })}
-      />
+      <VehicleSelectorCard distanceM={activeRoute?.distance_m} driveMin={activeRoute?.duration_min} />
 
       <Button
         size="lg"
@@ -40,26 +34,26 @@ export function TraversePanel() {
         disabled={state.goals.length === 0}
         loading={loading === 'traverse'}
         onClick={planTraverse}
-        title={state.goals.length === 0 ? 'Add at least one goal first' : undefined}
+        title={state.goals.length === 0 ? 'Add a goal first' : undefined}
       >
-        {state.traverse ? 'Recalculate routes' : 'Find rover routes'}
+        {state.traverse ? 'Replan route' : 'Plan route'}
       </Button>
       {error && <ErrorNote message={error} onClose={clearError} />}
 
       {state.traverse && (
         <>
           <RouteComparator
-            title="Rover route"
+            title="Vehicle route"
             routes={state.traverse.routes}
             selected={state.traverseProfile}
             onSelect={(profile) => dispatch({ type: 'selectTraverseProfile', profile })}
           />
 
-          <Card title="Rover stops" className="gap-xs">
+          <Card title="Stops" className="gap-xs">
             <div className="flex flex-wrap items-center justify-between gap-xs">
               <ParkingChips />
               <Button variant={parkingPlanned ? 'secondary' : 'primary'} size="sm" icon="directions_walk" loading={loading === parking?.id} onClick={openWalk}>
-                {parkingPlanned ? 'Open spacewalk' : 'Plan spacewalk'}
+                {parkingPlanned ? 'Open EVA' : 'Plan EVA'}
               </Button>
             </div>
             {parking && (

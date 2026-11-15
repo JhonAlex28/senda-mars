@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useMission } from '../state/MissionContext';
 import type { CrewConfig } from '../state/types';
-import { HelmetStatusCard } from './HelmetStatusCard';
 
 interface CrewSuitModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-/** Crew Roster, Team Name & Astronaut Suit Health Configuration Modal. */
+/** Crew config (durante la planificación): solo los parámetros de la tripulación. */
 export function CrewSuitModal({ open, onClose }: CrewSuitModalProps) {
   const { state, dispatch } = useMission();
   const [draft, setDraft] = useState<CrewConfig>(() => state.crew);
@@ -31,29 +30,24 @@ export function CrewSuitModal({ open, onClose }: CrewSuitModalProps) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-md backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label="Crew Roster and Suit Health"
+      aria-label="Crew config"
     >
       <div className="max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-lg border border-outline bg-surface-container p-lg shadow-2xl">
         <div className="mb-md flex items-start justify-between gap-md border-b border-outline-variant pb-sm">
           <div>
-            <div className="font-mono text-mono-sm uppercase tracking-wider text-accent">
-              Astronaut Bio-Medical &amp; xEMU Suit Telemetry
-            </div>
-            <h2 className="font-headline text-headline-md text-on-surface">
-              Mission Crew Roster, Team Name &amp; Suit Health
-            </h2>
+            <h2 className="font-headline text-headline-md text-on-surface">Crew config</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="rounded-md border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface hover:border-accent hover:text-accent"
           >
-            ✕ CLOSE
+            ✕
           </button>
         </div>
 
         <label className="mb-md flex flex-col gap-1">
-          <span className="font-mono text-mono-sm uppercase text-on-surface-variant">Mission Team / Callsign</span>
+          <span className="font-mono text-mono-sm uppercase text-on-surface-variant">Callsign</span>
           <input
             type="text"
             value={draft.teamName}
@@ -74,12 +68,12 @@ export function CrewSuitModal({ open, onClose }: CrewSuitModalProps) {
 
                 <div className="grid grid-cols-2 gap-xs font-mono text-mono-sm">
                   <label className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-on-surface-variant">ASTRONAUT NAME</span>
+                    <span className="text-[10px] text-on-surface-variant">NAME</span>
                     <input
                       type="text"
                       value={m.name}
                       onChange={(e) => updateMember(idx, { name: e.target.value.toUpperCase() })}
-                      className="rounded border border-outline bg-surface-container px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
+                      className="rounded border border-outline bg-surface-container min-h-[44px] px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
                     />
                   </label>
                   <label className="flex flex-col gap-0.5">
@@ -88,7 +82,7 @@ export function CrewSuitModal({ open, onClose }: CrewSuitModalProps) {
                       type="text"
                       value={m.role}
                       onChange={(e) => updateMember(idx, { role: e.target.value.toUpperCase() })}
-                      className="rounded border border-outline bg-surface-container px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
+                      className="rounded border border-outline bg-surface-container min-h-[44px] px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
                     />
                   </label>
                   <label className="flex flex-col gap-0.5">
@@ -97,32 +91,32 @@ export function CrewSuitModal({ open, onClose }: CrewSuitModalProps) {
                       type="text"
                       value={m.suitId}
                       onChange={(e) => updateMember(idx, { suitId: e.target.value })}
-                      className="rounded border border-outline bg-surface-container px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
+                      className="rounded border border-outline bg-surface-container min-h-[44px] px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
                     />
                   </label>
                   <label className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-on-surface-variant">RESTING HR (BPM)</span>
+                    <span className="text-[10px] text-on-surface-variant">RESTING HR</span>
                     <input
                       type="number"
                       min={45}
                       max={110}
                       value={m.restingBpm}
                       onChange={(e) => updateMember(idx, { restingBpm: Number(e.target.value) || 68 })}
-                      className="rounded border border-outline bg-surface-container px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
+                      className="rounded border border-outline bg-surface-container min-h-[44px] px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-0.5">
+                    <span className="text-[10px] text-on-surface-variant">MASS (KG)</span>
+                    <input
+                      type="number"
+                      min={40}
+                      max={130}
+                      value={m.massKg}
+                      onChange={(e) => updateMember(idx, { massKg: Number(e.target.value) || 75 })}
+                      className="rounded border border-outline bg-surface-container min-h-[44px] px-xs py-1 text-on-surface focus:border-accent focus:outline-none"
                     />
                   </label>
                 </div>
-
-                <HelmetStatusCard
-                  astronautName={m.name || m.id}
-                  suitId={m.suitId}
-                  tempC={idx === 0 ? 16.6 : 16.9}
-                  o2Pct={100}
-                  co2Pct={0.49}
-                  pressureKpa={29.6}
-                  heartRateBpm={m.restingBpm}
-                  valPct={35}
-                />
               </div>
             );
           })}
@@ -141,7 +135,7 @@ export function CrewSuitModal({ open, onClose }: CrewSuitModalProps) {
             onClick={save}
             className="rounded bg-primary px-lg py-xs font-headline text-title-md font-bold text-on-primary hover:opacity-90"
           >
-            Save Crew &amp; Suit Config
+            Save
           </button>
         </div>
       </div>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { ReadinessBadge, useReadiness } from '@/features/environment';
 import { Icon } from '@/shared/ui/Icon';
 import { useMission } from '../state/MissionContext';
 import { CrewSuitModal } from './CrewSuitModal';
 import { GaleConceptModal } from './GaleConceptModal';
-import { NasaLabsModal } from './NasaLabsModal';
 import sendaLogo from '@/shared/assets/senda-logo.png';
 
 export function SendaLogo() {
@@ -14,102 +14,78 @@ export function SendaLogo() {
   );
 }
 
-/** Top bar with mission title, NASA Labs, Gale EZ & SEV reference, and navigation back to Mars globe. */
+interface HeaderButtonProps {
+  icon: string;
+  label: string;
+  onClick?: () => void;
+  /** Bloqueado: se ve con candado y "Soon" (datos todavía sin fuente oficial). */
+  locked?: boolean;
+  tone?: 'default' | 'accent' | 'success';
+}
+
+function HeaderButton({ icon, label, onClick, locked, tone = 'default' }: HeaderButtonProps) {
+  const toneCls = {
+    default: 'border-outline text-on-surface hover:border-accent hover:text-accent',
+    accent: 'border-accent text-accent hover:bg-primary hover:text-on-primary',
+    success: 'border-success/50 bg-success/15 text-success hover:bg-success/25',
+  }[tone];
+  return (
+    <button
+      type="button"
+      disabled={locked}
+      onClick={onClick}
+      title={locked ? `${label} · soon` : label}
+      className={`inline-flex min-h-[44px] items-center gap-xs rounded-full border bg-surface px-md font-mono text-mono-sm transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-outline disabled:hover:text-on-surface ${toneCls}`}
+    >
+      <Icon name={locked ? 'lock' : icon} className="text-[18px]" />
+      <span>{label}</span>
+      {locked && <span className="font-label text-label-sm uppercase text-on-surface-variant">Soon</span>}
+    </button>
+  );
+}
+
+/** Barra superior: misión, clima real, tripulación y acciones (texto mínimo: icono + 1–2 palabras). */
 export function MissionHeader() {
   const { state, dispatch, targets } = useMission();
+  const { data: readiness } = useReadiness();
   const [conceptOpen, setConceptOpen] = useState(false);
-  const [labsOpen, setLabsOpen] = useState(false);
   const [crewOpen, setCrewOpen] = useState(false);
+  const going = state.phase === 'go';
 
-  const handleQuickDemo = () => {
-    const demoIds = targets
-      .filter((t) => !t.is_base)
-      .slice(0, 3)
-      .map((t) => t.id);
-    if (demoIds.length > 0) {
-      dispatch({ type: 'loadDemo', goals: demoIds });
-    }
+  const loadDemo = () => {
+    const ids = targets.filter((t) => !t.is_base).slice(0, 3).map((t) => t.id);
+    if (ids.length > 0) dispatch({ type: 'loadDemo', goals: ids });
   };
 
   return (
     <header className="flex flex-col border-b border-outline-variant bg-surface-container">
       <div className="flex flex-wrap items-center justify-between gap-sm px-xl py-sm">
         <SendaLogo />
-        <div className="flex flex-col">
-          <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
-          <span className="font-mono text-[10px] text-on-surface-variant">
-            MSL REMS: −34°C · 740 Pa · Dust τ=0.62 · RAD 0.67 mSv/sol · Gale EZ 100 km
-          </span>
+        <div className="flex flex-col gap-xs">
+          <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp</h1>
+          {readiness && <ReadinessBadge readiness={readiness} />}
         </div>
         <div className="flex flex-wrap items-center gap-sm">
-          <button
-            type="button"
-            onClick={handleQuickDemo}
-            title="Auto-load 3 Gale Crater science targets for instant presentation demo"
-            className="inline-flex items-center gap-xs rounded-full border border-success/50 bg-success/15 px-md py-xs font-mono text-mono-sm font-bold text-success transition-colors duration-fast hover:bg-success/25"
-          >
-            <Icon name="play_arrow" className="text-[16px]" />
-            <span>Quick Demo</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => dispatch({ type: 'resetMission' })}
-            title="Reset goals, routes, and environment for a fresh mission"
-            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface-variant transition-colors duration-fast hover:border-error hover:text-error"
-          >
-            <Icon name="restart_alt" className="text-[16px]" />
-            <span>Reset</span>
-          </button>
-          {state.phase === 'go' && (
-            <button
-              type="button"
-              onClick={() => dispatch({ type: 'setPhase', phase: 'plan' })}
-              className="inline-flex items-center gap-xs rounded-full border border-accent bg-surface px-md py-xs font-mono text-mono-sm text-accent transition-colors duration-fast hover:bg-primary hover:text-on-primary"
-            >
-              <Icon name="edit_road" className="text-[16px]" />
-              <span>Replan</span>
-            </button>
+          {going ? (
+            <>
+              <HeaderButton icon="monitor_heart" label="Crew status" tone="accent" onClick={() => dispatch({ type: 'setCrewStatusOpen', open: true })} />
+              <HeaderButton icon="edit_road" label="Replan" onClick={() => dispatch({ type: 'setPhase', phase: 'plan' })} />
+            </>
+          ) : (
+            <>
+              <HeaderButton icon="play_arrow" label="Demo" tone="success" onClick={loadDemo} />
+              <HeaderButton icon="restart_alt" label="Reset" onClick={() => dispatch({ type: 'resetMission' })} />
+              <HeaderButton icon="badge" label="Crew config" onClick={() => setCrewOpen(true)} />
+            </>
           )}
-          <button
-            type="button"
-            onClick={() => setCrewOpen(true)}
-            title="Configure Astronaut Names, Team Callsign & Suit Health Telemetry"
-            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
-          >
-            <Icon name="badge" className="text-[16px] text-warning" />
-            <span>{state.crew.teamName}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setLabsOpen(true)}
-            title="Open xEMU Monte Carlo, RIMFAX GPR, SHERLOC Raman, MSR Rack & CAPCOM"
-            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
-          >
-            <Icon name="science" className="text-[16px] text-success" />
-            <span>NASA Labs</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setConceptOpen(true)}
-            title="View Gale Crater Exploration Zone & Pressurized SEV Architecture"
-            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
-          >
-            <Icon name="satellite_alt" className="text-[16px] text-accent" />
-            <span>Gale EZ &amp; SEV</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => dispatch({ type: 'backToGlobe' })}
-            className="inline-flex items-center gap-sm rounded-full border-2 border-outline bg-surface-container-high px-lg py-xs font-headline text-title-md text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
-          >
-            <Icon name="arrow_back" className="text-[20px] text-accent" />
-            <span>View Mars</span>
-          </button>
+          <HeaderButton icon="science" label="Labs" locked />
+          <HeaderButton icon="memory" label="Quantum" locked />
+          <HeaderButton icon="satellite_alt" label="Gale EZ" onClick={() => setConceptOpen(true)} />
+          <HeaderButton icon="public" label="Mars" onClick={() => dispatch({ type: 'backToGlobe' })} />
         </div>
       </div>
       <CrewSuitModal open={crewOpen} onClose={() => setCrewOpen(false)} />
       <GaleConceptModal open={conceptOpen} onClose={() => setConceptOpen(false)} />
-      <NasaLabsModal open={labsOpen} onClose={() => setLabsOpen(false)} />
     </header>
   );
 }

@@ -298,7 +298,7 @@ function AssistantBubble({ exchange }: { exchange: Exchange }) {
   );
 }
 
-const SCREEN_NAME = { plan: 'rover route', walk: 'spacewalks', go: 'simulation started' } as const;
+const SCREEN_NAME = { plan: 'vehicle route', walk: 'EVA', go: 'simulation started' } as const;
 
 function Result({ tone, icon, children }: { tone: 'success' | 'warning' | 'error'; icon: string; children: ReactNode }) {
   const tones = {

@@ -23,12 +23,11 @@ export function usePlanning() {
   const planTraverse = () =>
     run('traverse', async () => {
       if (!state.base) return;
-      const plan = await routesApi.traverse(
-        state.base,
-        state.goals,
-        { hazards: state.hazards },
-        { vehicle_id: state.vehicleId, speed_kmh: state.vehicleSpeedKmh },
-      );
+      // Sin speed_kmh: el backend usa la velocidad nominal del SEV (mission_params.json)
+      const plan = await routesApi.traverse(state.base, state.goals, { hazards: state.hazards }, {
+        vehicle_id: state.vehicleId,
+        waypoints: state.waypoints,
+      });
       dispatch({ type: 'traversePlanned', plan });
     });
 

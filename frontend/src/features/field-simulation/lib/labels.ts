@@ -1,18 +1,18 @@
 import type { LegStop } from './itinerary';
 
-/** Nombre legible de una parada ("Altadena", "Rover P1", "Base"). */
+/** Nombre legible de una parada ("Altadena", "Stop P1", "Base"). */
 export function stopLabel(stop: LegStop, targetName: (id: string) => string | undefined): string {
   switch (stop.kind) {
     case 'target':
       return targetName(stop.refId) ?? stop.refId;
     case 'parking':
-      return `Rover stop ${stop.refId}`;
+      return `Stop ${stop.refId}`;
     case 'rover':
-      return 'The rover';
+      return 'Vehicle';
     case 'base':
-      return 'Base Alpha';
+      return 'Base';
     default:
-      return 'Waypoint';
+      return stop.refId || 'Waypoint';
   }
 }
 

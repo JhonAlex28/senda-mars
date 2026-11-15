@@ -5,21 +5,19 @@ import type { PlanStep } from '../state/types';
 
 const STEPS: { step: PlanStep; label: string; icon: string }[] = [
   { step: 'goals', label: 'Goals', icon: 'diamond' },
-  { step: 'traverse', label: 'Rover', icon: 'route' },
-  { step: 'eva', label: 'Spacewalks', icon: 'directions_walk' },
+  { step: 'traverse', label: 'Vehicle', icon: 'airport_shuttle' },
+  { step: 'eva', label: 'EVA', icon: 'directions_walk' },
   { step: 'ready', label: 'Start', icon: 'rocket_launch' },
 ];
 
-/** Interactive step bar on the map: Goals → Rover → Spacewalks → Start. */
+/** Pasos sobre el mapa: Goals → Vehicle → EVA → Start. */
 export function StepBanner() {
   const { state, dispatch } = useMission();
   const current = planStep(state);
   const index = STEPS.findIndex((s) => s.step === current);
   const canWalk = !!state.traverse;
-  const reserve = planReserve(state);
-  const dustPenaltyPct = Math.max(0, (state.env.tau - 0.62) * 14);
-  const adjustedBatteryPct = reserve ? Math.max(0, reserve.batteryPct - dustPenaltyPct) : 0;
-  const canGo = allEvasPlanned(state) && !!reserve?.returnOk && adjustedBatteryPct >= 15 && !state.env.speActive;
+  // Salir lo deciden el motor (retorno con reserva) y el clima real (LaunchCard)
+  const canGo = allEvasPlanned(state) && !!planReserve(state)?.returnOk;
 
   const onStepClick = (step: PlanStep) => {
     if (step === 'goals' || step === 'traverse') dispatch({ type: 'setPhase', phase: 'plan' });
@@ -52,7 +50,7 @@ export function StepBanner() {
                 >
                   <Icon name={i < index ? 'check' : s.icon} className="text-[14px]" />
                 </span>
-                <span className={`hidden truncate font-label text-label-sm uppercase lg:inline ${i === index ? 'text-on-surface' : 'text-on-surface-variant'}`}>{s.label}</span>
+                <span className={`hidden truncate font-label text-label-sm uppercase sm:inline ${i === index ? 'text-on-surface' : 'text-on-surface-variant'}`}>{s.label}</span>
               </button>
               {i < STEPS.length - 1 && <span className={`mx-xs h-px flex-1 ${i < index ? 'bg-success' : 'bg-outline'}`} />}
             </li>

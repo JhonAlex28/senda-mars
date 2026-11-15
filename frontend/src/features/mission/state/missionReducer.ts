@@ -6,6 +6,7 @@ export const initialMissionState: MissionState = {
   base: null,
   goals: [],
   hazards: [],
+  waypoints: [],
   tool: 'select',
   focusedTargetId: null,
   traverse: null,
@@ -13,16 +14,15 @@ export const initialMissionState: MissionState = {
   activeParkingId: null,
   evaPlans: {},
   vehicleId: 'SEV_PRESSURIZED',
-  vehicleSpeedKmh: 8.0,
   crew: {
-    teamName: 'SENDA-ARES CREW',
+    teamName: 'SENDA CREW',
     members: [
-      { id: 'EVA-1', name: 'WATNEY', role: 'CDR', suitId: 'xEMU-01', restingBpm: 68, massKg: 78 },
-      { id: 'EVA-2', name: 'LEWIS', role: 'GEO', suitId: 'xEMU-02', restingBpm: 64, massKg: 68 },
+      { id: 'EVA-1', name: 'EVA-1', role: 'CDR', suitId: 'xEMU-01', restingBpm: 68, massKg: 78 },
+      { id: 'EVA-2', name: 'EVA-2', role: 'GEO', suitId: 'xEMU-02', restingBpm: 64, massKg: 68 },
     ],
   },
-  env: { tau: 0.62, lmstHour: 13, speActive: false },
   quantumSummary: null,
+  crewStatusOpen: false,
   notice: null,
 };
 
@@ -35,7 +35,7 @@ function invalidatePlan(state: MissionState, reason: string): MissionState {
     evaPlans: {},
     activeParkingId: null,
     phase: state.phase === 'walk' ? 'plan' : state.phase,
-    notice: `${reason} Find the rover routes again.`,
+    notice: `${reason} Plan the route again.`,
   };
 }
 
@@ -55,31 +55,37 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
     case 'setPhase':
       return { ...state, phase: action.phase, tool: 'select', focusedTargetId: null };
 
+    // Las bases son fijas (ya establecidas): solo se toma la del catálogo
     case 'initBase':
       return state.base ? state : { ...state, base: action.point };
-    case 'moveBase':
-      return invalidatePlan({ ...state, base: action.point }, 'The base moved.');
 
     case 'toggleGoal': {
       const has = state.goals.includes(action.id);
       const goals = has ? state.goals.filter((g) => g !== action.id) : [...state.goals, action.id];
-      return invalidatePlan({ ...state, goals }, 'Your goals changed.');
+      return invalidatePlan({ ...state, goals }, 'Goals changed.');
     }
     case 'moveGoal':
       if (action.to < 0 || action.to >= state.goals.length) return state;
-      return invalidatePlan({ ...state, goals: move(state.goals, action.from, action.to) }, 'Your goal order changed.');
+      return invalidatePlan({ ...state, goals: move(state.goals, action.from, action.to) }, 'Goal order changed.');
     case 'focusTarget':
       return { ...state, focusedTargetId: action.id };
 
     case 'addHazard':
-      return invalidatePlan({ ...state, hazards: [...state.hazards, action.hazard] }, 'You marked a new danger zone.');
+      return invalidatePlan({ ...state, hazards: [...state.hazards, action.hazard] }, 'Danger zone added.');
     case 'removeHazard':
       return invalidatePlan(
         { ...state, hazards: state.hazards.filter((_, i) => i !== action.index) },
-        'A danger zone was removed.',
+        'Danger zone removed.',
       );
     case 'clearHazards':
-      return invalidatePlan({ ...state, hazards: [] }, 'Danger zones were cleared.');
+      return invalidatePlan({ ...state, hazards: [] }, 'Danger zones cleared.');
+    case 'addWaypoint':
+      return invalidatePlan({ ...state, waypoints: [...state.waypoints, action.point] }, 'Waypoint added.');
+    case 'removeWaypoint':
+      return invalidatePlan(
+        { ...state, waypoints: state.waypoints.filter((_, i) => i !== action.index) },
+        'Waypoint removed.',
+      );
     case 'setTool':
       return { ...state, tool: action.tool };
 
@@ -107,14 +113,10 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       return { ...state, evaPlans: { ...state.evaPlans, [action.parkingId]: { ...plan, profile: action.profile } } };
     }
 
-    case 'setVehicle':
-      return { ...state, vehicleId: action.vehicleId };
-    case 'setVehicleSpeed':
-      return { ...state, vehicleSpeedKmh: action.speedKmh };
     case 'setCrew':
       return { ...state, crew: action.crew };
-    case 'setEnv':
-      return { ...state, env: { ...state.env, ...action.env } };
+    case 'setCrewStatusOpen':
+      return { ...state, crewStatusOpen: action.open };
     case 'applyQuantumGoals':
       return invalidatePlan(
         { ...state, goals: action.goals, quantumSummary: action.summary },
@@ -129,7 +131,7 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
         evaPlans: {},
         activeParkingId: null,
         tool: 'select',
-        notice: 'Quick Demo loaded (3 Gale Crater science targets). Click "Find Rover Routes" to compute traverse!',
+        notice: 'Demo: 3 targets loaded.',
       };
     case 'resetMission':
       return {
@@ -137,7 +139,7 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
         phase: 'plan',
         base: state.base,
         crew: state.crew,
-        notice: 'Mission reset. Select science targets or click Quick Demo.',
+        notice: 'Mission reset.',
       };
 
     case 'dismissNotice':

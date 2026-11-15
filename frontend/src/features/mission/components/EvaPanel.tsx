@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { RouteComparator } from '@/features/route-planning';
+import { SCIENCE_TYPES, scienceType } from '@/features/targets';
 import { Live } from '@/shared/ui/Text';
 import { formatMinutes } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
@@ -25,18 +26,18 @@ export function EvaPanel() {
   return (
     // key: al cambiar de estacionamiento se crean nodos nuevos y el traductor los vuelve a traducir
     <Fragment key={parking.id}>
-      <Card title={`Spacewalk from ${parking.id}`} action={<ParkingChips />} className="gap-xs">
+      <Card title={`EVA · ${parking.id}`} action={<ParkingChips />} className="gap-xs">
         <ul className="flex flex-col gap-xs">
           {parking.target_ids.map((id) => {
             const t = targetById.get(id);
             return (
               <li key={id} className="flex items-center justify-between gap-sm rounded-md border border-outline bg-surface px-sm py-xs font-body text-body-sm">
                 <span className="flex min-w-0 items-center gap-xs">
-                  <Icon name="diamond" className="text-[16px] text-accent" />
+                  <Icon name={t ? SCIENCE_TYPES[scienceType(t)].icon : 'diamond'} className="text-[16px] text-accent" />
                   <span className="min-w-0 break-words">{t?.name ?? id}</span>
                 </span>
                 <Live className="shrink-0 font-mono text-mono-sm text-on-surface-variant">
-                  🔬 {formatMinutes(t?.task?.duration_min ?? 0)}
+                  {formatMinutes(t?.task?.duration_min ?? 0)}
                 </Live>
               </li>
             );
@@ -44,7 +45,7 @@ export function EvaPanel() {
         </ul>
         {!plan && (
           <Button icon="directions_walk" loading={loading === parking.id} onClick={() => planEva(parking.id)}>
-            Plan spacewalk
+            Plan EVA
           </Button>
         )}
         {error && <ErrorNote message={error} onClose={clearError} />}
@@ -53,7 +54,7 @@ export function EvaPanel() {
       {plan && walk && (
         <>
           <RouteComparator
-            title="Walking route"
+            title="EVA route"
             routes={plan.routes}
             selected={plan.profile}
             onSelect={(profile) => dispatch({ type: 'selectEvaProfile', parkingId: parking.id, profile })}
@@ -66,7 +67,7 @@ export function EvaPanel() {
                 await planEva(nextUnplanned.id);
               }}
             >
-              Next stop: {nextUnplanned.id}
+              Next: {nextUnplanned.id}
             </Button>
           )}
         </>

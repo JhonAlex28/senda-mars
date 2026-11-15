@@ -5,7 +5,7 @@ import type { RoverVehicleId } from './vehicles';
 /** Pantallas principales: globo → Plan (rover) → Walk (EVAs) → Go (simulación). */
 export type Phase = 'globe' | 'plan' | 'walk' | 'go';
 
-export type MapTool = 'select' | 'base' | 'hazard' | 'astar';
+export type MapTool = 'select' | 'hazard' | 'waypoint';
 
 /** Pasos guiados de la planificación (se derivan del estado, no se guardan). */
 export type PlanStep = 'goals' | 'traverse' | 'eva' | 'ready';
@@ -42,18 +42,14 @@ export interface QuantumSummary {
   deltaKwh?: number;
 }
 
-export interface EnvControls {
-  tau: number;
-  lmstHour: number;
-  speActive: boolean;
-}
-
 export interface MissionState {
   phase: Phase;
   missionId: string;
   base: GeoPoint | null;
   goals: string[]; // ids en orden de prioridad
   hazards: Hazard[];
+  /** Puntos de paso del vehículo marcados por el usuario (W1…Wn, en orden de creación). */
+  waypoints: GeoPoint[];
   tool: MapTool;
   focusedTargetId: string | null;
   traverse: TraversePlan | null;
@@ -61,10 +57,10 @@ export interface MissionState {
   activeParkingId: string | null;
   evaPlans: Record<string, EvaPlan>;
   vehicleId: RoverVehicleId;
-  vehicleSpeedKmh: number;
   crew: CrewConfig;
-  env: EnvControls;
   quantumSummary: QuantumSummary | null;
+  /** Modal "Crew status" (HUD del casco) durante la ejecución. */
+  crewStatusOpen: boolean;
   notice: string | null;
 }
 
@@ -73,23 +69,22 @@ export type MissionAction =
   | { type: 'backToGlobe' }
   | { type: 'setPhase'; phase: Phase }
   | { type: 'initBase'; point: GeoPoint }
-  | { type: 'moveBase'; point: GeoPoint }
   | { type: 'toggleGoal'; id: string }
   | { type: 'moveGoal'; from: number; to: number }
   | { type: 'focusTarget'; id: string | null }
   | { type: 'addHazard'; hazard: Hazard }
   | { type: 'removeHazard'; index: number }
   | { type: 'clearHazards' }
+  | { type: 'addWaypoint'; point: GeoPoint }
+  | { type: 'removeWaypoint'; index: number }
   | { type: 'setTool'; tool: MapTool }
   | { type: 'traversePlanned'; plan: TraversePlan }
   | { type: 'selectTraverseProfile'; profile: RouteProfile }
   | { type: 'selectParking'; id: string }
   | { type: 'evaPlanned'; parkingId: string; routes: RoutePlan[] }
   | { type: 'selectEvaProfile'; parkingId: string; profile: RouteProfile }
-  | { type: 'setVehicle'; vehicleId: RoverVehicleId }
-  | { type: 'setVehicleSpeed'; speedKmh: number }
   | { type: 'setCrew'; crew: CrewConfig }
-  | { type: 'setEnv'; env: Partial<EnvControls> }
+  | { type: 'setCrewStatusOpen'; open: boolean }
   | { type: 'applyQuantumGoals'; goals: string[]; summary: QuantumSummary }
   | { type: 'loadDemo'; goals: string[] }
   | { type: 'resetMission' }

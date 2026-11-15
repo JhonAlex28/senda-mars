@@ -1,8 +1,8 @@
 import type { TerrainGrid } from '../types';
 
-/** Umbrales de pendiente (env.json terrain_classes). */
+/** Umbrales humanos de pendiente (env.json terrain_classes): precaución 10°, no transitable 20°. */
 export const CAUTION_SLOPE_DEG = 10;
-export const DANGER_SLOPE_DEG = 18;
+export const DANGER_SLOPE_DEG = 20;
 
 type RGB = [number, number, number];
 

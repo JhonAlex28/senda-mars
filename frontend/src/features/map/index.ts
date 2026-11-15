@@ -6,9 +6,11 @@ export {
   CursorRing,
   HazardCircle,
   ParkingMarker,
+  PnrMarker,
   PositionMarker,
   RouteLine,
   TargetMarker,
+  WaypointMarker,
   type TargetState,
 } from './components/markers';
 export { useMap } from './context/MapContext';

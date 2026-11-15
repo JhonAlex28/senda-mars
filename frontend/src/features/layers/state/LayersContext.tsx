@@ -1,6 +1,5 @@
-import { createContext, useContext, useEffect, useMemo, useReducer, useState, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, useReducer, type ReactNode } from 'react';
 import { LAYERS, type LayerId } from '../catalog';
-import { subscribeRasterUpdates } from '../lib/rasters';
 
 export interface LayerView {
   visible: boolean;
@@ -33,8 +32,6 @@ const LayersContext = createContext<LayersValue | null>(null);
 /** Qué capas se ven y con qué opacidad. Lo comparten el panel y los mapas (Plan y Simulation). */
 export function LayersProvider({ children }: { children: ReactNode }) {
   const [layers, dispatch] = useReducer(reducer, initial);
-  const [rasterVersion, setRasterVersion] = useState(0);
-  useEffect(() => subscribeRasterUpdates(() => setRasterVersion((v) => v + 1)), []);
   const value = useMemo<LayersValue>(
     () => ({
       layers,
@@ -42,7 +39,7 @@ export function LayersProvider({ children }: { children: ReactNode }) {
       toggle: (id) => dispatch({ type: 'toggle', id }),
       setOpacity: (id, opacity) => dispatch({ type: 'opacity', id, opacity }),
     }),
-    [layers, rasterVersion],
+    [layers],
   );
   return <LayersContext.Provider value={value}>{children}</LayersContext.Provider>;
 }

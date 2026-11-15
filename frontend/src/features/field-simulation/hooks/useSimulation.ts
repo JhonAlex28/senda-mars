@@ -18,9 +18,9 @@ const TICK_MS = 100;
 export type ContingencyKind = 'blocked' | 'dust' | 'leak';
 
 export const CONTINGENCIES: Record<ContingencyKind, { title: string; text: string; icon: string; evaOnly?: boolean }> = {
-  blocked: { title: 'The path is blocked', text: 'Fallen rocks or deep sand block the way ahead.', icon: 'block' },
-  dust: { title: 'Dust storm', text: 'It is hard to see. Everyone moves 30% slower.', icon: 'storm' },
-  leak: { title: 'Leak in the suit', text: 'The suit uses 50% more oxygen.', icon: 'heat_pump', evaOnly: true },
+  blocked: { title: 'Path blocked', text: 'Rocks or sand ahead.', icon: 'block' },
+  dust: { title: 'Dust storm', text: '30% slower.', icon: 'storm' },
+  leak: { title: 'Suit leak', text: '+50% O₂ use.', icon: 'heat_pump', evaOnly: true },
 };
 
 const BLOCK = { rover: { ahead: 150, radius: 45 }, eva: { ahead: 25, radius: 6 } } as const;
@@ -114,7 +114,7 @@ export function useSimulation({ legs, base, hazards }: SimulationInput) {
         current.profile,
         { hazards: [...hazards, ...s.extraHazards, ...(hazard ? [hazard] : [])], conditions },
       );
-      const replanned = legFromRoute(route, { id: `${current.id}-r${s.events.length}`, title: current.title, parkingId: current.parkingId });
+      const replanned = legFromRoute(route, { id: `${current.id}-r${s.events.length}`, title: current.title, parkingId: current.parkingId, waypointId: current.waypointId });
       const after = legRemaining(replanned, 0, 0);
 
       dispatch({ type: 'contingency', hazard, conditions });
@@ -139,8 +139,8 @@ export function useSimulation({ legs, base, hazards }: SimulationInput) {
         hazards: [...hazards, ...s.extraHazards],
         conditions: s.conditions,
       });
-      const back = legFromRoute(route, { id: `${current.id}-back`, title: 'Walk back to the rover', parkingId: current.parkingId });
-      dispatch({ type: 'replace', legs: [back], dropRest: false, skip, note: 'Heading back to the rover.', icon: 'airport_shuttle' });
+      const back = legFromRoute(route, { id: `${current.id}-back`, title: 'Walk to the vehicle', parkingId: current.parkingId });
+      dispatch({ type: 'replace', legs: [back], dropRest: false, skip, note: 'Heading to the vehicle.', icon: 'airport_shuttle' });
     });
 
   /** Terminar antes: volver a la base desde donde estemos (pasando por el rover si estamos a pie). */
@@ -161,10 +161,10 @@ export function useSimulation({ legs, base, hazards }: SimulationInput) {
         const roverStop = current.stops[current.stops.length - 1];
         roverAt = stopWaypoint(current, roverStop);
         const walk = await plan('eva', [fromHere(s), roverAt], 'safe', scenario);
-        newLegs.push(legFromRoute(walk, { id: `${current.id}-home`, title: 'Walk back to the rover', parkingId: current.parkingId }));
+        newLegs.push(legFromRoute(walk, { id: `${current.id}-home`, title: 'Walk to the vehicle', parkingId: current.parkingId }));
       }
       const drive = await plan('rover', [{ ...roverAt, kind: 'waypoint', ref_id: '' }, baseWp], 'safe', scenario);
-      newLegs.push(legFromRoute(drive, { id: 'drive-home', title: 'Drive back to base', parkingId: null }));
+      newLegs.push(legFromRoute(drive, { id: 'drive-home', title: 'Drive to base', parkingId: null }));
 
       dispatch({ type: 'replace', legs: newLegs, dropRest: true, skip: pendingTargets, note: 'Returning to base early.', icon: 'home' });
     });

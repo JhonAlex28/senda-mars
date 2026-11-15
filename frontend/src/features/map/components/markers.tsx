@@ -65,17 +65,22 @@ interface TargetMarkerProps {
   id: string;
   name: string;
   state: TargetState;
+  /** Icono de Material Symbols según el tipo científico (agua, minerales…). */
+  icon?: string;
+  color?: string;
+  /** Nombre siempre visible (capa "Target names"), útil en tableta sin hover. */
+  showName?: boolean;
   priority?: number;
   focused?: boolean;
   dimmed?: boolean;
   onClick?: () => void;
 }
 
-export function TargetMarker({ point, id, name, state, priority, focused, dimmed, onClick }: TargetMarkerProps) {
+export function TargetMarker({ point, id, name, state, icon, color, showName, priority, focused, dimmed, onClick }: TargetMarkerProps) {
   const { projection, unit } = useMap();
   const { x, y } = projection.toXY(point);
-  const r = 11 * unit;
-  const ring = { idle: COLORS.muted, goal: COLORS.primary, done: COLORS.success, skipped: COLORS.outline }[state];
+  const r = 12 * unit;
+  const ring = { idle: color ?? COLORS.muted, goal: COLORS.primary, done: COLORS.success, skipped: COLORS.outline }[state];
   return (
     <g
       transform={`translate(${x} ${y})`}
@@ -88,9 +93,22 @@ export function TargetMarker({ point, id, name, state, priority, focused, dimmed
     >
       {focused && <circle r={r * 1.9} fill={COLORS.accent} fillOpacity={0.18} stroke={COLORS.accent} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />}
       <circle r={r} fill={COLORS.surface} stroke={ring} strokeWidth={2} vectorEffect="non-scaling-stroke" />
-      <text y={3.2 * unit} textAnchor="middle" fill={COLORS.text} fontFamily="Space Mono" fontSize={8.5 * unit}>
-        {state === 'done' ? '✓' : id}
-      </text>
+      {state === 'done' || !icon ? (
+        <text y={3.2 * unit} textAnchor="middle" fill={COLORS.text} fontFamily="Space Mono" fontSize={8.5 * unit}>
+          {state === 'done' ? '✓' : id}
+        </text>
+      ) : (
+        <text
+          y={6 * unit}
+          textAnchor="middle"
+          fill={color ?? COLORS.text}
+          fontFamily="Material Symbols Outlined"
+          fontSize={16 * unit}
+          className="notranslate"
+        >
+          {icon}
+        </text>
+      )}
       {priority !== undefined && state !== 'done' && (
         <g transform={`translate(${r * 0.95} ${-r * 0.95})`}>
           <circle r={6.5 * unit} fill={COLORS.primary} />
@@ -99,19 +117,51 @@ export function TargetMarker({ point, id, name, state, priority, focused, dimmed
           </text>
         </g>
       )}
-      <HoverLabel text={name} offset={r + 5 * unit} />
+      <HoverLabel text={name} offset={r + 5 * unit} always={showName} />
+    </g>
+  );
+}
+
+/** Punto de no retorno: desde aquí ya no queda reserva para volver con margen. */
+export function PnrMarker({ point }: { point: GeoPoint }) {
+  const { projection, unit } = useMap();
+  const { x, y } = projection.toXY(point);
+  const s = 9 * unit;
+  return (
+    <g transform={`translate(${x} ${y})`} className="group/marker" aria-label="Point of no return">
+      <rect x={-s} y={-s} width={2 * s} height={2 * s} transform="rotate(45)" fill={COLORS.error} stroke={COLORS.surface} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+      <text y={3.5 * unit} textAnchor="middle" fill={COLORS.text} fontFamily="Space Grotesk" fontWeight={700} fontSize={8 * unit}>
+        PNR
+      </text>
+      <HoverLabel text="No return past here" offset={s * 1.6} />
+    </g>
+  );
+}
+
+/** Punto de paso del vehículo marcado por el usuario (W1…). */
+export function WaypointMarker({ point, label, onClick }: { point: GeoPoint; label: string; onClick?: () => void }) {
+  const { projection, unit } = useMap();
+  const { x, y } = projection.toXY(point);
+  const r = 9 * unit;
+  return (
+    <g transform={`translate(${x} ${y})`} onClick={stop(onClick)} style={{ cursor: onClick ? 'pointer' : 'default' }} role="button" aria-label={`Waypoint ${label}`} className="group/marker">
+      <circle r={r} fill={COLORS.success} stroke={COLORS.surface} strokeWidth={2} vectorEffect="non-scaling-stroke" />
+      <text y={3.2 * unit} textAnchor="middle" fill="#0D1626" fontFamily="Space Grotesk" fontWeight={700} fontSize={8 * unit}>
+        {label}
+      </text>
+      <HoverLabel text={onClick ? `${label} · tap to remove` : label} offset={r + 4 * unit} />
     </g>
   );
 }
 
 /** Nombre que aparece sobre el marcador al pasar el cursor (el id solo, "T04", no dice nada). */
-function HoverLabel({ text, offset }: { text: string; offset: number }) {
+function HoverLabel({ text, offset, always }: { text: string; offset: number; always?: boolean }) {
   const { unit } = useMap();
   const fontSize = 10 * unit;
   const width = text.length * fontSize * 0.56 + 12 * unit;
   const height = 17 * unit;
   return (
-    <g className="pointer-events-none opacity-0 transition-opacity duration-fast group-hover/marker:opacity-100" transform={`translate(0 ${-offset - height})`}>
+    <g className={`pointer-events-none transition-opacity duration-fast ${always ? 'opacity-100' : 'opacity-0 group-hover/marker:opacity-100'}`} transform={`translate(0 ${-offset - height})`}>
       <rect x={-width / 2} width={width} height={height} rx={4 * unit} fill={COLORS.surface} fillOpacity={0.95} stroke={COLORS.accent} strokeWidth={1} vectorEffect="non-scaling-stroke" />
       <text y={height / 2 + fontSize * 0.36} textAnchor="middle" fill={COLORS.text} fontFamily="Space Grotesk" fontWeight={600} fontSize={fontSize}>
         {text}
@@ -162,7 +212,7 @@ export function ParkingMarker({ point, label, active, planned, onClick }: Parkin
   const r = 11 * unit;
   return (
     <g transform={`translate(${x} ${y})`} onClick={stop(onClick)} style={{ cursor: onClick ? 'pointer' : 'default' }} role="button" aria-label={`Parking ${label}`}>
-      <title>{`Rover parking ${label}${planned ? ' · walk planned' : ''}`}</title>
+      <title>{`Stop ${label}${planned ? ' · EVA planned' : ''}`}</title>
       {active && <circle r={r * 1.9} fill={COLORS.accent} fillOpacity={0.2} />}
       <rect x={-r} y={-r} width={r * 2} height={r * 2} rx={4 * unit} fill={active ? COLORS.accent : COLORS.surface} stroke={COLORS.accent} strokeWidth={2} vectorEffect="non-scaling-stroke" />
       <text y={3.5 * unit} textAnchor="middle" fill={active ? '#070D17' : COLORS.accent} fontFamily="Space Grotesk" fontWeight={700} fontSize={9.5 * unit}>

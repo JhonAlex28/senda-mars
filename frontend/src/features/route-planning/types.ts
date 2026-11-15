@@ -41,6 +41,11 @@ export interface RoutePlan {
   safety_pct: number;
   resource: Resource;
   return_ok: boolean;
+  /** Motor de seguridad (Mec. B), opcionales. */
+  pnr_index?: number | null; // primer punto sin retorno seguro
+  reserve_min?: number | null; // reserva mínima de retorno (L u kWh)
+  infeasible_reasons?: string[];
+  terrain_cell_m?: number | null; // 4 = DEM 1 m del boxwork, 10 = grilla regional
 }
 
 export interface Parking extends GeoPoint {

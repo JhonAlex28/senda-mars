@@ -7,7 +7,7 @@ export function ParkingChips() {
   if (!state.traverse) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-xs" role="tablist" aria-label="Rover parking spots">
+    <div className="flex flex-wrap items-center gap-xs" role="tablist" aria-label="Vehicle stops">
       {state.traverse.parkings.map((p) => {
         const active = p.id === state.activeParkingId;
         const planned = !!state.evaPlans[p.id];
