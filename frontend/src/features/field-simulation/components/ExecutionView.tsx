@@ -13,6 +13,9 @@ import { ItineraryCard } from './ItineraryCard';
 import { MissionSummary } from './MissionSummary';
 import { ReplanToast } from './ReplanToast';
 
+import type { CrewConfig, QuantumSummary } from '@/features/mission/state/types';
+import type { RoverVehicleId } from '@/features/mission/state/vehicles';
+
 interface ExecutionViewProps {
   legs: Leg[];
   base: GeoPoint;
@@ -21,6 +24,10 @@ interface ExecutionViewProps {
   targets: Target[];
   projection: Projection;
   site: TerrainLayer;
+  vehicleId?: RoverVehicleId;
+  vehicleSpeedKmh?: number;
+  crew?: CrewConfig;
+  quantumSummary?: QuantumSummary | null;
   /** La página decide la franja inferior; aquí se le pasa la tarjeta de suministros en vivo. */
   renderFooter: (supplies: ReactNode) => ReactNode;
   onReplan: () => void;
@@ -28,7 +35,22 @@ interface ExecutionViewProps {
 }
 
 /** Modo Go completo: itinerario, mapa en vivo, panel de ejecución y resumen final. */
-export function ExecutionView({ legs, base, hazards, parkings, targets, projection, site, renderFooter, onReplan, onExit }: ExecutionViewProps) {
+export function ExecutionView({
+  legs,
+  base,
+  hazards,
+  parkings,
+  targets,
+  projection,
+  site,
+  vehicleId = 'SEV_PRESSURIZED',
+  vehicleSpeedKmh = 8.0,
+  crew,
+  quantumSummary,
+  renderFooter,
+  onReplan,
+  onExit,
+}: ExecutionViewProps) {
   const sim = useSimulation({ legs, base, hazards });
   const targetById = useMemo(() => new Map(targets.map((t) => [t.id, t])), [targets]);
   const targetName = useCallback((id: string) => targetById.get(id)?.name, [targetById]);
@@ -37,13 +59,13 @@ export function ExecutionView({ legs, base, hazards, parkings, targets, projecti
 
   return (
     <>
-      <div className="grid min-h-0 flex-1 grid-cols-[260px_1fr_380px] gap-md p-md">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[260px_1fr_380px]">
         <aside className="flex min-h-0 flex-col gap-md">
           <ItineraryCard state={sim.state} targetName={targetName} />
         </aside>
-        <ExecutionMap projection={projection} site={site} sim={sim} targets={targets} parkings={parkings} base={base} hazards={hazards} />
+        <ExecutionMap projection={projection} site={site} sim={sim} targets={targets} parkings={parkings} base={base} hazards={hazards} vehicleId={vehicleId} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto">
-          <ExecutionPanel sim={sim} targetName={targetName} />
+          <ExecutionPanel sim={sim} targetName={targetName} vehicleId={vehicleId} vehicleSpeedKmh={vehicleSpeedKmh} crew={crew} />
         </aside>
       </div>
 
@@ -51,7 +73,7 @@ export function ExecutionView({ legs, base, hazards, parkings, targets, projecti
 
       {sim.lastReplan && <ReplanToast key={sim.state.events.length} result={sim.lastReplan} onClose={sim.clearReplan} />}
       {sim.state.finished && (
-        <MissionSummary state={sim.state} roverCapacity={roverCapacity} targetName={targetName} onReplan={onReplan} onExit={onExit} />
+        <MissionSummary state={sim.state} roverCapacity={roverCapacity} targetName={targetName} crew={crew} quantumSummary={quantumSummary} onReplan={onReplan} onExit={onExit} />
       )}
     </>
   );

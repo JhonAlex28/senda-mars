@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { HelmetStatusCard } from '@/features/mission/components/HelmetStatusCard';
+import type { CrewConfig } from '@/features/mission/state/types';
+import { ROVER_VEHICLES, type RoverVehicleId } from '@/features/mission/state/vehicles';
 import { formatDistance, formatMinutes } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
@@ -23,10 +26,14 @@ function arrivalAction(stop: LegStop, nextLeg: Leg | undefined): { label: string
 interface ExecutionPanelProps {
   sim: Simulation;
   targetName: (id: string) => string | undefined;
+  vehicleId?: RoverVehicleId;
+  vehicleSpeedKmh?: number;
+  crew?: CrewConfig;
 }
 
 /** Panel derecho del modo Go: dónde voy, cuánto falta, recursos y acciones. */
-export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
+export function ExecutionPanel({ sim, targetName, vehicleId = 'SEV_PRESSURIZED', vehicleSpeedKmh = 8.0, crew }: ExecutionPanelProps) {
+  const veh = ROVER_VEHICLES[vehicleId];
   const { state, leg, dispatch, busy, error, clearError } = sim;
   const [contingencyOpen, setContingencyOpen] = useState(false);
   const walking = leg.mode === 'eva';
@@ -84,7 +91,7 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
       <Card title="Supplies" className="gap-xs">
         {[
           { label: '🔋 Rover battery', pct: battery },
-          ...(walking ? [{ label: 'Oxygen in the suit', pct: suit }] : []),
+          ...(walking ? [{ label: '🫁 PLSS Oxygen (Suit)', pct: suit }] : []),
         ].map(({ label, pct }) => (
           <div key={label} className="flex flex-col gap-xs">
             <div className="flex justify-between gap-sm font-body text-body-sm">
@@ -94,6 +101,63 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
             <Meter value={pct} tone={toneForRemaining(pct)} label={label} className="h-2" />
           </div>
         ))}
+      </Card>
+
+      <Card title={`Crew & Suit Telemetry · ${crew?.teamName ?? 'SENDA-ARES CREW'}`} className="gap-xs">
+        {(() => {
+          const effort = walking ? 1.35 : 0.72;
+          const leakMult = state.conditions.o2_multiplier;
+          const baseO2Rate = walking ? 0.14 : veh.transitO2Pct === 0 ? 0.02 : 0.11;
+          const m1 = crew?.members[0] ?? { id: 'EVA-1', name: 'WATNEY', role: 'CDR', suitId: 'xEMU-01', restingBpm: 68, massKg: 78 };
+          const m2 = crew?.members[1] ?? { id: 'EVA-2', name: 'LEWIS', role: 'GEO', suitId: 'xEMU-02', restingBpm: 64, massKg: 68 };
+          const eva1Bpm = Math.round(m1.restingBpm + (walking ? 42 : 8) + Math.sin(state.clock * 0.4) * 4);
+          const eva2Bpm = Math.round(m2.restingBpm + (walking ? 38 : 7) + Math.cos(state.clock * 0.35) * 3);
+          const eva1O2 = Math.max(0, Math.round(suit - (walking ? 0 : 2)));
+          const eva2O2 = Math.max(0, Math.round(suit * 0.98));
+          const buddyDistM = walking ? Math.round(14 + Math.abs(Math.sin(state.clock * 0.3)) * 18) : 2;
+          const lcvgTemp = Number((16.6 + (walking ? 1.1 : 0.0) + Math.sin(state.clock * 0.2) * 0.3).toFixed(1));
+          const co2Pct = Number((0.49 * effort * (leakMult > 1 ? 1.15 : 1)).toFixed(2));
+          return (
+            <div className="flex flex-col gap-xs">
+              <HelmetStatusCard
+                astronautName={m1.name}
+                suitId={m1.suitId}
+                tempC={lcvgTemp}
+                o2Pct={eva1O2}
+                co2Pct={co2Pct}
+                pressureKpa={walking ? 29.6 : 57.0}
+                heartRateBpm={eva1Bpm}
+                valPct={Math.round(35 * effort)}
+              />
+              <div className="grid grid-cols-2 gap-xs font-mono text-[10px]">
+                <div className="col-span-2 flex items-center justify-between rounded border border-outline-variant bg-surface px-xs py-1 text-on-surface-variant">
+                  <span>Vehicle: <strong className="text-accent">{veh.shortName}</strong></span>
+                  <span>Cruise: <strong className="text-on-surface">{vehicleSpeedKmh.toFixed(1)} km/h</strong></span>
+                </div>
+                <div className="rounded border border-outline-variant bg-surface p-xs">
+                  <div className="flex items-center justify-between font-semibold text-accent">
+                    <span>{m1.name} ({m1.role})</span>
+                    <span>{eva1Bpm} bpm</span>
+                  </div>
+                  <div className="mt-0.5 text-on-surface-variant">PLSS O₂: {eva1O2}% · {(baseO2Rate * effort * leakMult).toFixed(2)} kg/h</div>
+                  <div className="text-on-surface-variant">Metab: {Math.round(850 * effort)} BTU/h</div>
+                </div>
+                <div className="rounded border border-outline-variant bg-surface p-xs">
+                  <div className="flex items-center justify-between font-semibold text-primary">
+                    <span>{m2.name} ({m2.role})</span>
+                    <span>{eva2Bpm} bpm</span>
+                  </div>
+                  <div className="mt-0.5 text-on-surface-variant">PLSS O₂: {eva2O2}% · {(baseO2Rate * 0.94 * effort * leakMult).toFixed(2)} kg/h</div>
+                  <div className="text-on-surface-variant">Metab: {Math.round(810 * effort)} BTU/h</div>
+                </div>
+                <div className="col-span-2 flex items-center justify-between rounded border border-outline-variant bg-surface px-xs py-1 text-on-surface-variant">
+                  <span>Buddy separation: <strong className="text-on-surface">{buddyDistM} m</strong></span>
+                  <span className="text-success">CO₂ Scrubber OK · &lt;50 m</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </Card>
 
       {action && (
@@ -140,12 +204,66 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
         </p>
       )}
 
-      <div className="mt-auto flex items-stretch gap-xs">
+      <div className="mt-auto flex flex-col gap-xs">
+        <div className="flex items-center justify-between gap-xs rounded border border-outline-variant bg-surface px-xs py-1 font-mono text-[10px]">
+          <span className="text-on-surface-variant">LIVE HAZARD SIM:</span>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              disabled={taskRunning || !!busy}
+              onClick={() => sim.triggerContingency('dust')}
+              className="rounded border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 text-amber-300 hover:bg-amber-500/20 disabled:opacity-40"
+              title="Simulate Mars Dust Storm (τ > 2.5)"
+            >
+              Dust
+            </button>
+            <button
+              type="button"
+              disabled={taskRunning || !!busy}
+              onClick={() => sim.triggerContingency('blocked')}
+              className="rounded border border-orange-500/40 bg-orange-500/10 px-1.5 py-0.5 text-orange-300 hover:bg-orange-500/20 disabled:opacity-40"
+              title="Simulate Solar Proton Event / Blocked Terrain"
+            >
+              SPE / Block
+            </button>
+            <button
+              type="button"
+              disabled={taskRunning || !!busy}
+              onClick={() => sim.triggerContingency('leak')}
+              className="rounded border border-rose-500/40 bg-rose-500/10 px-1.5 py-0.5 text-rose-300 hover:bg-rose-500/20 disabled:opacity-40"
+              title="Simulate xEMU Suit Pressure Drop"
+            >
+              Suit Leak
+            </button>
+          </div>
+        </div>
+        <div className="flex items-stretch gap-xs">
         {walking && (
           <ActionTile icon="airport_shuttle" label="Return to rover" disabled={taskRunning || !!busy} loading={busy === 'rover'} onClick={sim.returnToRover} />
         )}
         <ActionTile icon="warning" label="Contingency" tone="warning" disabled={taskRunning || !!busy} loading={['blocked', 'dust', 'leak'].includes(busy ?? '')} onClick={() => setContingencyOpen(true)} />
         <ActionTile icon="home" label="Return to base" disabled={taskRunning || !!busy || state.arrived?.kind === 'base'} loading={busy === 'base'} onClick={sim.returnToBase} />
+        </div>
+      </div>
+
+      <div className="rounded border border-outline-variant bg-surface px-xs py-1 font-mono text-[10px]">
+        <div className="flex items-center justify-between">
+          <span className="font-bold text-emerald-400">MSR SAMPLE CACHE</span>
+          <span className="text-on-surface-variant">
+            {state.completed.length} tube{state.completed.length === 1 ? '' : 's'} · {(state.completed.length * 0.25).toFixed(2)} kg
+          </span>
+        </div>
+        {state.completed.length > 0 ? (
+          <div className="mt-1 flex flex-wrap gap-1">
+            {state.completed.map((id, idx) => (
+              <span key={id} className="rounded border border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-[9px] text-emerald-300">
+                MSR-Ti-0{idx + 1}: {targetName(id) ?? id}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-0.5 text-[9px] text-on-surface-variant">En route — 0 titanium tubes sealed yet.</div>
+        )}
       </div>
 
       <EventLog events={state.events} />

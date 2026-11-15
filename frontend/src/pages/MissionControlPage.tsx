@@ -9,6 +9,7 @@ import {
   EvaPanel,
   GoalsCard,
   LaunchCard,
+  MarsWeatherCard,
   MissionHeader,
   PlanningMap,
   TraversePanel,
@@ -63,9 +64,10 @@ function PlanView({ projection, site, readiness }: ViewProps) {
 
   return (
     <>
-      <div className="grid min-h-0 flex-1 grid-cols-[260px_1fr_380px] gap-md p-md">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[260px_1fr_380px]">
         <aside className="scroll-thin flex min-h-0 flex-col gap-md overflow-y-auto">
           <LayersPanel />
+          <MarsWeatherCard />
         </aside>
         <PlanningMap projection={projection} site={site} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto pr-xs">
@@ -103,6 +105,10 @@ function GoView({ projection, site, readiness }: ViewProps) {
       targets={targets}
       projection={projection}
       site={site}
+      vehicleId={state.vehicleId}
+      vehicleSpeedKmh={state.vehicleSpeedKmh}
+      crew={state.crew}
+      quantumSummary={state.quantumSummary}
       renderFooter={(supplies: ReactNode) => <WeatherStrip readiness={readiness}>{supplies}</WeatherStrip>}
       onReplan={() => dispatch({ type: 'setPhase', phase: 'plan' })}
       onExit={() => dispatch({ type: 'backToGlobe' })}

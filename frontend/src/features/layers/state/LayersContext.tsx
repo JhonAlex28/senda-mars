@@ -10,7 +10,7 @@ type LayersState = Record<LayerId, LayerView>;
 type LayersAction = { type: 'toggle'; id: LayerId } | { type: 'opacity'; id: LayerId; opacity: number };
 
 const initial = Object.fromEntries(
-  LAYERS.map((l) => [l.id, { visible: l.available, opacity: l.defaultOpacity }]),
+  LAYERS.map((l) => [l.id, { visible: l.available && (l.defaultVisible ?? true), opacity: l.defaultOpacity }]),
 ) as LayersState;
 
 function reducer(state: LayersState, action: LayersAction): LayersState {

@@ -1,15 +1,9 @@
+import { useState } from 'react';
 import { Icon } from '@/shared/ui/Icon';
-import { allEvasPlanned } from '../state/selectors';
 import { useMission } from '../state/MissionContext';
-import type { Phase } from '../state/types';
-
-interface Tab {
-  phase: Exclude<Phase, 'globe'>;
-  label: string;
-  icon: string;
-  enabled: boolean;
-  hint: string;
-}
+import { CrewSuitModal } from './CrewSuitModal';
+import { GaleConceptModal } from './GaleConceptModal';
+import { NasaLabsModal } from './NasaLabsModal';
 
 export function SendaLogo() {
   return (
@@ -22,55 +16,102 @@ export function SendaLogo() {
   );
 }
 
-/** Barra superior con las tres grandes pestañas del flujo: Rover route → Spacewalks → Simulation. */
+/** Top bar with mission title, NASA Labs, Gale EZ & SEV reference, and navigation back to Mars globe. */
 export function MissionHeader() {
-  const { state, dispatch } = useMission();
-  const inGo = state.phase === 'go';
-  const tabs: Tab[] = [
-    { phase: 'plan', label: 'Rover route', icon: 'route', enabled: !inGo, hint: 'Choose goals and the rover route' },
-    { phase: 'walk', label: 'Spacewalks', icon: 'directions_walk', enabled: !inGo && !!state.traverse, hint: 'Plan the rover route first' },
-    { phase: 'go', label: 'Simulation', icon: 'rocket_launch', enabled: inGo || allEvasPlanned(state), hint: 'Plan every spacewalk first' },
-  ];
+  const { state, dispatch, targets } = useMission();
+  const [conceptOpen, setConceptOpen] = useState(false);
+  const [labsOpen, setLabsOpen] = useState(false);
+  const [crewOpen, setCrewOpen] = useState(false);
+
+  const handleQuickDemo = () => {
+    const demoIds = targets
+      .filter((t) => !t.is_base)
+      .slice(0, 3)
+      .map((t) => t.id);
+    if (demoIds.length > 0) {
+      dispatch({ type: 'loadDemo', goals: demoIds });
+    }
+  };
 
   return (
     <header className="flex flex-col border-b border-outline-variant bg-surface-container">
-      <div className="flex items-center justify-between px-xl py-sm">
+      <div className="flex flex-wrap items-center justify-between gap-sm px-xl py-sm">
         <SendaLogo />
-        <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
-        <button
-          type="button"
-          onClick={() => dispatch({ type: 'backToGlobe' })}
-          className="inline-flex items-center gap-sm rounded-full border-2 border-outline bg-surface-container-high px-lg py-xs font-headline text-title-md text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
-        >
-          <Icon name="arrow_back" className="text-[20px] text-accent" />
-          <span>View Mars</span>
-        </button>
-      </div>
-
-      <nav className="flex items-center justify-center gap-md px-xl pb-sm" aria-label="Mission modes">
-        {tabs.map((tab, i) => {
-          const active = state.phase === tab.phase;
-          return (
+        <div className="flex flex-col">
+          <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
+          <span className="font-mono text-[10px] text-on-surface-variant">
+            MSL REMS: −34°C · 740 Pa · Dust τ=0.62 · RAD 0.67 mSv/sol · Gale EZ 100 km
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-sm">
+          <button
+            type="button"
+            onClick={handleQuickDemo}
+            title="Auto-load 3 Gale Crater science targets for instant presentation demo"
+            className="inline-flex items-center gap-xs rounded-full border border-emerald-500/50 bg-emerald-500/15 px-md py-xs font-mono text-mono-sm font-bold text-emerald-300 transition-colors duration-fast hover:bg-emerald-500/25"
+          >
+            <Icon name="play_arrow" className="text-[16px]" />
+            <span>Quick Demo</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => dispatch({ type: 'resetMission' })}
+            title="Reset goals, routes, and environment for a fresh mission"
+            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface-variant transition-colors duration-fast hover:border-rose-400 hover:text-rose-300"
+          >
+            <Icon name="restart_alt" className="text-[16px]" />
+            <span>Reset</span>
+          </button>
+          {state.phase === 'go' && (
             <button
-              key={tab.phase}
               type="button"
-              disabled={!tab.enabled}
-              title={tab.enabled ? undefined : tab.hint}
-              aria-current={active ? 'step' : undefined}
-              onClick={() => dispatch({ type: 'setPhase', phase: tab.phase })}
-              className={`inline-flex items-center gap-sm rounded-full px-xl py-xs font-headline text-title-md transition-colors duration-fast disabled:cursor-not-allowed disabled:opacity-40 ${
-                active
-                  ? 'bg-primary text-on-primary'
-                  : 'border border-outline bg-surface text-on-surface-variant enabled:hover:border-accent enabled:hover:text-on-surface'
-              }`}
+              onClick={() => dispatch({ type: 'setPhase', phase: 'plan' })}
+              className="inline-flex items-center gap-xs rounded-full border border-accent bg-surface px-md py-xs font-mono text-mono-sm text-accent transition-colors duration-fast hover:bg-primary hover:text-on-primary"
             >
-              <span className="font-mono text-mono-sm opacity-70">{i + 1}</span>
-              <Icon name={tab.icon} className="text-[20px]" />
-              <span>{tab.label}</span>
+              <Icon name="edit_road" className="text-[16px]" />
+              <span>Replan</span>
             </button>
-          );
-        })}
-      </nav>
+          )}
+          <button
+            type="button"
+            onClick={() => setCrewOpen(true)}
+            title="Configure Astronaut Names, Team Callsign & Suit Health Telemetry"
+            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
+          >
+            <Icon name="badge" className="text-[16px] text-warning" />
+            <span>{state.crew.teamName}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setLabsOpen(true)}
+            title="Open xEMU Monte Carlo, RIMFAX GPR, SHERLOC Raman, MSR Rack & CAPCOM"
+            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
+          >
+            <Icon name="science" className="text-[16px] text-emerald-400" />
+            <span>NASA Labs</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setConceptOpen(true)}
+            title="View Gale Crater Exploration Zone & Pressurized SEV Architecture"
+            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
+          >
+            <Icon name="satellite_alt" className="text-[16px] text-accent" />
+            <span>Gale EZ &amp; SEV</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => dispatch({ type: 'backToGlobe' })}
+            className="inline-flex items-center gap-sm rounded-full border-2 border-outline bg-surface-container-high px-lg py-xs font-headline text-title-md text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
+          >
+            <Icon name="arrow_back" className="text-[20px] text-accent" />
+            <span>View Mars</span>
+          </button>
+        </div>
+      </div>
+      <CrewSuitModal open={crewOpen} onClose={() => setCrewOpen(false)} />
+      <GaleConceptModal open={conceptOpen} onClose={() => setConceptOpen(false)} />
+      <NasaLabsModal open={labsOpen} onClose={() => setLabsOpen(false)} />
     </header>
   );
 }

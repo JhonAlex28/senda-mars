@@ -170,6 +170,8 @@ class ScenarioIn(BaseModel):
 class TraverseIn(ScenarioIn):
     base: PointIn
     target_ids: list[str] = Field(min_length=1)
+    vehicle_id: str | None = None
+    speed_kmh: float | None = None
 
 
 class EvaIn(ScenarioIn):

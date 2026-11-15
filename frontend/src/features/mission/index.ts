@@ -3,6 +3,7 @@ export { ErrorNote } from './components/ErrorNote';
 export { EvaPanel } from './components/EvaPanel';
 export { GoalsCard } from './components/GoalsCard';
 export { LaunchCard } from './components/LaunchCard';
+export { MarsWeatherCard } from './components/MarsWeatherCard';
 export { MissionHeader, SendaLogo } from './components/MissionHeader';
 export { PlanningMap } from './components/PlanningMap';
 export { TraversePanel } from './components/TraversePanel';

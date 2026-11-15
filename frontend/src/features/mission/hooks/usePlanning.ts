@@ -23,7 +23,12 @@ export function usePlanning() {
   const planTraverse = () =>
     run('traverse', async () => {
       if (!state.base) return;
-      const plan = await routesApi.traverse(state.base, state.goals, { hazards: state.hazards });
+      const plan = await routesApi.traverse(
+        state.base,
+        state.goals,
+        { hazards: state.hazards },
+        { vehicle_id: state.vehicleId, speed_kmh: state.vehicleSpeedKmh },
+      );
       dispatch({ type: 'traversePlanned', plan });
     });
 

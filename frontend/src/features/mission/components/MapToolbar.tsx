@@ -8,6 +8,7 @@ const TOOLS: { tool: MapTool; icon: string; title: string; text: string; active:
   { tool: 'select', icon: 'touch_app', title: 'Select', text: 'Tap a rock to see it.', active: 'bg-primary text-on-primary' },
   { tool: 'base', icon: 'home_pin', title: 'Move base', text: 'Tap the map to place it.', active: 'bg-accent text-on-primary' },
   { tool: 'hazard', icon: 'warning', title: 'Mark danger zone', text: 'Tap to add. Tap again to remove.', active: 'bg-error text-on-error' },
+  { tool: 'astar', icon: 'alt_route', title: 'Scout waypoint', text: 'Tap anywhere on the terrain to preview a safe path from Base.', active: 'bg-success text-on-success' },
 ];
 
 /** Barra flotante de herramientas del mapa: solo iconos, la descripción aparece al pasar el cursor. */
