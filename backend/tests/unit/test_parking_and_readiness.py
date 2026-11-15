@@ -31,3 +31,16 @@ def test_dust_storm_is_no_go():
     readiness = assess(env)
     assert readiness.verdict is Verdict.NO_GO
     assert next(c for c in readiness.checks if c.key == "dust").verdict is Verdict.NO_GO
+
+
+def test_order_tour_avoids_zig_zag_and_renumbers():
+    from senda.domain.models.geo import GeoPoint
+    from senda.domain.models.route import ParkingSpot
+    from senda.domain.services.parking import order_tour
+
+    base = GeoPoint(137.42, -4.59)
+    far, mid, near = (ParkingSpot(i, GeoPoint(137.42, lat), [t])
+                      for i, lat, t in (("A", -4.80, "a"), ("B", -4.70, "b"), ("C", -4.60, "c")))
+    tour = order_tour(base, [far, near, mid])          # orden de prioridad: ida y vuelta 2 veces
+    assert [p.target_ids for p in tour] in ([["c"], ["b"], ["a"]], [["a"], ["b"], ["c"]])
+    assert [p.id for p in tour] == ["P1", "P2", "P3"]

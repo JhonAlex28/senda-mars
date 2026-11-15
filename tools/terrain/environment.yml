@@ -1,0 +1,11 @@
+name: senda-gis
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+  - gdal
+  - numpy
+  - scipy
+  - pillow

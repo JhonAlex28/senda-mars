@@ -2,9 +2,14 @@
 
 Implementaciones del puerto `TerrainProvider` (`application/ports/outbound.py`):
 
-- `npy_dem.py` ✅ (por defecto): DEM real del USGS (*MSL Gale Merged DEM 1 m*, HiRISE + CTX + MOLA)
-  exportado a NumPy en `data/terrain/{local,regional}` (ver `docs/terrain-data.md`). Elige la
-  grilla de 1 m o de 10 m según la resolución pedida y promedia por bloques.
-- `synthetic.py`: grilla generada por fórmula, solo como demo o respaldo (`SENDA_TERRAIN=synthetic`).
+- `synthetic.py`: grillas SINTÉTICAS (mock) `local` (boxwork, 4 m) y `regional` (corredor base → boxwork, 20 m).
+  Se marcan `kind="synthetic"`. Solo respaldo si faltan los `.npy`, o forzado con `SENDA_TERRAIN=synthetic`.
+- `npy_terrain.py` ✅ (por defecto): DEM real del USGS de Mec. A en `backend/data/terrain/<local|regional>/`
+  (ver `docs/terrain-data.md`):
+  - obligatorio: `grid.json` + `dem.npy`
+  - opcional (si falta se deriva del DEM): `classes_human.npy` (local) / `classes_rover.npy` (regional), `risk.npy`, `confidence.npy`
+- `CompositeTerrainProvider`: usa el real si existe para esa escala; si no, el sintético. Submuestrea
+  (reclasificando la pendiente) si la grilla supera `SENDA_MAX_PLANNING_CELLS`.
 
-`container.py` elige uno u otro; el dominio no cambia.
+Para actualizar el terreno basta con copiar los archivos en `backend/data/terrain/...` y reiniciar el backend.
+Ninguna otra parte del código cambia.

@@ -41,6 +41,9 @@ class JsonTargetRepository:
                     category=p.get("type_en", ""),
                     is_base=bool(p.get("is_base", False)),
                     task=task,
+                    score_s=float(p.get("S", 0.0)),
+                    shielding_pct=float(p.get("shielding_reduction_pct", 0.0)),
+                    is_shelter=bool(p.get("is_shelter", False)),
                 )
             self._cache = cache
         return self._cache

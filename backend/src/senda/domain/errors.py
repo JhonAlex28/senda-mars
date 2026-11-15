@@ -15,7 +15,11 @@ class NoRouteFound(DomainError):
 
 class OutsideSite(DomainError):
     def __init__(self, lon: float, lat: float) -> None:
-        super().__init__(f"Point ({lon:.5f}, {lat:.5f}) is outside the mission site")
+        super().__init__(f"Point ({lon:.5f}, {lat:.5f}) is outside the mission area (terrain grids)")
+
+
+class InvalidRequest(DomainError):
+    pass
 
 
 class AssistantUnavailable(DomainError):

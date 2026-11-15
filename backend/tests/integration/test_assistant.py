@@ -28,7 +28,7 @@ class _NoGo:
 def _outing(assess=None) -> PlanOuting:
     c = get_container()
     return PlanOuting(assess or AssessReadiness(c.environment_repo), ListTargets(c.target_repo),
-                      PlanTraverse(c.target_repo, c.terrain), PlanEva(c.target_repo, c.terrain))
+                      PlanTraverse(c.planner), PlanEva(c.planner))
 
 
 def _tools(context: MissionContext = MissionContext(), assess=None) -> MissionTools:
@@ -56,11 +56,15 @@ def test_outing_without_targets_picks_by_priority_and_plans_every_leg():
 
 
 def test_time_budget_drops_lowest_priority_targets_until_it_fits():
-    full = _outing().execute(_base())
-    short = _outing().execute(_base(), budget_min=120)
-    assert short.total_min <= 120 < full.total_min
+    # targets_v1 cubre ~13 km desde la base: se prueba con un subconjunto para que sea rápido
+    ids = ["S01", "S02", "S03", "S04"]
+    full = _outing().execute(_base(), target_ids=ids)
+    top = _outing().execute(_base(), target_ids=full.target_ids[:2])
+    budget = top.total_min + 1
+    short = _outing().execute(_base(), target_ids=ids, budget_min=budget)
+    assert short.total_min <= budget < full.total_min
     assert short.dropped and all(d.reason == "time" for d in short.dropped)
-    assert {"T05", "T06"} <= set(short.target_ids)   # los de mayor prioridad se quedan
+    assert set(full.target_ids[:2]) <= set(short.target_ids)   # los primeros de la lista se quedan
 
 
 def test_no_go_conditions_plan_nothing():
@@ -72,9 +76,9 @@ def test_no_go_conditions_plan_nothing():
 
 def test_plan_outing_tool_logs_full_plan_and_sends_a_summary():
     tools = _tools()
-    _, body = _run(tools, "plan_outing", target_ids=["T03"], speed_factor=0.7)
+    _, body = _run(tools, "plan_outing", target_ids=["S03"], speed_factor=0.7)
     assert body["planned"] and body["shown_on_screen"]
-    assert body["targets"][0]["id"] == "T03"
+    assert body["targets"][0]["id"] == "S03"
     assert "oxygen_left_pct" in body["spacewalks"][0] and "points" not in body["rover"]
     assert tools.log.outing.conditions.speed_factor == 0.7
     assert tools.log.outing.traverse.routes[0].points   # el plan completo, para el mapa
@@ -85,13 +89,13 @@ def test_target_ids_copied_with_their_names_still_work():
     _, body = _run(tools, "plan_outing", target_ids=["T05 Valle de la Luna", "T06"])
     assert [t["id"] for t in body["targets"]] == ["T05", "T06"]
     result, _ = _run(tools, "plan_outing", target_ids=["target1"])
-    assert result.is_error and "Valid target ids: T02" in result.content
+    assert result.is_error and "Valid target ids: S01" in result.content
 
 
 def test_plan_outing_starts_from_the_screen_base_and_hazards():
     zone = Hazard(GeoPoint(137.40, -4.70), 50)
     tools = _tools(MissionContext(base=_base(), hazards=(zone,)))
-    _, body = _run(tools, "plan_outing", target_ids=["T03"])
+    _, body = _run(tools, "plan_outing", target_ids=["S03"])
     assert body["scenario"]["danger_zones"] == 1
     assert tools.log.outing.hazards == [zone]
 
@@ -149,7 +153,7 @@ class _FakeModel:
         self.calls += 1
         if self.calls == 1:
             return AssistantMessage("", (ToolCall("a", "plan_outing",
-                                                  {"time_available_min": 180}),))
+                                                  {"target_ids": ["S03"], "time_available_min": 180}),))
         return AssistantMessage("Plan cargado: perfil seguro.")
 
 
@@ -163,7 +167,7 @@ def _post(json_body, build):
 
 def test_chat_endpoint_returns_the_plan_to_load_on_screen():
     res = _post({"messages": [{"role": "user", "content": "Prepara la salida, tengo 3 horas"}],
-                 "mission": {"goals": ["T03"], "hazards": [], "has_plan": False}},
+                 "mission": {"goals": ["S03"], "hazards": [], "has_plan": False}},
                 lambda ctx: ChatWithAssistant(_FakeModel(), _tools(ctx)))
     assert res.status_code == 200
     body = res.json()

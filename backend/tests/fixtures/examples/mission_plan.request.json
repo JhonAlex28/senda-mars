@@ -1,0 +1,15 @@
+{
+ "target_ids": [
+  "T02",
+  "T05",
+  "T06"
+ ],
+ "profiles": [
+  "safe",
+  "fast",
+  "scientific"
+ ],
+ "departure": {
+  "ltst": "06:00"
+ }
+}

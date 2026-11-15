@@ -4,12 +4,16 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from senda.application.assistant.tools import MissionContext, MissionTools
+from senda.application.planner_context import PlannerContext
 from senda.application.ports.outbound import AssistantModel
 from senda.application.use_cases.assistant import ChatWithAssistant
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
+from senda.application.use_cases.plan_mission import PlanMission
 from senda.application.use_cases.plan_outing import PlanOuting
 from senda.application.use_cases.plan_routes import PlanEva, PlanPath, PlanTraverse
 from senda.application.use_cases.quantum import OptimizeTargetsQuantum
+from senda.application.use_cases.return_field import GetReturnField, ListScenarios
+from senda.application.use_cases.simulate_eva import SimulateEva
 from senda.application.use_cases.targets import GetTarget, ListTargets
 from senda.application.use_cases.terrain import GetTerrain
 from senda.config import Settings
@@ -32,25 +36,45 @@ def assess_readiness_uc() -> AssessReadiness:
     return AssessReadiness(get_container().environment_repo)
 
 
+def planner_ctx() -> PlannerContext:
+    return get_container().planner
+
+
 def get_terrain_uc() -> GetTerrain:
-    return GetTerrain(get_container().terrain)
+    return GetTerrain(planner_ctx())
 
 
+# --- Contrato con el frontend (/routes/*) sobre el motor de Mec. B ---------
 def plan_traverse_uc() -> PlanTraverse:
-    c = get_container()
-    return PlanTraverse(c.target_repo, c.terrain)
+    return PlanTraverse(planner_ctx())
 
 
 def plan_eva_uc() -> PlanEva:
-    c = get_container()
-    return PlanEva(c.target_repo, c.terrain)
+    return PlanEva(planner_ctx())
 
 
 def plan_path_uc() -> PlanPath:
-    c = get_container()
-    return PlanPath(c.target_repo, c.terrain)
+    return PlanPath(planner_ctx())
 
 
+# --- Endpoints adicionales del planner (misión, simulación, seguridad) -----
+def plan_mission_uc() -> PlanMission:
+    return PlanMission(planner_ctx())
+
+
+def simulate_uc() -> SimulateEva:
+    return SimulateEva(planner_ctx())
+
+
+def return_field_uc() -> GetReturnField:
+    return GetReturnField(planner_ctx())
+
+
+def list_scenarios_uc() -> ListScenarios:
+    return ListScenarios()
+
+
+# --- Asistente y cuántico (main) --------------------------------------------
 def optimize_quantum_uc() -> OptimizeTargetsQuantum:
     c = get_container()
     return OptimizeTargetsQuantum(c.target_repo, c.quantum)
@@ -75,8 +99,7 @@ def chat_uc() -> Callable[[MissionContext], ChatWithAssistant] | None:
     def build(context: MissionContext) -> ChatWithAssistant:
         assess = AssessReadiness(c.environment_repo)
         targets = ListTargets(c.target_repo)
-        outing = PlanOuting(assess, targets, PlanTraverse(c.target_repo, c.terrain),
-                            PlanEva(c.target_repo, c.terrain))
+        outing = PlanOuting(assess, targets, PlanTraverse(c.planner), PlanEva(c.planner))
         tools = MissionTools(assess, GetEnvironment(c.environment_repo), targets, outing,
                              c.knowledge, context)
         return ChatWithAssistant(model, tools)

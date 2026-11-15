@@ -3,13 +3,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from senda.adapters.inbound.http.dependencies import plan_eva_uc, plan_path_uc, plan_traverse_uc
 from senda.adapters.inbound.http.schemas import EvaIn, PathIn, RouteOut, TraverseIn, TraverseOut
 from senda.application.use_cases.plan_routes import PlanEva, PlanPath, PlanTraverse
-from senda.domain.errors import NoRouteFound, OutsideSite, TargetNotFound
+from senda.domain.errors import InvalidRequest, NoRouteFound, OutsideSite, TargetNotFound
 
 router = APIRouter(prefix="/routes", tags=["routes"])
 
 
 def _http_error(e: Exception) -> HTTPException:
-    status = 404 if isinstance(e, TargetNotFound) else 422
+    status = 404 if isinstance(e, TargetNotFound) else 422   # InvalidRequest/OutsideSite/NoRouteFound
     return HTTPException(status_code=status, detail=str(e))
 
 
@@ -19,7 +19,7 @@ def plan_traverse(body: TraverseIn, uc: PlanTraverse = Depends(plan_traverse_uc)
     try:
         plan = uc.execute(body.base.to_domain(), body.target_ids, body.domain_hazards(),
                           body.conditions.to_domain(), body.vehicle_id, body.speed_kmh)
-    except (TargetNotFound, NoRouteFound, OutsideSite) as e:
+    except (TargetNotFound, NoRouteFound, OutsideSite, InvalidRequest) as e:
         raise _http_error(e) from e
     return TraverseOut.from_domain(plan)
 
@@ -30,7 +30,7 @@ def plan_eva(body: EvaIn, uc: PlanEva = Depends(plan_eva_uc)) -> list[RouteOut]:
     try:
         routes = uc.execute(body.rover.to_domain(), body.target_ids, body.domain_hazards(),
                             body.conditions.to_domain())
-    except (TargetNotFound, NoRouteFound, OutsideSite) as e:
+    except (TargetNotFound, NoRouteFound, OutsideSite, InvalidRequest) as e:
         raise _http_error(e) from e
     return [RouteOut.from_domain(r) for r in routes]
 
@@ -41,6 +41,6 @@ def plan_path(body: PathIn, uc: PlanPath = Depends(plan_path_uc)) -> list[RouteO
     try:
         routes = uc.execute(body.mode, [w.to_waypoint() for w in body.waypoints],
                             body.domain_hazards(), body.conditions.to_domain(), body.profiles)
-    except (NoRouteFound, OutsideSite) as e:
+    except (TargetNotFound, NoRouteFound, OutsideSite, InvalidRequest) as e:
         raise _http_error(e) from e
     return [RouteOut.from_domain(r) for r in routes]
