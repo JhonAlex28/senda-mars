@@ -1,4 +1,4 @@
-import type { CrewConfig, QuantumSummary } from '@/features/mission/state/types';
+import type { CrewConfig, QuantumSummary } from '@/features/mission';
 import { formatDistance, formatMinutes } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
 import { Icon } from '@/shared/ui/Icon';

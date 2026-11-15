@@ -65,7 +65,7 @@ python scripts/dev.py     # arranca backend + frontend. Ctrl+C detiene ambos
 
 ```text
 backend/
-├── data/                         targets_v0.geojson, env.json
+├── data/                         targets_v1.geojson, env.json, mission_params.json, terrain/, knowledge/
 ├── src/senda/
 │   ├── domain/                   ← núcleo: Python puro, sin FastAPI ni I/O
 │   │   ├── models/               entidades y value objects (GeoPoint, ScienceTarget, RoutePlan…)

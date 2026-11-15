@@ -1,5 +1,4 @@
-import { HelmetStatusCard } from '@/features/mission/components/HelmetStatusCard';
-import type { CrewConfig } from '@/features/mission/state/types';
+import { HelmetStatusCard, type CrewConfig } from '@/features/mission';
 import { Dialog } from '@/shared/ui/Dialog';
 import type { Simulation } from '../hooks/useSimulation';
 

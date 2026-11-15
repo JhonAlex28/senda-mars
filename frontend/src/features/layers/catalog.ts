@@ -1,4 +1,4 @@
-import { SCIENCE_TYPES, type ScienceType } from '@/features/targets/lib/scienceType';
+import { SCIENCE_TYPES, type ScienceType } from '@/features/targets';
 
 /** De dónde sale el dato de una capa (requisito RF-1: mostrar la procedencia). */
 export type Provenance = 'measured' | 'modeled' | 'assumed';

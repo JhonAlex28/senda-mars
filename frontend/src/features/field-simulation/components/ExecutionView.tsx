@@ -14,8 +14,7 @@ import { MissionSummary } from './MissionSummary';
 import { ReplanToast } from './ReplanToast';
 import { CrewStatusModal } from './CrewStatusModal';
 
-import type { CrewConfig, QuantumSummary } from '@/features/mission/state/types';
-import type { RoverVehicleId } from '@/features/mission/state/vehicles';
+import { type CrewConfig, type QuantumSummary, type RoverVehicleId } from '@/features/mission';
 
 interface ExecutionViewProps {
   legs: Leg[];

@@ -14,7 +14,7 @@ import {
   ViewModeSwitch,
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
-import { ROVER_VEHICLES, type RoverVehicleId } from '@/features/mission/state/vehicles';
+import { ROVER_VEHICLES, type RoverVehicleId } from '@/features/mission';
 import type { Hazard, Parking } from '@/features/route-planning';
 import { SCIENCE_TYPES, scienceType, type Target } from '@/features/targets';
 import { Terrain3DView, TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
