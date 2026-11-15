@@ -1,4 +1,4 @@
-# Contexto de desarrollo — Mecatrónico B: Planificación y Seguridad
+# Contexto de desarrollo — Planificación y Seguridad
 
 > Documento autocontenido. Sirve de contexto para cualquier colaborador o sesión de IA (por ejemplo, Claude Code) que no participó en la planificación. Describe la experiencia que construimos, mi alcance (tramo en **rover** + **EVA** a pie + **seguridad**), los algoritmos, los datos NASA y los **contratos de entrada/salida** con el resto del equipo.
 >
@@ -25,8 +25,8 @@
 ```
 
 1. **Globo:** varias bases/Zonas de Exploración (EZ) como si ya existieran (las propuestas del *First Landing Site/Exploration Zone Workshop*, NASA 2015). Solo **Gale** es interactiva en la demo. Capa estática del frontend.
-2. **Gale:** se muestra la **base/hábitat** en el sitio propuesto por **Calef et al. (2015)**: **137.4019°E, −4.5965°N**, centro de la elipse final de aterrizaje de MSL. Alrededor van la EZ de 100 km y la EZ interna de 25 km, y desde ahí el corredor hacia Mount Sharp.
-3. **Rover presurizado (NASA SEV):** la planificación **empieza en la base**. Los objetivos científicos del boxwork están lejos (**11.8 km en línea recta** entre la base y el centro del sitio; 11.2 km hasta T01, calculados con `GeoPoint.distance_to`), así que el traslado se hace en rover hasta un punto de **staging** (por defecto **T01**, Rustic Canyon). La tripulación va sin traje.
+2. **Gale:** se muestra la **base/hábitat** en el sitio propuesto por **Calef et al. (2015)**: **137.42009295°E, 4.59310427°S** (`[137.42009295, -4.59310427]`), en la elipse final de aterrizaje de MSL (§7, nota de procedencia). Alrededor van la EZ de 100 km y la EZ interna de 25 km, y desde ahí el corredor hacia Mount Sharp.
+3. **Rover presurizado (NASA SEV):** la planificación **empieza en la base**. Los objetivos científicos del boxwork están lejos (**12.1 km en línea recta** entre la base y el centro del sitio; 11.4 km hasta T01, calculados con `GeoPoint.distance_to`), así que el traslado se hace en rover hasta un punto de **staging** (por defecto **T01**, Rustic Canyon). La tripulación va sin traje.
 4. **EVA:** desde el SEV estacionado, la tripulación sale por los *suitports* y camina por las zonas de valor científico (T02–T08). Aquí está el detalle fino: los objetivos concretos, las paradas de muestreo y la pendiente a escala de 1 m. El **refugio seguro de la EVA es el SEV**, no la base.
 
 ### 0.2 Línea de tiempo por sol (la calcula el planificador)
@@ -232,7 +232,7 @@ frontend/src/features/
 }
 ```
 - **local:** bbox del boxwork (`env.json → site.bbox_lon_lat`), 1–2 m/celda.
-- **regional:** corredor que contiene la base (137.4019, −4.5965) y el bbox local. Por ejemplo `[137.36, -4.82, 137.43, -4.58]` (~4 × 14 km; a 10 m → ~410 × 1 420 ≈ 0.6 M celdas). Mec. A confirma la cobertura del DEM merged de 1 m en la elipse; si no cubre, usa DTM CTX (~20 m) o HRSC.
+- **regional:** corredor que contiene la base (137.42009295, −4.59310427) y el bbox local. Por ejemplo `[137.36, -4.82, 137.43, -4.58]` (~4 × 14 km; a 10 m → ~410 × 1 420 ≈ 0.6 M celdas). Mec. A confirma la cobertura del DEM merged de 1 m en la elipse; si no cubre, usa DTM CTX (~20 m) o HRSC.
 
 | Archivo | dtype | Contenido |
 |---|---|---|
@@ -273,7 +273,7 @@ Yo derivo la **pendiente direccional** entre celdas desde `dem.npy`, porque subi
 | `reference_eva.profiles.*.w_risk` | pesos por perfil (§5.1) |
 | `communications.orbital_relays` | (COULD) alerta de pérdida de enlace fuera de ventana |
 
-**`sites.geojson` 🆕** (Estudiante): `Point` por base o EZ con `{"id", "name", "kind": "ez_2015|base", "interactive": bool, "source", "source_url"}`. Gale: `{"id": "gale_calef2015", "coordinates": [137.4019, -4.5965], "interactive": true, "source": "Calef et al. 2015, abstract #1020"}`.
+**`sites.geojson` 🆕** (Estudiante): `Point` por base o EZ con `{"id", "name", "kind": "ez_2015|base", "interactive": bool, "source", "source_url"}`. Gale: `{"id": "gale_calef2015", "coordinates": [137.42009295, -4.59310427], "interactive": true, "source": "Calef et al. 2015, abstract #1020"}`.
 
 ### 4.4 Mec. B → Full stack (API)
 Los DTOs viven en `adapters/inbound/http/schemas.py`. El frontend los espeja en `features/route-planning/types.ts` y `features/field-simulation/types.ts` (regla de CONTRIBUTING §7).
@@ -281,14 +281,14 @@ Los DTOs viven en `adapters/inbound/http/schemas.py`. El frontend los espeja en 
 **`POST /api/v1/mission/plan`** — la llamada principal de la demo.
 ```json
 // Request
-{"base": [137.4019, -4.5965],          // opcional; por defecto la base Calef
+{"base": [137.42009295, -4.59310427],  // opcional; por defecto la base Calef
  "staging_target_id": "T01",           // opcional; null → R-4
  "target_ids": ["T02", "T05", "T06"],
  "profiles": ["safe", "fast", "scientific"],
  "departure": {"sol": 5074, "ltst": "06:00"},
  "scenario": "none"}
 // Response
-{"base": {"lonlat": [137.4019, -4.5965]},
+{"base": {"lonlat": [137.42009295, -4.59310427]},
  "staging": {"target_id": "T01", "lonlat": [137.396, -4.785]},
  "traverse_out":  {"path": [[lon, lat]], "metrics": {"dist_m": 0, "ascent_m": 0, "max_slope_deg": 0,
                    "energy_kWh": 0, "battery_used_pct": 0, "time_min": 0, "feasible": true}},
@@ -345,7 +345,7 @@ Los DTOs viven en `adapters/inbound/http/schemas.py`. El frontend los espeja en 
 ### 4.5 Parámetros (`data/mission_params.json`, mío)
 ```json
 {
-  "base": {"lonlat": [137.4019, -4.5965], "source": "Calef et al. 2015, #1020", "kind": "medido"},
+  "base": {"lonlat": [137.42009295, -4.59310427], "source": "Calef et al. 2015 (presentación, nasa.gov)", "kind": "medido"},
   "eva": {"from_env_json": "physiology", "stop_rate_W": 220, "science_radius_m": 15,
           "reserve_caution_fraction": 0.20, "kind": "supuesto"},
   "rover": {
@@ -359,6 +359,77 @@ Los DTOs viven en `adapters/inbound/http/schemas.py`. El frontend los espeja en 
   }
 }
 ```
+
+
+### 4.6 Flujo de integración: qué recibo, cómo lo uso y qué entrego
+
+```
+  Mec. A (terreno)                    Estudiante (datos NASA)
+  data/terrain/{local,regional}/      data/targets_v0.geojson · env.json · sites.geojson
+  grid.json + *.npy                            │
+        │                                      │
+        ▼  npy_terrain.py (adapter)            ▼  json_targets.py / json_environment.py / json_params.py
+  ┌──────────────────────────────────────────────────────────────────────────────┐
+  │ MEC. B — domain/ + application/                                              │
+  │  GridSpec (lon/lat ↔ celda) → costos (metabolic.py, rover_energy.py)         │
+  │  → A* (pathfinding.py) → métricas → campo de retorno → PNR/alertas → timeline │
+  │  Casos de uso: PlanMission · PlanRoutes · PlanTraverse · SimulateEva ·        │
+  │                GetReturnField                                                 │
+  └──────────────────────────────────────────────────────────────────────────────┘
+        │  DTOs (schemas.py) — siempre [lon, lat] hacia afuera
+        ▼
+  Full stack: routers /api/v1/... → frontend
+     features/map · features/route-planning · features/field-simulation
+```
+
+**Lo que recibo de Mec. A (terreno) y cómo lo uso**
+
+| Recibo | Lo convierto en / lo uso para | Dónde |
+|---|---|---|
+| `grid.json` (`origin_xy`, `cell_size_m`, `shape`, `crs_proj4`) | Construir `GridSpec`: pasar los `[lon, lat]` de base, objetivos y clics de la UI a `(fila, col)`, y devolver las rutas como `[lon, lat]` | `domain/models/grid.py` |
+| `dem.npy` | Pendiente **direccional** `G` de cada arista → Pandolf (EVA, kJ) y `sinθ` (rover, kWh); `ascent_m`, `max_slope_deg`, `elevation_profile` | `metabolic.py`, `rover_energy.py` |
+| `classes_human.npy` / `classes_rover.npy` | Máscara no-go (clase 2/255, dilatada) → arista `inf` en A\*; clase 1 → velocidad reducida y alerta `SLOPE_AHEAD` | `pathfinding.py`, `safety_rules.py` |
+| `risk.npy` | Factor `(1 + w_r·risk)` del costo de búsqueda: hace que `safe` se aleje de `fast` | costo de búsqueda |
+| `confidence.npy` | Alerta `LOW_CONFIDENCE`; se muestra en la UI como "dato interpolado" | `safety_rules.py` |
+
+**Lo que recibo del Estudiante (datos NASA) y cómo lo uso**
+
+| Recibo | Campo | Lo uso para |
+|---|---|---|
+| `targets_v0.geojson` | `geometry.coordinates` | Waypoints de la EVA (→ celda vía `GridSpec`) |
+| | `rubric.total_15`, `S` | `science_score` de cada ruta; capa `science.npy` (descuento del perfil `scientific`) |
+| | `eva_sampling.duration_min` | Duración de cada parada → energía y O₂ de la parada |
+| | `is_base` (T01) / `is_shelter` (T08) | Staging del SEV (inicio/fin de la EVA y fuente del campo de retorno) / refugio en `sep_event` |
+| | `shielding_reduction_pct` | Menor dosis durante la parada |
+| `env.json` | `radiation.gcr_dose_mSv_per_sol`, `radiation.limits` | `dose_mSv` y alerta `DOSE_HIGH` |
+| | `eva_window`, `time.sunrise/sunset` | Timeline por sol (M-2): cuándo puede haber EVA y cuándo se puede manejar |
+| | `physiology.*` | Parámetros de Pandolf, capacidad de O₂, márgenes, multiplicadores de escenarios |
+| | `reference_eva.profiles.*.w_risk` | Pesos de los perfiles |
+| | `dust`, `radiation.solar_storm` | Escenarios `dust_storm` y `sep_event` |
+| `sites.geojson` 🆕 | punto `gale_calef2015` | Origen del tramo rover (la base) |
+
+**Lo que entrego y cómo se integra**
+
+| Entrego | Lo consume | Cómo se integra en la UI |
+|---|---|---|
+| `POST /api/v1/mission/plan` → `traverse_out/back.path` | Full stack, `features/map` | Línea del rover base → T01 sobre el mapa regional |
+| `eva.routes[].path` (3 perfiles) | `features/map` | 3 líneas de colores sobre el boxwork |
+| `metrics`, `segments`, `stops`, `elevation_profile` | `features/route-planning` | Comparador de 3 rutas (O₂, tiempo, dosis, ciencia, factibilidad) y perfil de elevación |
+| `timeline` (por sol) | `features/route-planning` | Cronograma Sol N / N+1 / N+2 |
+| `pnr_index` | `features/map` | Marcador "punto de no retorno" sobre la ruta |
+| `GET /return-field` → PNG + `bbox_lonlat` | `features/map` | Capa ráster "zona segura" e isolínea |
+| `POST /simulate` → `timeline[]` con `alert` | `features/field-simulation` | HUD (O₂, reserva, dosis, próximo waypoint) y modal de alertas |
+| `assumptions` (con `kind`) | todas las features | Panel "supuestos y fuentes" (honestidad del dato) |
+| `fallback_mission.json`, `fallback_simulation.json` | Full stack | Respaldo si el backend no responde en la demo |
+| DTOs en `schemas.py` | Full stack | Los espeja en `features/*/types.ts` |
+
+**Ejemplo de punta a punta:** el usuario elige T02, T05 y T06 y pulsa "Planificar".
+1. El frontend envía `POST /api/v1/mission/plan` con `target_ids` y `departure`.
+2. `PlanMission` lee la base (`sites.geojson`), T01 y los objetivos (`targets_v0.geojson`) y la ventana EVA (`env.json`).
+3. `PlanTraverse` corre A\* en la grilla **regional** de Mec. A con el costo del rover → `traverse_out`.
+4. `PlanRoutes` corre A\* en la grilla **local** con Pandolf para cada perfil → `eva.routes`. Con el campo de retorno desde T01 calcula la reserva y el PNR.
+5. `PlanMission` arma la `timeline` por sol y junta `assumptions`.
+6. El Full stack dibuja las rutas en el mapa, el comparador y el cronograma. Si el usuario pulsa "Ejecutar", llama a `POST /simulate` con la ruta elegida.
 
 ---
 
@@ -460,7 +531,7 @@ Para pasar de la celda `i` a la vecina `j` (8 vecinos; `d = cell` o `cell·√2`
 
 | Dato | Misión / fuente | Lo provee | Uso | Tipo |
 |---|---|---|---|---|
-| Base/hábitat 137.4019°E −4.5965°, EZ de 100 y 25 km, ROIs ISRU, *camps* en cráteres de ~100 m | Calef III et al. 2015, *Assessing Gale Crater as a Landing Site for the First Human Mission to Mars*, abstract #1020 — [abstract](https://www.hou.usra.edu/meetings/explorationzone2015/pdf/1020.pdf), [presentación](https://www.nasa.gov/wp-content/uploads/2015/11/calef_galecrater_lsez2015tagged.pdf) | Estudiante | Origen de la misión (vista 2) | medido / propuesta |
+| Base/hábitat **137.42009295°E, 4.59310427°S** (coordenada del equipo, tomada de la presentación de Calef 2015). *Procedencia:* el texto del abstract #1020 da 137.4019°E, −4.5965° como "centro de la elipse final de MSL", ~1.1 km de diferencia; **manda la del equipo**. EZ de 100 y 25 km, ROIs ISRU, *camps* en cráteres de ~100 m | Calef III et al. 2015, *Assessing Gale Crater as a Landing Site for the First Human Mission to Mars*, abstract #1020 — [abstract](https://www.hou.usra.edu/meetings/explorationzone2015/pdf/1020.pdf), [presentación](https://www.nasa.gov/wp-content/uploads/2015/11/calef_galecrater_lsez2015tagged.pdf) | Estudiante | Origen de la misión (vista 2) | medido / propuesta |
 | EZ del taller 2015 (47 propuestas) | NASA First Landing Site/EZ Workshop — [anuncio](https://www.nasa.gov/sites/default/files/atoms/files/first-landing-site-announcement.pdf) | Estudiante | Globo (vista 1) | propuesta |
 | DEM 1 m + orto 25 cm | USGS *MSL Gale Merged DEM / Orthophoto* (Calef & Parker; MRO HiRISE + CTX, MGS MOLA) | Mec. A | Pendiente, costo, clases (local y regional) | medido |
 | Vehículo presurizado | NASA SEV — [science.nasa.gov/3d-resources/space-exploration-vehicle](https://science.nasa.gov/3d-resources/space-exploration-vehicle/): 2 tripulantes, 14 días, ~10 km/h, 12 ruedas que giran 360° | Mec. B | `rover.*` medidos | medido (spec) |
@@ -522,7 +593,7 @@ Ramas y PRs según CONTRIBUTING: un PR por tarea, título en Conventional Commit
 ---
 
 ## 11. Preguntas abiertas
-1. **Cobertura del DEM regional:** ¿el MSL Gale Merged DEM de 1 m cubre la franja base (−4.5965) → boxwork (−4.79)? Si no, ¿CTX o HRSC? (Mec. A)
+1. **Cobertura del DEM regional:** ¿el MSL Gale Merged DEM de 1 m cubre la franja base (−4.5931) → boxwork (−4.79)? Si no, ¿CTX o HRSC? (Mec. A)
 2. **Umbrales del SEV:** la página NASA no da pendiente máxima, autonomía ni masa. ¿Hay una fuente primaria (DRA 5.0, documentos del MMSEV o Desert RATS) para reemplazar los supuestos de §4.5?
 3. **Mover `physiology` y `reference_eva`** de `env.json` a `mission_params.json` (PR coordinado con el Estudiante) o dejarlos donde están.
 4. **Elevación de la base:** confirmarla con el DEM (≈ −4 500 m, **a verificar**) → ascenso de ~765 m hasta T01 (−3 734.7 m).

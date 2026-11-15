@@ -33,6 +33,12 @@ class JsonTargetRepository:
                     ),
                     description=p.get("desc_en", ""),
                     category=p.get("type_en", ""),
+                    score_s=float(p.get("S", 0.0)),
+                    eva_duration_min=float(p.get("eva_sampling", {}).get("duration_min", 0.0)),
+                    eva_tool=str(p.get("eva_sampling", {}).get("tool", "")),
+                    shielding_pct=float(p.get("shielding_reduction_pct", 0.0)),
+                    is_base=bool(p.get("is_base", False)),
+                    is_shelter=bool(p.get("is_shelter", False)),
                 )
             self._cache = cache
         return self._cache

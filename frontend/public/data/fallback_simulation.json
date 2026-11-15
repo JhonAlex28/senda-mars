@@ -1,0 +1,8640 @@
+{
+ "scenario": "sep_event",
+ "timeline": [
+  {
+   "t_min": 0.0,
+   "lonlat": [
+    137.39603,
+    -4.7849746
+   ],
+   "cell": [
+    91,
+    355
+   ],
+   "progress": 0.0,
+   "o2_left_L": 300.0,
+   "return_o2_L": 0.0,
+   "reserve_L": 300.0,
+   "dose_mSv": 0.0,
+   "next_wp": "T02",
+   "dist_left_m": 3612.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 0.09,
+   "lonlat": [
+    137.39603,
+    -4.7850421
+   ],
+   "cell": [
+    92,
+    355
+   ],
+   "progress": 0.0011,
+   "o2_left_L": 299.93,
+   "return_o2_L": 0.06,
+   "reserve_L": 299.85,
+   "dose_mSv": 4e-05,
+   "next_wp": "T02",
+   "dist_left_m": 3608.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 0.3,
+   "lonlat": [
+    137.3959625,
+    -4.7851096
+   ],
+   "cell": [
+    93,
+    354
+   ],
+   "progress": 0.0027,
+   "o2_left_L": 299.73,
+   "return_o2_L": 0.15,
+   "reserve_L": 299.53,
+   "dose_mSv": 0.00013,
+   "next_wp": "T02",
+   "dist_left_m": 3603.1,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 0.51,
+   "lonlat": [
+    137.395895,
+    -4.7851771
+   ],
+   "cell": [
+    94,
+    353
+   ],
+   "progress": 0.0042,
+   "o2_left_L": 299.54,
+   "return_o2_L": 0.28,
+   "reserve_L": 299.17,
+   "dose_mSv": 0.00022,
+   "next_wp": "T02",
+   "dist_left_m": 3597.5,
+   "alert": null
+  },
+  {
+   "t_min": 0.63,
+   "lonlat": [
+    137.3958276,
+    -4.7852446
+   ],
+   "cell": [
+    95,
+    352
+   ],
+   "progress": 0.0058,
+   "o2_left_L": 299.4,
+   "return_o2_L": 0.41,
+   "reserve_L": 298.87,
+   "dose_mSv": 0.00027,
+   "next_wp": "T02",
+   "dist_left_m": 3591.8,
+   "alert": null
+  },
+  {
+   "t_min": 0.76,
+   "lonlat": [
+    137.3957601,
+    -4.7853121
+   ],
+   "cell": [
+    96,
+    351
+   ],
+   "progress": 0.0074,
+   "o2_left_L": 299.29,
+   "return_o2_L": 0.5,
+   "reserve_L": 298.64,
+   "dose_mSv": 0.00033,
+   "next_wp": "T02",
+   "dist_left_m": 3586.2,
+   "alert": null
+  },
+  {
+   "t_min": 0.89,
+   "lonlat": [
+    137.3956926,
+    -4.7853795
+   ],
+   "cell": [
+    97,
+    350
+   ],
+   "progress": 0.0089,
+   "o2_left_L": 299.2,
+   "return_o2_L": 0.59,
+   "reserve_L": 298.43,
+   "dose_mSv": 0.00038,
+   "next_wp": "T02",
+   "dist_left_m": 3580.5,
+   "alert": null
+  },
+  {
+   "t_min": 1.01,
+   "lonlat": [
+    137.3956251,
+    -4.785447
+   ],
+   "cell": [
+    98,
+    349
+   ],
+   "progress": 0.0105,
+   "o2_left_L": 299.04,
+   "return_o2_L": 0.68,
+   "reserve_L": 298.16,
+   "dose_mSv": 0.00044,
+   "next_wp": "T02",
+   "dist_left_m": 3574.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 1.14,
+   "lonlat": [
+    137.3955576,
+    -4.7855145
+   ],
+   "cell": [
+    99,
+    348
+   ],
+   "progress": 0.0121,
+   "o2_left_L": 298.89,
+   "return_o2_L": 0.77,
+   "reserve_L": 297.89,
+   "dose_mSv": 0.00049,
+   "next_wp": "T02",
+   "dist_left_m": 3569.2,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 1.26,
+   "lonlat": [
+    137.3954901,
+    -4.785582
+   ],
+   "cell": [
+    100,
+    347
+   ],
+   "progress": 0.0136,
+   "o2_left_L": 298.76,
+   "return_o2_L": 0.86,
+   "reserve_L": 297.65,
+   "dose_mSv": 0.00055,
+   "next_wp": "T02",
+   "dist_left_m": 3563.5,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 1.39,
+   "lonlat": [
+    137.3954227,
+    -4.7856495
+   ],
+   "cell": [
+    101,
+    346
+   ],
+   "progress": 0.0152,
+   "o2_left_L": 298.65,
+   "return_o2_L": 0.94,
+   "reserve_L": 297.42,
+   "dose_mSv": 0.0006,
+   "next_wp": "T02",
+   "dist_left_m": 3557.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 1.51,
+   "lonlat": [
+    137.3953552,
+    -4.7857169
+   ],
+   "cell": [
+    102,
+    345
+   ],
+   "progress": 0.0168,
+   "o2_left_L": 298.53,
+   "return_o2_L": 1.03,
+   "reserve_L": 297.19,
+   "dose_mSv": 0.00065,
+   "next_wp": "T02",
+   "dist_left_m": 3552.2,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 1.66,
+   "lonlat": [
+    137.3953552,
+    -4.7857844
+   ],
+   "cell": [
+    103,
+    345
+   ],
+   "progress": 0.0179,
+   "o2_left_L": 298.35,
+   "return_o2_L": 1.1,
+   "reserve_L": 296.92,
+   "dose_mSv": 0.00072,
+   "next_wp": "T02",
+   "dist_left_m": 3548.2,
+   "alert": null
+  },
+  {
+   "t_min": 1.79,
+   "lonlat": [
+    137.3952877,
+    -4.7858519
+   ],
+   "cell": [
+    104,
+    344
+   ],
+   "progress": 0.0194,
+   "o2_left_L": 298.16,
+   "return_o2_L": 1.21,
+   "reserve_L": 296.58,
+   "dose_mSv": 0.00077,
+   "next_wp": "T02",
+   "dist_left_m": 3542.6,
+   "alert": null
+  },
+  {
+   "t_min": 1.88,
+   "lonlat": [
+    137.3952877,
+    -4.7859194
+   ],
+   "cell": [
+    105,
+    344
+   ],
+   "progress": 0.0205,
+   "o2_left_L": 298.02,
+   "return_o2_L": 1.28,
+   "reserve_L": 296.36,
+   "dose_mSv": 0.00081,
+   "next_wp": "T02",
+   "dist_left_m": 3538.6,
+   "alert": null
+  },
+  {
+   "t_min": 1.97,
+   "lonlat": [
+    137.3952877,
+    -4.7859869
+   ],
+   "cell": [
+    106,
+    344
+   ],
+   "progress": 0.0217,
+   "o2_left_L": 297.89,
+   "return_o2_L": 1.34,
+   "reserve_L": 296.14,
+   "dose_mSv": 0.00085,
+   "next_wp": "T02",
+   "dist_left_m": 3534.6,
+   "alert": null
+  },
+  {
+   "t_min": 2.05,
+   "lonlat": [
+    137.3952877,
+    -4.7860544
+   ],
+   "cell": [
+    107,
+    344
+   ],
+   "progress": 0.0228,
+   "o2_left_L": 297.76,
+   "return_o2_L": 1.4,
+   "reserve_L": 295.94,
+   "dose_mSv": 0.00089,
+   "next_wp": "T02",
+   "dist_left_m": 3530.6,
+   "alert": null
+  },
+  {
+   "t_min": 2.14,
+   "lonlat": [
+    137.3952877,
+    -4.7861218
+   ],
+   "cell": [
+    108,
+    344
+   ],
+   "progress": 0.0239,
+   "o2_left_L": 297.65,
+   "return_o2_L": 1.47,
+   "reserve_L": 295.74,
+   "dose_mSv": 0.00093,
+   "next_wp": "T02",
+   "dist_left_m": 3526.6,
+   "alert": null
+  },
+  {
+   "t_min": 2.23,
+   "lonlat": [
+    137.3952877,
+    -4.7861893
+   ],
+   "cell": [
+    109,
+    344
+   ],
+   "progress": 0.025,
+   "o2_left_L": 297.55,
+   "return_o2_L": 1.53,
+   "reserve_L": 295.56,
+   "dose_mSv": 0.00097,
+   "next_wp": "T02",
+   "dist_left_m": 3522.6,
+   "alert": null
+  },
+  {
+   "t_min": 2.32,
+   "lonlat": [
+    137.3952877,
+    -4.7862568
+   ],
+   "cell": [
+    110,
+    344
+   ],
+   "progress": 0.0261,
+   "o2_left_L": 297.46,
+   "return_o2_L": 1.59,
+   "reserve_L": 295.38,
+   "dose_mSv": 0.001,
+   "next_wp": "T02",
+   "dist_left_m": 3518.6,
+   "alert": null
+  },
+  {
+   "t_min": 2.45,
+   "lonlat": [
+    137.3953552,
+    -4.7863243
+   ],
+   "cell": [
+    111,
+    345
+   ],
+   "progress": 0.0276,
+   "o2_left_L": 297.34,
+   "return_o2_L": 1.61,
+   "reserve_L": 295.24,
+   "dose_mSv": 0.00106,
+   "next_wp": "T02",
+   "dist_left_m": 3512.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 2.54,
+   "lonlat": [
+    137.3953552,
+    -4.7863918
+   ],
+   "cell": [
+    112,
+    345
+   ],
+   "progress": 0.0288,
+   "o2_left_L": 297.26,
+   "return_o2_L": 1.68,
+   "reserve_L": 295.08,
+   "dose_mSv": 0.0011,
+   "next_wp": "T02",
+   "dist_left_m": 3508.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 2.62,
+   "lonlat": [
+    137.3953552,
+    -4.7864593
+   ],
+   "cell": [
+    113,
+    345
+   ],
+   "progress": 0.0299,
+   "o2_left_L": 297.19,
+   "return_o2_L": 1.74,
+   "reserve_L": 294.93,
+   "dose_mSv": 0.00114,
+   "next_wp": "T02",
+   "dist_left_m": 3504.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 2.71,
+   "lonlat": [
+    137.3953552,
+    -4.7865267
+   ],
+   "cell": [
+    114,
+    345
+   ],
+   "progress": 0.031,
+   "o2_left_L": 297.13,
+   "return_o2_L": 1.8,
+   "reserve_L": 294.78,
+   "dose_mSv": 0.00117,
+   "next_wp": "T02",
+   "dist_left_m": 3500.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 2.8,
+   "lonlat": [
+    137.3953552,
+    -4.7865942
+   ],
+   "cell": [
+    115,
+    345
+   ],
+   "progress": 0.0321,
+   "o2_left_L": 296.99,
+   "return_o2_L": 1.87,
+   "reserve_L": 294.56,
+   "dose_mSv": 0.00121,
+   "next_wp": "T02",
+   "dist_left_m": 3496.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 2.95,
+   "lonlat": [
+    137.3953552,
+    -4.7866617
+   ],
+   "cell": [
+    116,
+    345
+   ],
+   "progress": 0.0332,
+   "o2_left_L": 296.81,
+   "return_o2_L": 1.93,
+   "reserve_L": 294.3,
+   "dose_mSv": 0.00128,
+   "next_wp": "T02",
+   "dist_left_m": 3492.9,
+   "alert": null
+  },
+  {
+   "t_min": 3.08,
+   "lonlat": [
+    137.3952877,
+    -4.7867292
+   ],
+   "cell": [
+    117,
+    344
+   ],
+   "progress": 0.0347,
+   "o2_left_L": 296.63,
+   "return_o2_L": 2.05,
+   "reserve_L": 293.97,
+   "dose_mSv": 0.00133,
+   "next_wp": "T02",
+   "dist_left_m": 3487.3,
+   "alert": null
+  },
+  {
+   "t_min": 3.16,
+   "lonlat": [
+    137.3952877,
+    -4.7867967
+   ],
+   "cell": [
+    118,
+    344
+   ],
+   "progress": 0.0359,
+   "o2_left_L": 296.49,
+   "return_o2_L": 2.11,
+   "reserve_L": 293.75,
+   "dose_mSv": 0.00137,
+   "next_wp": "T02",
+   "dist_left_m": 3483.3,
+   "alert": null
+  },
+  {
+   "t_min": 3.25,
+   "lonlat": [
+    137.3952877,
+    -4.7868641
+   ],
+   "cell": [
+    119,
+    344
+   ],
+   "progress": 0.037,
+   "o2_left_L": 296.36,
+   "return_o2_L": 2.17,
+   "reserve_L": 293.54,
+   "dose_mSv": 0.00141,
+   "next_wp": "T02",
+   "dist_left_m": 3479.3,
+   "alert": null
+  },
+  {
+   "t_min": 3.34,
+   "lonlat": [
+    137.3952877,
+    -4.7869316
+   ],
+   "cell": [
+    120,
+    344
+   ],
+   "progress": 0.0381,
+   "o2_left_L": 296.24,
+   "return_o2_L": 2.24,
+   "reserve_L": 293.33,
+   "dose_mSv": 0.00145,
+   "next_wp": "T02",
+   "dist_left_m": 3475.3,
+   "alert": null
+  },
+  {
+   "t_min": 3.43,
+   "lonlat": [
+    137.3952877,
+    -4.7869991
+   ],
+   "cell": [
+    121,
+    344
+   ],
+   "progress": 0.0392,
+   "o2_left_L": 296.14,
+   "return_o2_L": 2.3,
+   "reserve_L": 293.14,
+   "dose_mSv": 0.00148,
+   "next_wp": "T02",
+   "dist_left_m": 3471.3,
+   "alert": null
+  },
+  {
+   "t_min": 3.52,
+   "lonlat": [
+    137.3952877,
+    -4.7870666
+   ],
+   "cell": [
+    122,
+    344
+   ],
+   "progress": 0.0403,
+   "o2_left_L": 296.04,
+   "return_o2_L": 2.36,
+   "reserve_L": 292.97,
+   "dose_mSv": 0.00152,
+   "next_wp": "T02",
+   "dist_left_m": 3467.3,
+   "alert": null
+  },
+  {
+   "t_min": 3.61,
+   "lonlat": [
+    137.3952877,
+    -4.7871341
+   ],
+   "cell": [
+    123,
+    344
+   ],
+   "progress": 0.0414,
+   "o2_left_L": 295.95,
+   "return_o2_L": 2.43,
+   "reserve_L": 292.8,
+   "dose_mSv": 0.00156,
+   "next_wp": "T02",
+   "dist_left_m": 3463.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 3.7,
+   "lonlat": [
+    137.3952877,
+    -4.7872016
+   ],
+   "cell": [
+    124,
+    344
+   ],
+   "progress": 0.0425,
+   "o2_left_L": 295.87,
+   "return_o2_L": 2.49,
+   "reserve_L": 292.64,
+   "dose_mSv": 0.0016,
+   "next_wp": "T02",
+   "dist_left_m": 3459.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 3.79,
+   "lonlat": [
+    137.3952877,
+    -4.787269
+   ],
+   "cell": [
+    125,
+    344
+   ],
+   "progress": 0.0436,
+   "o2_left_L": 295.8,
+   "return_o2_L": 2.56,
+   "reserve_L": 292.48,
+   "dose_mSv": 0.00164,
+   "next_wp": "T02",
+   "dist_left_m": 3455.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 3.88,
+   "lonlat": [
+    137.3952877,
+    -4.7873365
+   ],
+   "cell": [
+    126,
+    344
+   ],
+   "progress": 0.0447,
+   "o2_left_L": 295.74,
+   "return_o2_L": 2.62,
+   "reserve_L": 292.33,
+   "dose_mSv": 0.00168,
+   "next_wp": "T02",
+   "dist_left_m": 3451.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 4.0,
+   "lonlat": [
+    137.3952202,
+    -4.787404
+   ],
+   "cell": [
+    127,
+    343
+   ],
+   "progress": 0.0463,
+   "o2_left_L": 295.6,
+   "return_o2_L": 2.71,
+   "reserve_L": 292.08,
+   "dose_mSv": 0.00173,
+   "next_wp": "T02",
+   "dist_left_m": 3445.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 4.21,
+   "lonlat": [
+    137.3951527,
+    -4.7874715
+   ],
+   "cell": [
+    128,
+    342
+   ],
+   "progress": 0.0478,
+   "o2_left_L": 295.4,
+   "return_o2_L": 2.8,
+   "reserve_L": 291.76,
+   "dose_mSv": 0.00182,
+   "next_wp": "T02",
+   "dist_left_m": 3439.9,
+   "alert": null
+  },
+  {
+   "t_min": 4.34,
+   "lonlat": [
+    137.3950852,
+    -4.787539
+   ],
+   "cell": [
+    129,
+    341
+   ],
+   "progress": 0.0494,
+   "o2_left_L": 295.26,
+   "return_o2_L": 2.92,
+   "reserve_L": 291.45,
+   "dose_mSv": 0.00188,
+   "next_wp": "T02",
+   "dist_left_m": 3434.3,
+   "alert": null
+  },
+  {
+   "t_min": 4.46,
+   "lonlat": [
+    137.3950178,
+    -4.7876065
+   ],
+   "cell": [
+    130,
+    340
+   ],
+   "progress": 0.051,
+   "o2_left_L": 295.14,
+   "return_o2_L": 3.01,
+   "reserve_L": 291.22,
+   "dose_mSv": 0.00193,
+   "next_wp": "T02",
+   "dist_left_m": 3428.6,
+   "alert": null
+  },
+  {
+   "t_min": 4.59,
+   "lonlat": [
+    137.3949503,
+    -4.7876739
+   ],
+   "cell": [
+    131,
+    339
+   ],
+   "progress": 0.0525,
+   "o2_left_L": 295.04,
+   "return_o2_L": 3.1,
+   "reserve_L": 291.0,
+   "dose_mSv": 0.00198,
+   "next_wp": "T02",
+   "dist_left_m": 3423.0,
+   "alert": null
+  },
+  {
+   "t_min": 4.71,
+   "lonlat": [
+    137.3948828,
+    -4.7877414
+   ],
+   "cell": [
+    132,
+    338
+   ],
+   "progress": 0.0541,
+   "o2_left_L": 294.9,
+   "return_o2_L": 3.19,
+   "reserve_L": 290.75,
+   "dose_mSv": 0.00204,
+   "next_wp": "T02",
+   "dist_left_m": 3417.3,
+   "alert": null
+  },
+  {
+   "t_min": 4.84,
+   "lonlat": [
+    137.3948153,
+    -4.7878089
+   ],
+   "cell": [
+    133,
+    337
+   ],
+   "progress": 0.0557,
+   "o2_left_L": 294.75,
+   "return_o2_L": 3.28,
+   "reserve_L": 290.48,
+   "dose_mSv": 0.00209,
+   "next_wp": "T02",
+   "dist_left_m": 3411.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 4.97,
+   "lonlat": [
+    137.3947478,
+    -4.7878764
+   ],
+   "cell": [
+    134,
+    336
+   ],
+   "progress": 0.0572,
+   "o2_left_L": 294.61,
+   "return_o2_L": 3.37,
+   "reserve_L": 290.23,
+   "dose_mSv": 0.00215,
+   "next_wp": "T02",
+   "dist_left_m": 3406.0,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 5.09,
+   "lonlat": [
+    137.3946804,
+    -4.7879439
+   ],
+   "cell": [
+    135,
+    335
+   ],
+   "progress": 0.0588,
+   "o2_left_L": 294.5,
+   "return_o2_L": 3.46,
+   "reserve_L": 290.0,
+   "dose_mSv": 0.0022,
+   "next_wp": "T02",
+   "dist_left_m": 3400.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 5.18,
+   "lonlat": [
+    137.3946804,
+    -4.7880114
+   ],
+   "cell": [
+    136,
+    335
+   ],
+   "progress": 0.0599,
+   "o2_left_L": 294.43,
+   "return_o2_L": 3.52,
+   "reserve_L": 289.85,
+   "dose_mSv": 0.00224,
+   "next_wp": "T02",
+   "dist_left_m": 3396.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 5.27,
+   "lonlat": [
+    137.3946804,
+    -4.7880788
+   ],
+   "cell": [
+    137,
+    335
+   ],
+   "progress": 0.061,
+   "o2_left_L": 294.31,
+   "return_o2_L": 3.59,
+   "reserve_L": 289.65,
+   "dose_mSv": 0.00228,
+   "next_wp": "T02",
+   "dist_left_m": 3392.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 5.42,
+   "lonlat": [
+    137.3946804,
+    -4.7881463
+   ],
+   "cell": [
+    138,
+    335
+   ],
+   "progress": 0.0621,
+   "o2_left_L": 294.13,
+   "return_o2_L": 3.65,
+   "reserve_L": 289.39,
+   "dose_mSv": 0.00234,
+   "next_wp": "T02",
+   "dist_left_m": 3388.3,
+   "alert": null
+  },
+  {
+   "t_min": 5.54,
+   "lonlat": [
+    137.3946129,
+    -4.7882138
+   ],
+   "cell": [
+    139,
+    334
+   ],
+   "progress": 0.0637,
+   "o2_left_L": 293.93,
+   "return_o2_L": 3.76,
+   "reserve_L": 289.03,
+   "dose_mSv": 0.0024,
+   "next_wp": "T02",
+   "dist_left_m": 3382.7,
+   "alert": null
+  },
+  {
+   "t_min": 5.63,
+   "lonlat": [
+    137.3946129,
+    -4.7882813
+   ],
+   "cell": [
+    140,
+    334
+   ],
+   "progress": 0.0648,
+   "o2_left_L": 293.79,
+   "return_o2_L": 3.83,
+   "reserve_L": 288.81,
+   "dose_mSv": 0.00244,
+   "next_wp": "T02",
+   "dist_left_m": 3378.7,
+   "alert": null
+  },
+  {
+   "t_min": 5.72,
+   "lonlat": [
+    137.3946129,
+    -4.7883488
+   ],
+   "cell": [
+    141,
+    334
+   ],
+   "progress": 0.0659,
+   "o2_left_L": 293.66,
+   "return_o2_L": 3.89,
+   "reserve_L": 288.6,
+   "dose_mSv": 0.00247,
+   "next_wp": "T02",
+   "dist_left_m": 3374.7,
+   "alert": null
+  },
+  {
+   "t_min": 5.81,
+   "lonlat": [
+    137.3946129,
+    -4.7884162
+   ],
+   "cell": [
+    142,
+    334
+   ],
+   "progress": 0.067,
+   "o2_left_L": 293.54,
+   "return_o2_L": 3.96,
+   "reserve_L": 288.4,
+   "dose_mSv": 0.00251,
+   "next_wp": "T02",
+   "dist_left_m": 3370.7,
+   "alert": null
+  },
+  {
+   "t_min": 5.9,
+   "lonlat": [
+    137.3946129,
+    -4.7884837
+   ],
+   "cell": [
+    143,
+    334
+   ],
+   "progress": 0.0681,
+   "o2_left_L": 293.43,
+   "return_o2_L": 4.02,
+   "reserve_L": 288.2,
+   "dose_mSv": 0.00255,
+   "next_wp": "T02",
+   "dist_left_m": 3366.7,
+   "alert": null
+  },
+  {
+   "t_min": 5.99,
+   "lonlat": [
+    137.3946129,
+    -4.7885512
+   ],
+   "cell": [
+    144,
+    334
+   ],
+   "progress": 0.0692,
+   "o2_left_L": 293.33,
+   "return_o2_L": 4.08,
+   "reserve_L": 288.02,
+   "dose_mSv": 0.00259,
+   "next_wp": "T02",
+   "dist_left_m": 3362.7,
+   "alert": null
+  },
+  {
+   "t_min": 6.08,
+   "lonlat": [
+    137.3946129,
+    -4.7886187
+   ],
+   "cell": [
+    145,
+    334
+   ],
+   "progress": 0.0703,
+   "o2_left_L": 293.24,
+   "return_o2_L": 4.15,
+   "reserve_L": 287.85,
+   "dose_mSv": 0.00263,
+   "next_wp": "T02",
+   "dist_left_m": 3358.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 6.16,
+   "lonlat": [
+    137.3946129,
+    -4.7886862
+   ],
+   "cell": [
+    146,
+    334
+   ],
+   "progress": 0.0714,
+   "o2_left_L": 293.16,
+   "return_o2_L": 4.21,
+   "reserve_L": 287.69,
+   "dose_mSv": 0.00267,
+   "next_wp": "T02",
+   "dist_left_m": 3354.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 6.25,
+   "lonlat": [
+    137.3946129,
+    -4.7887537
+   ],
+   "cell": [
+    147,
+    334
+   ],
+   "progress": 0.0725,
+   "o2_left_L": 293.09,
+   "return_o2_L": 4.27,
+   "reserve_L": 287.54,
+   "dose_mSv": 0.00271,
+   "next_wp": "T02",
+   "dist_left_m": 3350.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 6.34,
+   "lonlat": [
+    137.3946129,
+    -4.7888211
+   ],
+   "cell": [
+    148,
+    334
+   ],
+   "progress": 0.0737,
+   "o2_left_L": 293.02,
+   "return_o2_L": 4.34,
+   "reserve_L": 287.39,
+   "dose_mSv": 0.00274,
+   "next_wp": "T02",
+   "dist_left_m": 3346.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 6.47,
+   "lonlat": [
+    137.3945454,
+    -4.7888886
+   ],
+   "cell": [
+    149,
+    333
+   ],
+   "progress": 0.0752,
+   "o2_left_L": 292.88,
+   "return_o2_L": 4.43,
+   "reserve_L": 287.13,
+   "dose_mSv": 0.0028,
+   "next_wp": "T02",
+   "dist_left_m": 3341.0,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 6.62,
+   "lonlat": [
+    137.3945454,
+    -4.7889561
+   ],
+   "cell": [
+    150,
+    333
+   ],
+   "progress": 0.0763,
+   "o2_left_L": 292.7,
+   "return_o2_L": 4.49,
+   "reserve_L": 286.87,
+   "dose_mSv": 0.00286,
+   "next_wp": "T02",
+   "dist_left_m": 3337.0,
+   "alert": null
+  },
+  {
+   "t_min": 6.71,
+   "lonlat": [
+    137.3945454,
+    -4.7890236
+   ],
+   "cell": [
+    151,
+    333
+   ],
+   "progress": 0.0774,
+   "o2_left_L": 292.55,
+   "return_o2_L": 4.58,
+   "reserve_L": 286.6,
+   "dose_mSv": 0.0029,
+   "next_wp": "T02",
+   "dist_left_m": 3333.0,
+   "alert": null
+  },
+  {
+   "t_min": 6.79,
+   "lonlat": [
+    137.3945454,
+    -4.7890911
+   ],
+   "cell": [
+    152,
+    333
+   ],
+   "progress": 0.0785,
+   "o2_left_L": 292.41,
+   "return_o2_L": 4.64,
+   "reserve_L": 286.38,
+   "dose_mSv": 0.00294,
+   "next_wp": "T02",
+   "dist_left_m": 3329.0,
+   "alert": null
+  },
+  {
+   "t_min": 6.88,
+   "lonlat": [
+    137.3945454,
+    -4.7891586
+   ],
+   "cell": [
+    153,
+    333
+   ],
+   "progress": 0.0797,
+   "o2_left_L": 292.28,
+   "return_o2_L": 4.71,
+   "reserve_L": 286.16,
+   "dose_mSv": 0.00298,
+   "next_wp": "T02",
+   "dist_left_m": 3325.0,
+   "alert": null
+  },
+  {
+   "t_min": 6.97,
+   "lonlat": [
+    137.3945454,
+    -4.789226
+   ],
+   "cell": [
+    154,
+    333
+   ],
+   "progress": 0.0808,
+   "o2_left_L": 292.15,
+   "return_o2_L": 4.77,
+   "reserve_L": 285.95,
+   "dose_mSv": 0.00302,
+   "next_wp": "T02",
+   "dist_left_m": 3321.0,
+   "alert": null
+  },
+  {
+   "t_min": 7.06,
+   "lonlat": [
+    137.3945454,
+    -4.7892935
+   ],
+   "cell": [
+    155,
+    333
+   ],
+   "progress": 0.0819,
+   "o2_left_L": 292.04,
+   "return_o2_L": 4.83,
+   "reserve_L": 285.76,
+   "dose_mSv": 0.00305,
+   "next_wp": "T02",
+   "dist_left_m": 3317.0,
+   "alert": null
+  },
+  {
+   "t_min": 7.15,
+   "lonlat": [
+    137.3945454,
+    -4.789361
+   ],
+   "cell": [
+    156,
+    333
+   ],
+   "progress": 0.083,
+   "o2_left_L": 291.94,
+   "return_o2_L": 4.9,
+   "reserve_L": 285.58,
+   "dose_mSv": 0.00309,
+   "next_wp": "T02",
+   "dist_left_m": 3313.0,
+   "alert": null
+  },
+  {
+   "t_min": 7.24,
+   "lonlat": [
+    137.3945454,
+    -4.7894285
+   ],
+   "cell": [
+    157,
+    333
+   ],
+   "progress": 0.0841,
+   "o2_left_L": 291.85,
+   "return_o2_L": 4.96,
+   "reserve_L": 285.4,
+   "dose_mSv": 0.00313,
+   "next_wp": "T02",
+   "dist_left_m": 3309.0,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 7.33,
+   "lonlat": [
+    137.3945454,
+    -4.789496
+   ],
+   "cell": [
+    158,
+    333
+   ],
+   "progress": 0.0852,
+   "o2_left_L": 291.77,
+   "return_o2_L": 5.02,
+   "reserve_L": 285.24,
+   "dose_mSv": 0.00317,
+   "next_wp": "T02",
+   "dist_left_m": 3305.0,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 7.42,
+   "lonlat": [
+    137.3945454,
+    -4.7895634
+   ],
+   "cell": [
+    159,
+    333
+   ],
+   "progress": 0.0863,
+   "o2_left_L": 291.7,
+   "return_o2_L": 5.09,
+   "reserve_L": 285.08,
+   "dose_mSv": 0.00321,
+   "next_wp": "T02",
+   "dist_left_m": 3301.0,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 7.51,
+   "lonlat": [
+    137.3945454,
+    -4.7896309
+   ],
+   "cell": [
+    160,
+    333
+   ],
+   "progress": 0.0874,
+   "o2_left_L": 291.63,
+   "return_o2_L": 5.15,
+   "reserve_L": 284.93,
+   "dose_mSv": 0.00325,
+   "next_wp": "T02",
+   "dist_left_m": 3297.0,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 7.63,
+   "lonlat": [
+    137.3944779,
+    -4.7896984
+   ],
+   "cell": [
+    161,
+    332
+   ],
+   "progress": 0.089,
+   "o2_left_L": 291.52,
+   "return_o2_L": 5.24,
+   "reserve_L": 284.71,
+   "dose_mSv": 0.0033,
+   "next_wp": "T02",
+   "dist_left_m": 3291.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 7.78,
+   "lonlat": [
+    137.3944779,
+    -4.7897659
+   ],
+   "cell": [
+    162,
+    332
+   ],
+   "progress": 0.0901,
+   "o2_left_L": 291.34,
+   "return_o2_L": 5.3,
+   "reserve_L": 284.45,
+   "dose_mSv": 0.00336,
+   "next_wp": "T02",
+   "dist_left_m": 3287.4,
+   "alert": null
+  },
+  {
+   "t_min": 7.91,
+   "lonlat": [
+    137.3944104,
+    -4.7898334
+   ],
+   "cell": [
+    163,
+    331
+   ],
+   "progress": 0.0916,
+   "o2_left_L": 291.18,
+   "return_o2_L": 5.42,
+   "reserve_L": 284.13,
+   "dose_mSv": 0.00342,
+   "next_wp": "T02",
+   "dist_left_m": 3281.7,
+   "alert": null
+  },
+  {
+   "t_min": 8.03,
+   "lonlat": [
+    137.3943429,
+    -4.7899009
+   ],
+   "cell": [
+    164,
+    330
+   ],
+   "progress": 0.0932,
+   "o2_left_L": 291.04,
+   "return_o2_L": 5.51,
+   "reserve_L": 283.88,
+   "dose_mSv": 0.00347,
+   "next_wp": "T02",
+   "dist_left_m": 3276.1,
+   "alert": null
+  },
+  {
+   "t_min": 8.16,
+   "lonlat": [
+    137.3942755,
+    -4.7899683
+   ],
+   "cell": [
+    165,
+    329
+   ],
+   "progress": 0.0948,
+   "o2_left_L": 290.92,
+   "return_o2_L": 5.6,
+   "reserve_L": 283.65,
+   "dose_mSv": 0.00353,
+   "next_wp": "T02",
+   "dist_left_m": 3270.4,
+   "alert": null
+  },
+  {
+   "t_min": 8.28,
+   "lonlat": [
+    137.394208,
+    -4.7900358
+   ],
+   "cell": [
+    166,
+    328
+   ],
+   "progress": 0.0963,
+   "o2_left_L": 290.83,
+   "return_o2_L": 5.69,
+   "reserve_L": 283.44,
+   "dose_mSv": 0.00358,
+   "next_wp": "T02",
+   "dist_left_m": 3264.8,
+   "alert": null
+  },
+  {
+   "t_min": 8.41,
+   "lonlat": [
+    137.3941405,
+    -4.7901033
+   ],
+   "cell": [
+    167,
+    327
+   ],
+   "progress": 0.0979,
+   "o2_left_L": 290.74,
+   "return_o2_L": 5.78,
+   "reserve_L": 283.23,
+   "dose_mSv": 0.00364,
+   "next_wp": "T02",
+   "dist_left_m": 3259.1,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 8.53,
+   "lonlat": [
+    137.394073,
+    -4.7901708
+   ],
+   "cell": [
+    168,
+    326
+   ],
+   "progress": 0.0995,
+   "o2_left_L": 290.59,
+   "return_o2_L": 5.87,
+   "reserve_L": 282.96,
+   "dose_mSv": 0.00369,
+   "next_wp": "T02",
+   "dist_left_m": 3253.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 8.66,
+   "lonlat": [
+    137.3940055,
+    -4.7902383
+   ],
+   "cell": [
+    169,
+    325
+   ],
+   "progress": 0.101,
+   "o2_left_L": 290.46,
+   "return_o2_L": 5.96,
+   "reserve_L": 282.71,
+   "dose_mSv": 0.00375,
+   "next_wp": "T02",
+   "dist_left_m": 3247.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 8.78,
+   "lonlat": [
+    137.393938,
+    -4.7903058
+   ],
+   "cell": [
+    170,
+    324
+   ],
+   "progress": 0.1026,
+   "o2_left_L": 290.34,
+   "return_o2_L": 6.05,
+   "reserve_L": 282.48,
+   "dose_mSv": 0.0038,
+   "next_wp": "T02",
+   "dist_left_m": 3242.1,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 8.91,
+   "lonlat": [
+    137.3938706,
+    -4.7903732
+   ],
+   "cell": [
+    171,
+    323
+   ],
+   "progress": 0.1042,
+   "o2_left_L": 290.19,
+   "return_o2_L": 6.14,
+   "reserve_L": 282.22,
+   "dose_mSv": 0.00385,
+   "next_wp": "T02",
+   "dist_left_m": 3236.5,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 9.06,
+   "lonlat": [
+    137.3938706,
+    -4.7904407
+   ],
+   "cell": [
+    172,
+    323
+   ],
+   "progress": 0.1053,
+   "o2_left_L": 290.01,
+   "return_o2_L": 6.2,
+   "reserve_L": 281.95,
+   "dose_mSv": 0.00392,
+   "next_wp": "T02",
+   "dist_left_m": 3232.5,
+   "alert": null
+  },
+  {
+   "t_min": 9.18,
+   "lonlat": [
+    137.3938031,
+    -4.7905082
+   ],
+   "cell": [
+    173,
+    322
+   ],
+   "progress": 0.1068,
+   "o2_left_L": 289.82,
+   "return_o2_L": 6.32,
+   "reserve_L": 281.61,
+   "dose_mSv": 0.00397,
+   "next_wp": "T02",
+   "dist_left_m": 3226.8,
+   "alert": null
+  },
+  {
+   "t_min": 9.27,
+   "lonlat": [
+    137.3938031,
+    -4.7905757
+   ],
+   "cell": [
+    174,
+    322
+   ],
+   "progress": 0.1079,
+   "o2_left_L": 289.68,
+   "return_o2_L": 6.38,
+   "reserve_L": 281.39,
+   "dose_mSv": 0.00401,
+   "next_wp": "T02",
+   "dist_left_m": 3222.8,
+   "alert": null
+  },
+  {
+   "t_min": 9.36,
+   "lonlat": [
+    137.3938031,
+    -4.7906432
+   ],
+   "cell": [
+    175,
+    322
+   ],
+   "progress": 0.1091,
+   "o2_left_L": 289.55,
+   "return_o2_L": 6.44,
+   "reserve_L": 281.17,
+   "dose_mSv": 0.00405,
+   "next_wp": "T02",
+   "dist_left_m": 3218.8,
+   "alert": null
+  },
+  {
+   "t_min": 9.45,
+   "lonlat": [
+    137.3938031,
+    -4.7907106
+   ],
+   "cell": [
+    176,
+    322
+   ],
+   "progress": 0.1102,
+   "o2_left_L": 289.43,
+   "return_o2_L": 6.51,
+   "reserve_L": 280.97,
+   "dose_mSv": 0.00409,
+   "next_wp": "T02",
+   "dist_left_m": 3214.8,
+   "alert": null
+  },
+  {
+   "t_min": 9.54,
+   "lonlat": [
+    137.3938031,
+    -4.7907781
+   ],
+   "cell": [
+    177,
+    322
+   ],
+   "progress": 0.1113,
+   "o2_left_L": 289.32,
+   "return_o2_L": 6.57,
+   "reserve_L": 280.78,
+   "dose_mSv": 0.00413,
+   "next_wp": "T02",
+   "dist_left_m": 3210.8,
+   "alert": null
+  },
+  {
+   "t_min": 9.63,
+   "lonlat": [
+    137.3938031,
+    -4.7908456
+   ],
+   "cell": [
+    178,
+    322
+   ],
+   "progress": 0.1124,
+   "o2_left_L": 289.22,
+   "return_o2_L": 6.63,
+   "reserve_L": 280.59,
+   "dose_mSv": 0.00417,
+   "next_wp": "T02",
+   "dist_left_m": 3206.8,
+   "alert": null
+  },
+  {
+   "t_min": 9.72,
+   "lonlat": [
+    137.3938031,
+    -4.7909131
+   ],
+   "cell": [
+    179,
+    322
+   ],
+   "progress": 0.1135,
+   "o2_left_L": 289.13,
+   "return_o2_L": 6.7,
+   "reserve_L": 280.42,
+   "dose_mSv": 0.0042,
+   "next_wp": "T02",
+   "dist_left_m": 3202.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 9.81,
+   "lonlat": [
+    137.3938031,
+    -4.7909806
+   ],
+   "cell": [
+    180,
+    322
+   ],
+   "progress": 0.1146,
+   "o2_left_L": 289.05,
+   "return_o2_L": 6.76,
+   "reserve_L": 280.26,
+   "dose_mSv": 0.00424,
+   "next_wp": "T02",
+   "dist_left_m": 3198.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 9.9,
+   "lonlat": [
+    137.3938031,
+    -4.7910481
+   ],
+   "cell": [
+    181,
+    322
+   ],
+   "progress": 0.1157,
+   "o2_left_L": 288.98,
+   "return_o2_L": 6.82,
+   "reserve_L": 280.11,
+   "dose_mSv": 0.00428,
+   "next_wp": "T02",
+   "dist_left_m": 3194.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 9.98,
+   "lonlat": [
+    137.3938031,
+    -4.7911155
+   ],
+   "cell": [
+    182,
+    322
+   ],
+   "progress": 0.1168,
+   "o2_left_L": 288.91,
+   "return_o2_L": 6.89,
+   "reserve_L": 279.95,
+   "dose_mSv": 0.00432,
+   "next_wp": "T02",
+   "dist_left_m": 3190.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 10.11,
+   "lonlat": [
+    137.3937356,
+    -4.791183
+   ],
+   "cell": [
+    183,
+    321
+   ],
+   "progress": 0.1184,
+   "o2_left_L": 288.78,
+   "return_o2_L": 6.98,
+   "reserve_L": 279.71,
+   "dose_mSv": 0.00437,
+   "next_wp": "T02",
+   "dist_left_m": 3185.2,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 10.32,
+   "lonlat": [
+    137.3936681,
+    -4.7912505
+   ],
+   "cell": [
+    184,
+    320
+   ],
+   "progress": 0.1199,
+   "o2_left_L": 288.57,
+   "return_o2_L": 7.07,
+   "reserve_L": 279.38,
+   "dose_mSv": 0.00446,
+   "next_wp": "T02",
+   "dist_left_m": 3179.5,
+   "alert": null
+  },
+  {
+   "t_min": 10.45,
+   "lonlat": [
+    137.3936006,
+    -4.791318
+   ],
+   "cell": [
+    185,
+    319
+   ],
+   "progress": 0.1215,
+   "o2_left_L": 288.42,
+   "return_o2_L": 7.19,
+   "reserve_L": 279.07,
+   "dose_mSv": 0.00452,
+   "next_wp": "T02",
+   "dist_left_m": 3173.8,
+   "alert": null
+  },
+  {
+   "t_min": 10.57,
+   "lonlat": [
+    137.3935332,
+    -4.7913855
+   ],
+   "cell": [
+    186,
+    318
+   ],
+   "progress": 0.1231,
+   "o2_left_L": 288.29,
+   "return_o2_L": 7.28,
+   "reserve_L": 278.82,
+   "dose_mSv": 0.00457,
+   "next_wp": "T02",
+   "dist_left_m": 3168.2,
+   "alert": null
+  },
+  {
+   "t_min": 10.7,
+   "lonlat": [
+    137.3934657,
+    -4.791453
+   ],
+   "cell": [
+    187,
+    317
+   ],
+   "progress": 0.1246,
+   "o2_left_L": 288.18,
+   "return_o2_L": 7.37,
+   "reserve_L": 278.6,
+   "dose_mSv": 0.00463,
+   "next_wp": "T02",
+   "dist_left_m": 3162.5,
+   "alert": null
+  },
+  {
+   "t_min": 10.82,
+   "lonlat": [
+    137.3933982,
+    -4.7915204
+   ],
+   "cell": [
+    188,
+    316
+   ],
+   "progress": 0.1262,
+   "o2_left_L": 288.09,
+   "return_o2_L": 7.47,
+   "reserve_L": 278.38,
+   "dose_mSv": 0.00468,
+   "next_wp": "T02",
+   "dist_left_m": 3156.9,
+   "alert": null
+  },
+  {
+   "t_min": 10.95,
+   "lonlat": [
+    137.3933307,
+    -4.7915879
+   ],
+   "cell": [
+    189,
+    315
+   ],
+   "progress": 0.1278,
+   "o2_left_L": 287.93,
+   "return_o2_L": 7.56,
+   "reserve_L": 278.11,
+   "dose_mSv": 0.00474,
+   "next_wp": "T02",
+   "dist_left_m": 3151.2,
+   "alert": null
+  },
+  {
+   "t_min": 11.07,
+   "lonlat": [
+    137.3932632,
+    -4.7916554
+   ],
+   "cell": [
+    190,
+    314
+   ],
+   "progress": 0.1293,
+   "o2_left_L": 287.79,
+   "return_o2_L": 7.65,
+   "reserve_L": 277.84,
+   "dose_mSv": 0.00479,
+   "next_wp": "T02",
+   "dist_left_m": 3145.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 11.16,
+   "lonlat": [
+    137.3931957,
+    -4.7916554
+   ],
+   "cell": [
+    190,
+    313
+   ],
+   "progress": 0.1304,
+   "o2_left_L": 287.7,
+   "return_o2_L": 7.68,
+   "reserve_L": 277.72,
+   "dose_mSv": 0.00483,
+   "next_wp": "T02",
+   "dist_left_m": 3141.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 11.29,
+   "lonlat": [
+    137.3931283,
+    -4.7917229
+   ],
+   "cell": [
+    191,
+    312
+   ],
+   "progress": 0.132,
+   "o2_left_L": 287.58,
+   "return_o2_L": 7.77,
+   "reserve_L": 277.49,
+   "dose_mSv": 0.00488,
+   "next_wp": "T02",
+   "dist_left_m": 3135.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 11.38,
+   "lonlat": [
+    137.3930608,
+    -4.7917229
+   ],
+   "cell": [
+    191,
+    311
+   ],
+   "progress": 0.1331,
+   "o2_left_L": 287.51,
+   "return_o2_L": 7.79,
+   "reserve_L": 277.38,
+   "dose_mSv": 0.00492,
+   "next_wp": "T02",
+   "dist_left_m": 3131.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 11.5,
+   "lonlat": [
+    137.3929933,
+    -4.7917904
+   ],
+   "cell": [
+    192,
+    310
+   ],
+   "progress": 0.1347,
+   "o2_left_L": 287.4,
+   "return_o2_L": 7.87,
+   "reserve_L": 277.16,
+   "dose_mSv": 0.00498,
+   "next_wp": "T02",
+   "dist_left_m": 3126.2,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 11.65,
+   "lonlat": [
+    137.3929933,
+    -4.7918578
+   ],
+   "cell": [
+    193,
+    310
+   ],
+   "progress": 0.1358,
+   "o2_left_L": 287.22,
+   "return_o2_L": 7.94,
+   "reserve_L": 276.9,
+   "dose_mSv": 0.00504,
+   "next_wp": "T02",
+   "dist_left_m": 3122.2,
+   "alert": null
+  },
+  {
+   "t_min": 11.78,
+   "lonlat": [
+    137.3929258,
+    -4.7919253
+   ],
+   "cell": [
+    194,
+    309
+   ],
+   "progress": 0.1373,
+   "o2_left_L": 287.03,
+   "return_o2_L": 8.05,
+   "reserve_L": 276.57,
+   "dose_mSv": 0.00509,
+   "next_wp": "T02",
+   "dist_left_m": 3116.6,
+   "alert": null
+  },
+  {
+   "t_min": 11.87,
+   "lonlat": [
+    137.3929258,
+    -4.7919928
+   ],
+   "cell": [
+    195,
+    309
+   ],
+   "progress": 0.1385,
+   "o2_left_L": 286.89,
+   "return_o2_L": 8.11,
+   "reserve_L": 276.34,
+   "dose_mSv": 0.00513,
+   "next_wp": "T02",
+   "dist_left_m": 3112.6,
+   "alert": null
+  },
+  {
+   "t_min": 11.95,
+   "lonlat": [
+    137.3929258,
+    -4.7920603
+   ],
+   "cell": [
+    196,
+    309
+   ],
+   "progress": 0.1396,
+   "o2_left_L": 286.75,
+   "return_o2_L": 8.18,
+   "reserve_L": 276.12,
+   "dose_mSv": 0.00517,
+   "next_wp": "T02",
+   "dist_left_m": 3108.6,
+   "alert": null
+  },
+  {
+   "t_min": 12.04,
+   "lonlat": [
+    137.3929258,
+    -4.7921278
+   ],
+   "cell": [
+    197,
+    309
+   ],
+   "progress": 0.1407,
+   "o2_left_L": 286.63,
+   "return_o2_L": 8.24,
+   "reserve_L": 275.92,
+   "dose_mSv": 0.00521,
+   "next_wp": "T02",
+   "dist_left_m": 3104.6,
+   "alert": null
+  },
+  {
+   "t_min": 12.13,
+   "lonlat": [
+    137.3929258,
+    -4.7921953
+   ],
+   "cell": [
+    198,
+    309
+   ],
+   "progress": 0.1418,
+   "o2_left_L": 286.52,
+   "return_o2_L": 8.31,
+   "reserve_L": 275.72,
+   "dose_mSv": 0.00525,
+   "next_wp": "T02",
+   "dist_left_m": 3100.6,
+   "alert": null
+  },
+  {
+   "t_min": 12.22,
+   "lonlat": [
+    137.3929258,
+    -4.7922627
+   ],
+   "cell": [
+    199,
+    309
+   ],
+   "progress": 0.1429,
+   "o2_left_L": 286.42,
+   "return_o2_L": 8.37,
+   "reserve_L": 275.54,
+   "dose_mSv": 0.00529,
+   "next_wp": "T02",
+   "dist_left_m": 3096.6,
+   "alert": null
+  },
+  {
+   "t_min": 12.31,
+   "lonlat": [
+    137.3929258,
+    -4.7923302
+   ],
+   "cell": [
+    200,
+    309
+   ],
+   "progress": 0.144,
+   "o2_left_L": 286.32,
+   "return_o2_L": 8.43,
+   "reserve_L": 275.36,
+   "dose_mSv": 0.00532,
+   "next_wp": "T02",
+   "dist_left_m": 3092.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 12.4,
+   "lonlat": [
+    137.3929258,
+    -4.7923977
+   ],
+   "cell": [
+    201,
+    309
+   ],
+   "progress": 0.1451,
+   "o2_left_L": 286.24,
+   "return_o2_L": 8.5,
+   "reserve_L": 275.2,
+   "dose_mSv": 0.00536,
+   "next_wp": "T02",
+   "dist_left_m": 3088.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 12.49,
+   "lonlat": [
+    137.3929258,
+    -4.7924652
+   ],
+   "cell": [
+    202,
+    309
+   ],
+   "progress": 0.1462,
+   "o2_left_L": 286.17,
+   "return_o2_L": 8.56,
+   "reserve_L": 275.04,
+   "dose_mSv": 0.0054,
+   "next_wp": "T02",
+   "dist_left_m": 3084.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 12.58,
+   "lonlat": [
+    137.3929258,
+    -4.7925327
+   ],
+   "cell": [
+    203,
+    309
+   ],
+   "progress": 0.1473,
+   "o2_left_L": 286.1,
+   "return_o2_L": 8.62,
+   "reserve_L": 274.89,
+   "dose_mSv": 0.00544,
+   "next_wp": "T02",
+   "dist_left_m": 3080.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 12.7,
+   "lonlat": [
+    137.3928583,
+    -4.7926002
+   ],
+   "cell": [
+    204,
+    308
+   ],
+   "progress": 0.1489,
+   "o2_left_L": 286.0,
+   "return_o2_L": 8.71,
+   "reserve_L": 274.68,
+   "dose_mSv": 0.00549,
+   "next_wp": "T02",
+   "dist_left_m": 3074.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 12.85,
+   "lonlat": [
+    137.3928583,
+    -4.7926676
+   ],
+   "cell": [
+    205,
+    308
+   ],
+   "progress": 0.15,
+   "o2_left_L": 285.82,
+   "return_o2_L": 8.78,
+   "reserve_L": 274.41,
+   "dose_mSv": 0.00556,
+   "next_wp": "T02",
+   "dist_left_m": 3070.9,
+   "alert": null
+  },
+  {
+   "t_min": 12.98,
+   "lonlat": [
+    137.3927908,
+    -4.7927351
+   ],
+   "cell": [
+    206,
+    307
+   ],
+   "progress": 0.1516,
+   "o2_left_L": 285.66,
+   "return_o2_L": 8.89,
+   "reserve_L": 274.1,
+   "dose_mSv": 0.00561,
+   "next_wp": "T02",
+   "dist_left_m": 3065.3,
+   "alert": null
+  },
+  {
+   "t_min": 13.1,
+   "lonlat": [
+    137.3927234,
+    -4.7928026
+   ],
+   "cell": [
+    207,
+    306
+   ],
+   "progress": 0.1531,
+   "o2_left_L": 285.52,
+   "return_o2_L": 8.98,
+   "reserve_L": 273.85,
+   "dose_mSv": 0.00567,
+   "next_wp": "T02",
+   "dist_left_m": 3059.6,
+   "alert": null
+  },
+  {
+   "t_min": 13.23,
+   "lonlat": [
+    137.3926559,
+    -4.7928701
+   ],
+   "cell": [
+    208,
+    305
+   ],
+   "progress": 0.1547,
+   "o2_left_L": 285.4,
+   "return_o2_L": 9.07,
+   "reserve_L": 273.61,
+   "dose_mSv": 0.00572,
+   "next_wp": "T02",
+   "dist_left_m": 3054.0,
+   "alert": null
+  },
+  {
+   "t_min": 13.35,
+   "lonlat": [
+    137.3925884,
+    -4.7929376
+   ],
+   "cell": [
+    209,
+    304
+   ],
+   "progress": 0.1562,
+   "o2_left_L": 285.23,
+   "return_o2_L": 9.16,
+   "reserve_L": 273.32,
+   "dose_mSv": 0.00578,
+   "next_wp": "T02",
+   "dist_left_m": 3048.3,
+   "alert": null
+  },
+  {
+   "t_min": 13.48,
+   "lonlat": [
+    137.3925209,
+    -4.793005
+   ],
+   "cell": [
+    210,
+    303
+   ],
+   "progress": 0.1578,
+   "o2_left_L": 285.05,
+   "return_o2_L": 9.25,
+   "reserve_L": 273.02,
+   "dose_mSv": 0.00583,
+   "next_wp": "T02",
+   "dist_left_m": 3042.6,
+   "alert": null
+  },
+  {
+   "t_min": 13.61,
+   "lonlat": [
+    137.3924534,
+    -4.7930725
+   ],
+   "cell": [
+    211,
+    302
+   ],
+   "progress": 0.1594,
+   "o2_left_L": 284.89,
+   "return_o2_L": 9.34,
+   "reserve_L": 272.74,
+   "dose_mSv": 0.00588,
+   "next_wp": "T02",
+   "dist_left_m": 3037.0,
+   "alert": null
+  },
+  {
+   "t_min": 13.73,
+   "lonlat": [
+    137.3923859,
+    -4.79314
+   ],
+   "cell": [
+    212,
+    301
+   ],
+   "progress": 0.1609,
+   "o2_left_L": 284.75,
+   "return_o2_L": 9.43,
+   "reserve_L": 272.49,
+   "dose_mSv": 0.00594,
+   "next_wp": "T02",
+   "dist_left_m": 3031.3,
+   "alert": null
+  },
+  {
+   "t_min": 13.82,
+   "lonlat": [
+    137.3923185,
+    -4.79314
+   ],
+   "cell": [
+    212,
+    300
+   ],
+   "progress": 0.1621,
+   "o2_left_L": 284.65,
+   "return_o2_L": 9.46,
+   "reserve_L": 272.36,
+   "dose_mSv": 0.00598,
+   "next_wp": "T02",
+   "dist_left_m": 3027.3,
+   "alert": null
+  },
+  {
+   "t_min": 13.95,
+   "lonlat": [
+    137.392251,
+    -4.7932075
+   ],
+   "cell": [
+    213,
+    299
+   ],
+   "progress": 0.1636,
+   "o2_left_L": 284.55,
+   "return_o2_L": 9.55,
+   "reserve_L": 272.14,
+   "dose_mSv": 0.00603,
+   "next_wp": "T02",
+   "dist_left_m": 3021.7,
+   "alert": null
+  },
+  {
+   "t_min": 14.07,
+   "lonlat": [
+    137.3921835,
+    -4.793275
+   ],
+   "cell": [
+    214,
+    298
+   ],
+   "progress": 0.1652,
+   "o2_left_L": 284.38,
+   "return_o2_L": 9.64,
+   "reserve_L": 271.86,
+   "dose_mSv": 0.00609,
+   "next_wp": "T02",
+   "dist_left_m": 3016.0,
+   "alert": null
+  },
+  {
+   "t_min": 14.2,
+   "lonlat": [
+    137.392116,
+    -4.7933425
+   ],
+   "cell": [
+    215,
+    297
+   ],
+   "progress": 0.1668,
+   "o2_left_L": 284.19,
+   "return_o2_L": 9.73,
+   "reserve_L": 271.55,
+   "dose_mSv": 0.00614,
+   "next_wp": "T02",
+   "dist_left_m": 3010.4,
+   "alert": null
+  },
+  {
+   "t_min": 14.32,
+   "lonlat": [
+    137.3920485,
+    -4.7934099
+   ],
+   "cell": [
+    216,
+    296
+   ],
+   "progress": 0.1683,
+   "o2_left_L": 284.02,
+   "return_o2_L": 9.82,
+   "reserve_L": 271.26,
+   "dose_mSv": 0.0062,
+   "next_wp": "T02",
+   "dist_left_m": 3004.7,
+   "alert": null
+  },
+  {
+   "t_min": 14.45,
+   "lonlat": [
+    137.3919811,
+    -4.7934774
+   ],
+   "cell": [
+    217,
+    295
+   ],
+   "progress": 0.1699,
+   "o2_left_L": 283.88,
+   "return_o2_L": 9.91,
+   "reserve_L": 271.0,
+   "dose_mSv": 0.00625,
+   "next_wp": "T02",
+   "dist_left_m": 2999.0,
+   "alert": null
+  },
+  {
+   "t_min": 14.57,
+   "lonlat": [
+    137.3919136,
+    -4.7935449
+   ],
+   "cell": [
+    218,
+    294
+   ],
+   "progress": 0.1714,
+   "o2_left_L": 283.76,
+   "return_o2_L": 10.0,
+   "reserve_L": 270.76,
+   "dose_mSv": 0.0063,
+   "next_wp": "T02",
+   "dist_left_m": 2993.4,
+   "alert": null
+  },
+  {
+   "t_min": 14.66,
+   "lonlat": [
+    137.3919136,
+    -4.7936124
+   ],
+   "cell": [
+    219,
+    294
+   ],
+   "progress": 0.1726,
+   "o2_left_L": 283.67,
+   "return_o2_L": 10.06,
+   "reserve_L": 270.59,
+   "dose_mSv": 0.00634,
+   "next_wp": "T02",
+   "dist_left_m": 2989.4,
+   "alert": null
+  },
+  {
+   "t_min": 14.75,
+   "lonlat": [
+    137.3919136,
+    -4.7936799
+   ],
+   "cell": [
+    220,
+    294
+   ],
+   "progress": 0.1737,
+   "o2_left_L": 283.59,
+   "return_o2_L": 10.12,
+   "reserve_L": 270.43,
+   "dose_mSv": 0.00638,
+   "next_wp": "T02",
+   "dist_left_m": 2985.4,
+   "alert": null
+  },
+  {
+   "t_min": 14.88,
+   "lonlat": [
+    137.3918461,
+    -4.7937474
+   ],
+   "cell": [
+    221,
+    293
+   ],
+   "progress": 0.1752,
+   "o2_left_L": 283.48,
+   "return_o2_L": 10.21,
+   "reserve_L": 270.21,
+   "dose_mSv": 0.00644,
+   "next_wp": "T02",
+   "dist_left_m": 2979.7,
+   "alert": null
+  },
+  {
+   "t_min": 15.0,
+   "lonlat": [
+    137.3917786,
+    -4.7938148
+   ],
+   "cell": [
+    222,
+    292
+   ],
+   "progress": 0.1768,
+   "o2_left_L": 283.33,
+   "return_o2_L": 10.3,
+   "reserve_L": 269.94,
+   "dose_mSv": 0.00649,
+   "next_wp": "T02",
+   "dist_left_m": 2974.1,
+   "alert": null
+  },
+  {
+   "t_min": 15.09,
+   "lonlat": [
+    137.3917111,
+    -4.7938148
+   ],
+   "cell": [
+    222,
+    291
+   ],
+   "progress": 0.1779,
+   "o2_left_L": 283.2,
+   "return_o2_L": 10.33,
+   "reserve_L": 269.77,
+   "dose_mSv": 0.00653,
+   "next_wp": "T02",
+   "dist_left_m": 2970.1,
+   "alert": null
+  },
+  {
+   "t_min": 15.18,
+   "lonlat": [
+    137.3916436,
+    -4.7938148
+   ],
+   "cell": [
+    222,
+    290
+   ],
+   "progress": 0.179,
+   "o2_left_L": 283.08,
+   "return_o2_L": 10.35,
+   "reserve_L": 269.61,
+   "dose_mSv": 0.00657,
+   "next_wp": "T02",
+   "dist_left_m": 2966.1,
+   "alert": null
+  },
+  {
+   "t_min": 15.27,
+   "lonlat": [
+    137.3915762,
+    -4.7938148
+   ],
+   "cell": [
+    222,
+    289
+   ],
+   "progress": 0.1801,
+   "o2_left_L": 282.96,
+   "return_o2_L": 10.38,
+   "reserve_L": 269.46,
+   "dose_mSv": 0.00661,
+   "next_wp": "T02",
+   "dist_left_m": 2962.1,
+   "alert": null
+  },
+  {
+   "t_min": 15.36,
+   "lonlat": [
+    137.3915087,
+    -4.7938148
+   ],
+   "cell": [
+    222,
+    288
+   ],
+   "progress": 0.1812,
+   "o2_left_L": 282.85,
+   "return_o2_L": 10.44,
+   "reserve_L": 269.27,
+   "dose_mSv": 0.00664,
+   "next_wp": "T02",
+   "dist_left_m": 2958.1,
+   "alert": null
+  },
+  {
+   "t_min": 15.48,
+   "lonlat": [
+    137.3914412,
+    -4.7938823
+   ],
+   "cell": [
+    223,
+    287
+   ],
+   "progress": 0.1828,
+   "o2_left_L": 282.71,
+   "return_o2_L": 10.53,
+   "reserve_L": 269.02,
+   "dose_mSv": 0.0067,
+   "next_wp": "T02",
+   "dist_left_m": 2952.4,
+   "alert": null
+  },
+  {
+   "t_min": 15.61,
+   "lonlat": [
+    137.3913737,
+    -4.7939498
+   ],
+   "cell": [
+    224,
+    286
+   ],
+   "progress": 0.1844,
+   "o2_left_L": 282.53,
+   "return_o2_L": 10.62,
+   "reserve_L": 268.72,
+   "dose_mSv": 0.00675,
+   "next_wp": "T02",
+   "dist_left_m": 2946.8,
+   "alert": null
+  },
+  {
+   "t_min": 15.74,
+   "lonlat": [
+    137.3913062,
+    -4.7940173
+   ],
+   "cell": [
+    225,
+    285
+   ],
+   "progress": 0.1859,
+   "o2_left_L": 282.37,
+   "return_o2_L": 10.71,
+   "reserve_L": 268.44,
+   "dose_mSv": 0.00681,
+   "next_wp": "T02",
+   "dist_left_m": 2941.1,
+   "alert": null
+  },
+  {
+   "t_min": 15.86,
+   "lonlat": [
+    137.3912387,
+    -4.7940848
+   ],
+   "cell": [
+    226,
+    284
+   ],
+   "progress": 0.1875,
+   "o2_left_L": 282.24,
+   "return_o2_L": 10.8,
+   "reserve_L": 268.19,
+   "dose_mSv": 0.00686,
+   "next_wp": "T02",
+   "dist_left_m": 2935.4,
+   "alert": null
+  },
+  {
+   "t_min": 15.99,
+   "lonlat": [
+    137.3911713,
+    -4.7941523
+   ],
+   "cell": [
+    227,
+    283
+   ],
+   "progress": 0.1891,
+   "o2_left_L": 282.13,
+   "return_o2_L": 10.89,
+   "reserve_L": 267.97,
+   "dose_mSv": 0.00692,
+   "next_wp": "T02",
+   "dist_left_m": 2929.8,
+   "alert": null
+  },
+  {
+   "t_min": 16.08,
+   "lonlat": [
+    137.3911713,
+    -4.7942197
+   ],
+   "cell": [
+    228,
+    283
+   ],
+   "progress": 0.1902,
+   "o2_left_L": 282.06,
+   "return_o2_L": 10.92,
+   "reserve_L": 267.87,
+   "dose_mSv": 0.00695,
+   "next_wp": "T02",
+   "dist_left_m": 2925.8,
+   "alert": null
+  },
+  {
+   "t_min": 16.2,
+   "lonlat": [
+    137.3911038,
+    -4.7942872
+   ],
+   "cell": [
+    229,
+    282
+   ],
+   "progress": 0.1917,
+   "o2_left_L": 281.97,
+   "return_o2_L": 11.03,
+   "reserve_L": 267.64,
+   "dose_mSv": 0.00701,
+   "next_wp": "T02",
+   "dist_left_m": 2920.1,
+   "alert": null
+  },
+  {
+   "t_min": 16.33,
+   "lonlat": [
+    137.3910363,
+    -4.7943547
+   ],
+   "cell": [
+    230,
+    281
+   ],
+   "progress": 0.1933,
+   "o2_left_L": 281.83,
+   "return_o2_L": 11.12,
+   "reserve_L": 267.38,
+   "dose_mSv": 0.00706,
+   "next_wp": "T02",
+   "dist_left_m": 2914.5,
+   "alert": null
+  },
+  {
+   "t_min": 16.45,
+   "lonlat": [
+    137.3909688,
+    -4.7944222
+   ],
+   "cell": [
+    231,
+    280
+   ],
+   "progress": 0.1949,
+   "o2_left_L": 281.71,
+   "return_o2_L": 11.21,
+   "reserve_L": 267.14,
+   "dose_mSv": 0.00712,
+   "next_wp": "T02",
+   "dist_left_m": 2908.8,
+   "alert": null
+  },
+  {
+   "t_min": 16.58,
+   "lonlat": [
+    137.3909013,
+    -4.7944897
+   ],
+   "cell": [
+    232,
+    279
+   ],
+   "progress": 0.1964,
+   "o2_left_L": 281.61,
+   "return_o2_L": 11.3,
+   "reserve_L": 266.92,
+   "dose_mSv": 0.00717,
+   "next_wp": "T02",
+   "dist_left_m": 2903.2,
+   "alert": null
+  },
+  {
+   "t_min": 16.67,
+   "lonlat": [
+    137.3908339,
+    -4.7944897
+   ],
+   "cell": [
+    232,
+    278
+   ],
+   "progress": 0.1975,
+   "o2_left_L": 281.5,
+   "return_o2_L": 11.35,
+   "reserve_L": 266.75,
+   "dose_mSv": 0.00721,
+   "next_wp": "T02",
+   "dist_left_m": 2899.2,
+   "alert": null
+  },
+  {
+   "t_min": 16.76,
+   "lonlat": [
+    137.3907664,
+    -4.7944897
+   ],
+   "cell": [
+    232,
+    277
+   ],
+   "progress": 0.1986,
+   "o2_left_L": 281.41,
+   "return_o2_L": 11.41,
+   "reserve_L": 266.57,
+   "dose_mSv": 0.00725,
+   "next_wp": "T02",
+   "dist_left_m": 2895.2,
+   "alert": null
+  },
+  {
+   "t_min": 16.85,
+   "lonlat": [
+    137.3906989,
+    -4.7944897
+   ],
+   "cell": [
+    232,
+    276
+   ],
+   "progress": 0.1997,
+   "o2_left_L": 281.3,
+   "return_o2_L": 11.47,
+   "reserve_L": 266.38,
+   "dose_mSv": 0.00729,
+   "next_wp": "T02",
+   "dist_left_m": 2891.2,
+   "alert": null
+  },
+  {
+   "t_min": 16.93,
+   "lonlat": [
+    137.3906314,
+    -4.7944897
+   ],
+   "cell": [
+    232,
+    275
+   ],
+   "progress": 0.2009,
+   "o2_left_L": 281.2,
+   "return_o2_L": 11.54,
+   "reserve_L": 266.21,
+   "dose_mSv": 0.00733,
+   "next_wp": "T02",
+   "dist_left_m": 2887.2,
+   "alert": null
+  },
+  {
+   "t_min": 17.06,
+   "lonlat": [
+    137.3905639,
+    -4.7945571
+   ],
+   "cell": [
+    233,
+    274
+   ],
+   "progress": 0.2024,
+   "o2_left_L": 281.07,
+   "return_o2_L": 11.63,
+   "reserve_L": 265.95,
+   "dose_mSv": 0.00738,
+   "next_wp": "T02",
+   "dist_left_m": 2881.5,
+   "alert": null
+  },
+  {
+   "t_min": 17.19,
+   "lonlat": [
+    137.3904964,
+    -4.7946246
+   ],
+   "cell": [
+    234,
+    273
+   ],
+   "progress": 0.204,
+   "o2_left_L": 280.96,
+   "return_o2_L": 11.72,
+   "reserve_L": 265.73,
+   "dose_mSv": 0.00743,
+   "next_wp": "T02",
+   "dist_left_m": 2875.9,
+   "alert": null
+  },
+  {
+   "t_min": 17.31,
+   "lonlat": [
+    137.390429,
+    -4.7946921
+   ],
+   "cell": [
+    235,
+    272
+   ],
+   "progress": 0.2055,
+   "o2_left_L": 280.87,
+   "return_o2_L": 11.81,
+   "reserve_L": 265.52,
+   "dose_mSv": 0.00749,
+   "next_wp": "T02",
+   "dist_left_m": 2870.2,
+   "alert": null
+  },
+  {
+   "t_min": 17.44,
+   "lonlat": [
+    137.3903615,
+    -4.7947596
+   ],
+   "cell": [
+    236,
+    271
+   ],
+   "progress": 0.2071,
+   "o2_left_L": 280.78,
+   "return_o2_L": 11.92,
+   "reserve_L": 265.28,
+   "dose_mSv": 0.00754,
+   "next_wp": "T02",
+   "dist_left_m": 2864.5,
+   "alert": null
+  },
+  {
+   "t_min": 17.53,
+   "lonlat": [
+    137.3903615,
+    -4.7948271
+   ],
+   "cell": [
+    237,
+    271
+   ],
+   "progress": 0.2082,
+   "o2_left_L": 280.71,
+   "return_o2_L": 11.97,
+   "reserve_L": 265.15,
+   "dose_mSv": 0.00758,
+   "next_wp": "T02",
+   "dist_left_m": 2860.5,
+   "alert": null
+  },
+  {
+   "t_min": 17.65,
+   "lonlat": [
+    137.390294,
+    -4.7948946
+   ],
+   "cell": [
+    238,
+    270
+   ],
+   "progress": 0.2098,
+   "o2_left_L": 280.61,
+   "return_o2_L": 12.06,
+   "reserve_L": 264.93,
+   "dose_mSv": 0.00764,
+   "next_wp": "T02",
+   "dist_left_m": 2854.9,
+   "alert": null
+  },
+  {
+   "t_min": 17.78,
+   "lonlat": [
+    137.3902265,
+    -4.794962
+   ],
+   "cell": [
+    239,
+    269
+   ],
+   "progress": 0.2114,
+   "o2_left_L": 280.49,
+   "return_o2_L": 12.15,
+   "reserve_L": 264.7,
+   "dose_mSv": 0.00769,
+   "next_wp": "T02",
+   "dist_left_m": 2849.2,
+   "alert": null
+  },
+  {
+   "t_min": 17.9,
+   "lonlat": [
+    137.390159,
+    -4.7950295
+   ],
+   "cell": [
+    240,
+    268
+   ],
+   "progress": 0.2129,
+   "o2_left_L": 280.4,
+   "return_o2_L": 12.24,
+   "reserve_L": 264.49,
+   "dose_mSv": 0.00774,
+   "next_wp": "T02",
+   "dist_left_m": 2843.6,
+   "alert": null
+  },
+  {
+   "t_min": 18.03,
+   "lonlat": [
+    137.3900915,
+    -4.795097
+   ],
+   "cell": [
+    241,
+    267
+   ],
+   "progress": 0.2145,
+   "o2_left_L": 280.31,
+   "return_o2_L": 12.35,
+   "reserve_L": 264.26,
+   "dose_mSv": 0.0078,
+   "next_wp": "T02",
+   "dist_left_m": 2837.9,
+   "alert": null
+  },
+  {
+   "t_min": 18.12,
+   "lonlat": [
+    137.3900241,
+    -4.795097
+   ],
+   "cell": [
+    241,
+    266
+   ],
+   "progress": 0.2156,
+   "o2_left_L": 280.24,
+   "return_o2_L": 12.41,
+   "reserve_L": 264.11,
+   "dose_mSv": 0.00784,
+   "next_wp": "T02",
+   "dist_left_m": 2833.9,
+   "alert": null
+  },
+  {
+   "t_min": 18.21,
+   "lonlat": [
+    137.3899566,
+    -4.795097
+   ],
+   "cell": [
+    241,
+    265
+   ],
+   "progress": 0.2167,
+   "o2_left_L": 280.17,
+   "return_o2_L": 12.47,
+   "reserve_L": 263.96,
+   "dose_mSv": 0.00788,
+   "next_wp": "T02",
+   "dist_left_m": 2829.9,
+   "alert": null
+  },
+  {
+   "t_min": 18.3,
+   "lonlat": [
+    137.3898891,
+    -4.795097
+   ],
+   "cell": [
+    241,
+    264
+   ],
+   "progress": 0.2178,
+   "o2_left_L": 280.1,
+   "return_o2_L": 12.54,
+   "reserve_L": 263.81,
+   "dose_mSv": 0.00791,
+   "next_wp": "T02",
+   "dist_left_m": 2825.9,
+   "alert": null
+  },
+  {
+   "t_min": 18.42,
+   "lonlat": [
+    137.3898216,
+    -4.7951645
+   ],
+   "cell": [
+    242,
+    263
+   ],
+   "progress": 0.2194,
+   "o2_left_L": 279.97,
+   "return_o2_L": 12.63,
+   "reserve_L": 263.56,
+   "dose_mSv": 0.00797,
+   "next_wp": "T02",
+   "dist_left_m": 2820.3,
+   "alert": null
+  },
+  {
+   "t_min": 18.55,
+   "lonlat": [
+    137.3897541,
+    -4.795232
+   ],
+   "cell": [
+    243,
+    262
+   ],
+   "progress": 0.2209,
+   "o2_left_L": 279.86,
+   "return_o2_L": 12.72,
+   "reserve_L": 263.33,
+   "dose_mSv": 0.00802,
+   "next_wp": "T02",
+   "dist_left_m": 2814.6,
+   "alert": null
+  },
+  {
+   "t_min": 18.67,
+   "lonlat": [
+    137.3896867,
+    -4.7952995
+   ],
+   "cell": [
+    244,
+    261
+   ],
+   "progress": 0.2225,
+   "o2_left_L": 279.77,
+   "return_o2_L": 12.81,
+   "reserve_L": 263.12,
+   "dose_mSv": 0.00808,
+   "next_wp": "T02",
+   "dist_left_m": 2808.9,
+   "alert": null
+  },
+  {
+   "t_min": 18.8,
+   "lonlat": [
+    137.3896192,
+    -4.7953669
+   ],
+   "cell": [
+    245,
+    260
+   ],
+   "progress": 0.2241,
+   "o2_left_L": 279.68,
+   "return_o2_L": 12.91,
+   "reserve_L": 262.89,
+   "dose_mSv": 0.00813,
+   "next_wp": "T02",
+   "dist_left_m": 2803.3,
+   "alert": null
+  },
+  {
+   "t_min": 18.92,
+   "lonlat": [
+    137.3895517,
+    -4.7954344
+   ],
+   "cell": [
+    246,
+    259
+   ],
+   "progress": 0.2256,
+   "o2_left_L": 279.58,
+   "return_o2_L": 13.0,
+   "reserve_L": 262.67,
+   "dose_mSv": 0.00819,
+   "next_wp": "T02",
+   "dist_left_m": 2797.6,
+   "alert": null
+  },
+  {
+   "t_min": 19.05,
+   "lonlat": [
+    137.3894842,
+    -4.7955019
+   ],
+   "cell": [
+    247,
+    258
+   ],
+   "progress": 0.2272,
+   "o2_left_L": 279.44,
+   "return_o2_L": 13.09,
+   "reserve_L": 262.42,
+   "dose_mSv": 0.00824,
+   "next_wp": "T02",
+   "dist_left_m": 2792.0,
+   "alert": null
+  },
+  {
+   "t_min": 19.18,
+   "lonlat": [
+    137.3894167,
+    -4.7955694
+   ],
+   "cell": [
+    248,
+    257
+   ],
+   "progress": 0.2288,
+   "o2_left_L": 279.32,
+   "return_o2_L": 13.18,
+   "reserve_L": 262.19,
+   "dose_mSv": 0.00829,
+   "next_wp": "T02",
+   "dist_left_m": 2786.3,
+   "alert": null
+  },
+  {
+   "t_min": 19.3,
+   "lonlat": [
+    137.3893492,
+    -4.7956369
+   ],
+   "cell": [
+    249,
+    256
+   ],
+   "progress": 0.2303,
+   "o2_left_L": 279.22,
+   "return_o2_L": 13.27,
+   "reserve_L": 261.97,
+   "dose_mSv": 0.00835,
+   "next_wp": "T02",
+   "dist_left_m": 2780.7,
+   "alert": null
+  },
+  {
+   "t_min": 19.43,
+   "lonlat": [
+    137.3892818,
+    -4.7957043
+   ],
+   "cell": [
+    250,
+    255
+   ],
+   "progress": 0.2319,
+   "o2_left_L": 279.13,
+   "return_o2_L": 13.37,
+   "reserve_L": 261.75,
+   "dose_mSv": 0.0084,
+   "next_wp": "T02",
+   "dist_left_m": 2775.0,
+   "alert": null
+  },
+  {
+   "t_min": 19.52,
+   "lonlat": [
+    137.3892143,
+    -4.7957043
+   ],
+   "cell": [
+    250,
+    254
+   ],
+   "progress": 0.233,
+   "o2_left_L": 279.07,
+   "return_o2_L": 13.44,
+   "reserve_L": 261.6,
+   "dose_mSv": 0.00844,
+   "next_wp": "T02",
+   "dist_left_m": 2771.0,
+   "alert": null
+  },
+  {
+   "t_min": 19.6,
+   "lonlat": [
+    137.3891468,
+    -4.7957043
+   ],
+   "cell": [
+    250,
+    253
+   ],
+   "progress": 0.2341,
+   "o2_left_L": 279.01,
+   "return_o2_L": 13.52,
+   "reserve_L": 261.43,
+   "dose_mSv": 0.00848,
+   "next_wp": "T02",
+   "dist_left_m": 2767.0,
+   "alert": null
+  },
+  {
+   "t_min": 19.73,
+   "lonlat": [
+    137.3890793,
+    -4.7957718
+   ],
+   "cell": [
+    251,
+    252
+   ],
+   "progress": 0.2357,
+   "o2_left_L": 278.85,
+   "return_o2_L": 13.6,
+   "reserve_L": 261.18,
+   "dose_mSv": 0.00853,
+   "next_wp": "T02",
+   "dist_left_m": 2761.3,
+   "alert": null
+  },
+  {
+   "t_min": 19.86,
+   "lonlat": [
+    137.3890118,
+    -4.7958393
+   ],
+   "cell": [
+    252,
+    251
+   ],
+   "progress": 0.2372,
+   "o2_left_L": 278.71,
+   "return_o2_L": 13.69,
+   "reserve_L": 260.92,
+   "dose_mSv": 0.00859,
+   "next_wp": "T02",
+   "dist_left_m": 2755.7,
+   "alert": null
+  },
+  {
+   "t_min": 19.98,
+   "lonlat": [
+    137.3889443,
+    -4.7959068
+   ],
+   "cell": [
+    253,
+    250
+   ],
+   "progress": 0.2388,
+   "o2_left_L": 278.59,
+   "return_o2_L": 13.78,
+   "reserve_L": 260.68,
+   "dose_mSv": 0.00864,
+   "next_wp": "T02",
+   "dist_left_m": 2750.0,
+   "alert": null
+  },
+  {
+   "t_min": 20.11,
+   "lonlat": [
+    137.3888769,
+    -4.7959743
+   ],
+   "cell": [
+    254,
+    249
+   ],
+   "progress": 0.2404,
+   "o2_left_L": 278.49,
+   "return_o2_L": 13.87,
+   "reserve_L": 260.47,
+   "dose_mSv": 0.0087,
+   "next_wp": "T02",
+   "dist_left_m": 2744.4,
+   "alert": null
+  },
+  {
+   "t_min": 20.23,
+   "lonlat": [
+    137.3888094,
+    -4.7960418
+   ],
+   "cell": [
+    255,
+    248
+   ],
+   "progress": 0.2419,
+   "o2_left_L": 278.4,
+   "return_o2_L": 13.96,
+   "reserve_L": 260.26,
+   "dose_mSv": 0.00875,
+   "next_wp": "T02",
+   "dist_left_m": 2738.7,
+   "alert": null
+  },
+  {
+   "t_min": 20.36,
+   "lonlat": [
+    137.3887419,
+    -4.7961092
+   ],
+   "cell": [
+    256,
+    247
+   ],
+   "progress": 0.2435,
+   "o2_left_L": 278.24,
+   "return_o2_L": 14.05,
+   "reserve_L": 259.98,
+   "dose_mSv": 0.00881,
+   "next_wp": "T02",
+   "dist_left_m": 2733.1,
+   "alert": null
+  },
+  {
+   "t_min": 20.48,
+   "lonlat": [
+    137.3886744,
+    -4.7961767
+   ],
+   "cell": [
+    257,
+    246
+   ],
+   "progress": 0.2451,
+   "o2_left_L": 278.1,
+   "return_o2_L": 14.14,
+   "reserve_L": 259.73,
+   "dose_mSv": 0.00886,
+   "next_wp": "T02",
+   "dist_left_m": 2727.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 20.61,
+   "lonlat": [
+    137.3886069,
+    -4.7962442
+   ],
+   "cell": [
+    258,
+    245
+   ],
+   "progress": 0.2466,
+   "o2_left_L": 277.98,
+   "return_o2_L": 14.22,
+   "reserve_L": 259.49,
+   "dose_mSv": 0.00892,
+   "next_wp": "T02",
+   "dist_left_m": 2721.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 20.7,
+   "lonlat": [
+    137.3885395,
+    -4.7962442
+   ],
+   "cell": [
+    258,
+    244
+   ],
+   "progress": 0.2477,
+   "o2_left_L": 277.91,
+   "return_o2_L": 14.29,
+   "reserve_L": 259.34,
+   "dose_mSv": 0.00895,
+   "next_wp": "T02",
+   "dist_left_m": 2717.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 20.83,
+   "lonlat": [
+    137.388472,
+    -4.7963117
+   ],
+   "cell": [
+    259,
+    243
+   ],
+   "progress": 0.2493,
+   "o2_left_L": 277.82,
+   "return_o2_L": 14.38,
+   "reserve_L": 259.12,
+   "dose_mSv": 0.00901,
+   "next_wp": "T02",
+   "dist_left_m": 2712.1,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 20.95,
+   "lonlat": [
+    137.3884045,
+    -4.7963792
+   ],
+   "cell": [
+    260,
+    242
+   ],
+   "progress": 0.2509,
+   "o2_left_L": 277.68,
+   "return_o2_L": 14.47,
+   "reserve_L": 258.87,
+   "dose_mSv": 0.00906,
+   "next_wp": "T02",
+   "dist_left_m": 2706.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 21.16,
+   "lonlat": [
+    137.388337,
+    -4.7964467
+   ],
+   "cell": [
+    261,
+    241
+   ],
+   "progress": 0.2524,
+   "o2_left_L": 277.47,
+   "return_o2_L": 14.56,
+   "reserve_L": 258.54,
+   "dose_mSv": 0.00915,
+   "next_wp": "T02",
+   "dist_left_m": 2700.8,
+   "alert": null
+  },
+  {
+   "t_min": 21.29,
+   "lonlat": [
+    137.3882695,
+    -4.7965141
+   ],
+   "cell": [
+    262,
+    240
+   ],
+   "progress": 0.254,
+   "o2_left_L": 277.32,
+   "return_o2_L": 14.68,
+   "reserve_L": 258.23,
+   "dose_mSv": 0.00921,
+   "next_wp": "T02",
+   "dist_left_m": 2695.1,
+   "alert": null
+  },
+  {
+   "t_min": 21.41,
+   "lonlat": [
+    137.388202,
+    -4.7965816
+   ],
+   "cell": [
+    263,
+    239
+   ],
+   "progress": 0.2556,
+   "o2_left_L": 277.2,
+   "return_o2_L": 14.77,
+   "reserve_L": 257.99,
+   "dose_mSv": 0.00926,
+   "next_wp": "T02",
+   "dist_left_m": 2689.5,
+   "alert": null
+  },
+  {
+   "t_min": 21.54,
+   "lonlat": [
+    137.3881346,
+    -4.7966491
+   ],
+   "cell": [
+    264,
+    238
+   ],
+   "progress": 0.2571,
+   "o2_left_L": 277.1,
+   "return_o2_L": 14.86,
+   "reserve_L": 257.77,
+   "dose_mSv": 0.00932,
+   "next_wp": "T02",
+   "dist_left_m": 2683.8,
+   "alert": null
+  },
+  {
+   "t_min": 21.66,
+   "lonlat": [
+    137.3880671,
+    -4.7967166
+   ],
+   "cell": [
+    265,
+    237
+   ],
+   "progress": 0.2587,
+   "o2_left_L": 277.01,
+   "return_o2_L": 14.97,
+   "reserve_L": 257.55,
+   "dose_mSv": 0.00937,
+   "next_wp": "T02",
+   "dist_left_m": 2678.1,
+   "alert": null
+  },
+  {
+   "t_min": 21.79,
+   "lonlat": [
+    137.3879996,
+    -4.7967841
+   ],
+   "cell": [
+    266,
+    236
+   ],
+   "progress": 0.2603,
+   "o2_left_L": 276.87,
+   "return_o2_L": 15.06,
+   "reserve_L": 257.29,
+   "dose_mSv": 0.00942,
+   "next_wp": "T02",
+   "dist_left_m": 2672.5,
+   "alert": null
+  },
+  {
+   "t_min": 21.91,
+   "lonlat": [
+    137.3879321,
+    -4.7968515
+   ],
+   "cell": [
+    267,
+    235
+   ],
+   "progress": 0.2618,
+   "o2_left_L": 276.73,
+   "return_o2_L": 15.15,
+   "reserve_L": 257.04,
+   "dose_mSv": 0.00948,
+   "next_wp": "T02",
+   "dist_left_m": 2666.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 22.0,
+   "lonlat": [
+    137.3878646,
+    -4.7968515
+   ],
+   "cell": [
+    267,
+    234
+   ],
+   "progress": 0.2629,
+   "o2_left_L": 276.64,
+   "return_o2_L": 15.21,
+   "reserve_L": 256.87,
+   "dose_mSv": 0.00952,
+   "next_wp": "T02",
+   "dist_left_m": 2662.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 22.13,
+   "lonlat": [
+    137.3877971,
+    -4.796919
+   ],
+   "cell": [
+    268,
+    233
+   ],
+   "progress": 0.2645,
+   "o2_left_L": 276.53,
+   "return_o2_L": 15.3,
+   "reserve_L": 256.64,
+   "dose_mSv": 0.00957,
+   "next_wp": "T02",
+   "dist_left_m": 2657.2,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 22.22,
+   "lonlat": [
+    137.3877297,
+    -4.796919
+   ],
+   "cell": [
+    268,
+    232
+   ],
+   "progress": 0.2656,
+   "o2_left_L": 276.47,
+   "return_o2_L": 15.36,
+   "reserve_L": 256.5,
+   "dose_mSv": 0.00961,
+   "next_wp": "T02",
+   "dist_left_m": 2653.2,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 22.34,
+   "lonlat": [
+    137.3876622,
+    -4.7969865
+   ],
+   "cell": [
+    269,
+    231
+   ],
+   "progress": 0.2672,
+   "o2_left_L": 276.34,
+   "return_o2_L": 15.45,
+   "reserve_L": 256.25,
+   "dose_mSv": 0.00966,
+   "next_wp": "T02",
+   "dist_left_m": 2647.5,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 22.55,
+   "lonlat": [
+    137.3875947,
+    -4.797054
+   ],
+   "cell": [
+    270,
+    230
+   ],
+   "progress": 0.2688,
+   "o2_left_L": 276.12,
+   "return_o2_L": 15.54,
+   "reserve_L": 255.92,
+   "dose_mSv": 0.00976,
+   "next_wp": "T02",
+   "dist_left_m": 2641.9,
+   "alert": null
+  },
+  {
+   "t_min": 22.68,
+   "lonlat": [
+    137.3875272,
+    -4.7971215
+   ],
+   "cell": [
+    271,
+    229
+   ],
+   "progress": 0.2703,
+   "o2_left_L": 275.97,
+   "return_o2_L": 15.67,
+   "reserve_L": 255.6,
+   "dose_mSv": 0.00981,
+   "next_wp": "T02",
+   "dist_left_m": 2636.2,
+   "alert": null
+  },
+  {
+   "t_min": 22.8,
+   "lonlat": [
+    137.3874597,
+    -4.797189
+   ],
+   "cell": [
+    272,
+    228
+   ],
+   "progress": 0.2719,
+   "o2_left_L": 275.84,
+   "return_o2_L": 15.76,
+   "reserve_L": 255.35,
+   "dose_mSv": 0.00986,
+   "next_wp": "T02",
+   "dist_left_m": 2630.5,
+   "alert": null
+  },
+  {
+   "t_min": 22.93,
+   "lonlat": [
+    137.3873923,
+    -4.7972564
+   ],
+   "cell": [
+    273,
+    227
+   ],
+   "progress": 0.2734,
+   "o2_left_L": 275.73,
+   "return_o2_L": 15.85,
+   "reserve_L": 255.13,
+   "dose_mSv": 0.00992,
+   "next_wp": "T02",
+   "dist_left_m": 2624.9,
+   "alert": null
+  },
+  {
+   "t_min": 23.06,
+   "lonlat": [
+    137.3873248,
+    -4.7973239
+   ],
+   "cell": [
+    274,
+    226
+   ],
+   "progress": 0.275,
+   "o2_left_L": 275.64,
+   "return_o2_L": 15.95,
+   "reserve_L": 254.91,
+   "dose_mSv": 0.00997,
+   "next_wp": "T02",
+   "dist_left_m": 2619.2,
+   "alert": null
+  },
+  {
+   "t_min": 23.18,
+   "lonlat": [
+    137.3872573,
+    -4.7973914
+   ],
+   "cell": [
+    275,
+    225
+   ],
+   "progress": 0.2766,
+   "o2_left_L": 275.52,
+   "return_o2_L": 16.04,
+   "reserve_L": 254.68,
+   "dose_mSv": 0.01003,
+   "next_wp": "T02",
+   "dist_left_m": 2613.6,
+   "alert": null
+  },
+  {
+   "t_min": 23.31,
+   "lonlat": [
+    137.3871898,
+    -4.7974589
+   ],
+   "cell": [
+    276,
+    224
+   ],
+   "progress": 0.2781,
+   "o2_left_L": 275.38,
+   "return_o2_L": 16.12,
+   "reserve_L": 254.42,
+   "dose_mSv": 0.01008,
+   "next_wp": "T02",
+   "dist_left_m": 2607.9,
+   "alert": null
+  },
+  {
+   "t_min": 23.4,
+   "lonlat": [
+    137.3871223,
+    -4.7974589
+   ],
+   "cell": [
+    276,
+    223
+   ],
+   "progress": 0.2793,
+   "o2_left_L": 275.29,
+   "return_o2_L": 16.19,
+   "reserve_L": 254.24,
+   "dose_mSv": 0.01012,
+   "next_wp": "T02",
+   "dist_left_m": 2603.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 23.52,
+   "lonlat": [
+    137.3870548,
+    -4.7975264
+   ],
+   "cell": [
+    277,
+    222
+   ],
+   "progress": 0.2808,
+   "o2_left_L": 275.18,
+   "return_o2_L": 16.28,
+   "reserve_L": 254.01,
+   "dose_mSv": 0.01017,
+   "next_wp": "T02",
+   "dist_left_m": 2598.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 23.61,
+   "lonlat": [
+    137.3869874,
+    -4.7975264
+   ],
+   "cell": [
+    277,
+    221
+   ],
+   "progress": 0.2819,
+   "o2_left_L": 275.11,
+   "return_o2_L": 16.34,
+   "reserve_L": 253.86,
+   "dose_mSv": 0.01021,
+   "next_wp": "T02",
+   "dist_left_m": 2594.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 23.7,
+   "lonlat": [
+    137.3869199,
+    -4.7975264
+   ],
+   "cell": [
+    277,
+    220
+   ],
+   "progress": 0.283,
+   "o2_left_L": 275.04,
+   "return_o2_L": 16.41,
+   "reserve_L": 253.71,
+   "dose_mSv": 0.01025,
+   "next_wp": "T02",
+   "dist_left_m": 2590.3,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 23.83,
+   "lonlat": [
+    137.3868524,
+    -4.7975939
+   ],
+   "cell": [
+    278,
+    219
+   ],
+   "progress": 0.2846,
+   "o2_left_L": 274.92,
+   "return_o2_L": 16.49,
+   "reserve_L": 253.48,
+   "dose_mSv": 0.01031,
+   "next_wp": "T02",
+   "dist_left_m": 2584.6,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 24.04,
+   "lonlat": [
+    137.3867849,
+    -4.7976613
+   ],
+   "cell": [
+    279,
+    218
+   ],
+   "progress": 0.2862,
+   "o2_left_L": 274.72,
+   "return_o2_L": 16.58,
+   "reserve_L": 253.16,
+   "dose_mSv": 0.0104,
+   "next_wp": "T02",
+   "dist_left_m": 2578.9,
+   "alert": null
+  },
+  {
+   "t_min": 24.16,
+   "lonlat": [
+    137.3867174,
+    -4.7977288
+   ],
+   "cell": [
+    280,
+    217
+   ],
+   "progress": 0.2877,
+   "o2_left_L": 274.57,
+   "return_o2_L": 16.71,
+   "reserve_L": 252.84,
+   "dose_mSv": 0.01045,
+   "next_wp": "T02",
+   "dist_left_m": 2573.3,
+   "alert": null
+  },
+  {
+   "t_min": 24.29,
+   "lonlat": [
+    137.3866499,
+    -4.7977963
+   ],
+   "cell": [
+    281,
+    216
+   ],
+   "progress": 0.2893,
+   "o2_left_L": 274.44,
+   "return_o2_L": 16.8,
+   "reserve_L": 252.6,
+   "dose_mSv": 0.01051,
+   "next_wp": "T02",
+   "dist_left_m": 2567.6,
+   "alert": null
+  },
+  {
+   "t_min": 24.41,
+   "lonlat": [
+    137.3865825,
+    -4.7978638
+   ],
+   "cell": [
+    282,
+    215
+   ],
+   "progress": 0.2909,
+   "o2_left_L": 274.34,
+   "return_o2_L": 16.89,
+   "reserve_L": 252.38,
+   "dose_mSv": 0.01056,
+   "next_wp": "T02",
+   "dist_left_m": 2562.0,
+   "alert": null
+  },
+  {
+   "t_min": 24.54,
+   "lonlat": [
+    137.386515,
+    -4.7979313
+   ],
+   "cell": [
+    283,
+    214
+   ],
+   "progress": 0.2924,
+   "o2_left_L": 274.24,
+   "return_o2_L": 16.98,
+   "reserve_L": 252.16,
+   "dose_mSv": 0.01061,
+   "next_wp": "T02",
+   "dist_left_m": 2556.3,
+   "alert": null
+  },
+  {
+   "t_min": 24.66,
+   "lonlat": [
+    137.3864475,
+    -4.7979987
+   ],
+   "cell": [
+    284,
+    213
+   ],
+   "progress": 0.294,
+   "o2_left_L": 274.08,
+   "return_o2_L": 17.07,
+   "reserve_L": 251.88,
+   "dose_mSv": 0.01067,
+   "next_wp": "T02",
+   "dist_left_m": 2550.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 24.79,
+   "lonlat": [
+    137.38638,
+    -4.7980662
+   ],
+   "cell": [
+    285,
+    212
+   ],
+   "progress": 0.2956,
+   "o2_left_L": 273.94,
+   "return_o2_L": 17.16,
+   "reserve_L": 251.63,
+   "dose_mSv": 0.01072,
+   "next_wp": "T02",
+   "dist_left_m": 2545.0,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 24.92,
+   "lonlat": [
+    137.3863125,
+    -4.7981337
+   ],
+   "cell": [
+    286,
+    211
+   ],
+   "progress": 0.2971,
+   "o2_left_L": 273.82,
+   "return_o2_L": 17.25,
+   "reserve_L": 251.39,
+   "dose_mSv": 0.01078,
+   "next_wp": "T02",
+   "dist_left_m": 2539.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 25.0,
+   "lonlat": [
+    137.386245,
+    -4.7981337
+   ],
+   "cell": [
+    286,
+    210
+   ],
+   "progress": 0.2982,
+   "o2_left_L": 273.75,
+   "return_o2_L": 17.31,
+   "reserve_L": 251.24,
+   "dose_mSv": 0.01082,
+   "next_wp": "T02",
+   "dist_left_m": 2535.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 25.13,
+   "lonlat": [
+    137.3861776,
+    -4.7982012
+   ],
+   "cell": [
+    287,
+    209
+   ],
+   "progress": 0.2998,
+   "o2_left_L": 273.65,
+   "return_o2_L": 17.4,
+   "reserve_L": 251.03,
+   "dose_mSv": 0.01087,
+   "next_wp": "T02",
+   "dist_left_m": 2529.7,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 25.34,
+   "lonlat": [
+    137.3861101,
+    -4.7982687
+   ],
+   "cell": [
+    288,
+    208
+   ],
+   "progress": 0.3014,
+   "o2_left_L": 273.43,
+   "return_o2_L": 17.49,
+   "reserve_L": 250.69,
+   "dose_mSv": 0.01096,
+   "next_wp": "T02",
+   "dist_left_m": 2524.0,
+   "alert": null
+  },
+  {
+   "t_min": 25.46,
+   "lonlat": [
+    137.3860426,
+    -4.7983362
+   ],
+   "cell": [
+    289,
+    207
+   ],
+   "progress": 0.3029,
+   "o2_left_L": 273.26,
+   "return_o2_L": 17.62,
+   "reserve_L": 250.36,
+   "dose_mSv": 0.01101,
+   "next_wp": "T02",
+   "dist_left_m": 2518.4,
+   "alert": null
+  },
+  {
+   "t_min": 25.59,
+   "lonlat": [
+    137.3859751,
+    -4.7984036
+   ],
+   "cell": [
+    290,
+    206
+   ],
+   "progress": 0.3045,
+   "o2_left_L": 273.12,
+   "return_o2_L": 17.71,
+   "reserve_L": 250.09,
+   "dose_mSv": 0.01107,
+   "next_wp": "T02",
+   "dist_left_m": 2512.7,
+   "alert": null
+  },
+  {
+   "t_min": 25.72,
+   "lonlat": [
+    137.3859076,
+    -4.7984711
+   ],
+   "cell": [
+    291,
+    205
+   ],
+   "progress": 0.3061,
+   "o2_left_L": 273.0,
+   "return_o2_L": 17.8,
+   "reserve_L": 249.86,
+   "dose_mSv": 0.01112,
+   "next_wp": "T02",
+   "dist_left_m": 2507.1,
+   "alert": null
+  },
+  {
+   "t_min": 25.84,
+   "lonlat": [
+    137.3858402,
+    -4.7985386
+   ],
+   "cell": [
+    292,
+    204
+   ],
+   "progress": 0.3076,
+   "o2_left_L": 272.91,
+   "return_o2_L": 17.89,
+   "reserve_L": 249.65,
+   "dose_mSv": 0.01118,
+   "next_wp": "T02",
+   "dist_left_m": 2501.4,
+   "alert": null
+  },
+  {
+   "t_min": 25.97,
+   "lonlat": [
+    137.3857727,
+    -4.7986061
+   ],
+   "cell": [
+    293,
+    203
+   ],
+   "progress": 0.3092,
+   "o2_left_L": 272.82,
+   "return_o2_L": 18.0,
+   "reserve_L": 249.42,
+   "dose_mSv": 0.01123,
+   "next_wp": "T02",
+   "dist_left_m": 2495.8,
+   "alert": null
+  },
+  {
+   "t_min": 26.09,
+   "lonlat": [
+    137.3857052,
+    -4.7986736
+   ],
+   "cell": [
+    294,
+    202
+   ],
+   "progress": 0.3108,
+   "o2_left_L": 272.67,
+   "return_o2_L": 18.09,
+   "reserve_L": 249.16,
+   "dose_mSv": 0.01129,
+   "next_wp": "T02",
+   "dist_left_m": 2490.1,
+   "alert": null
+  },
+  {
+   "t_min": 26.22,
+   "lonlat": [
+    137.3856377,
+    -4.7987411
+   ],
+   "cell": [
+    295,
+    201
+   ],
+   "progress": 0.3123,
+   "o2_left_L": 272.54,
+   "return_o2_L": 18.18,
+   "reserve_L": 248.91,
+   "dose_mSv": 0.01134,
+   "next_wp": "T02",
+   "dist_left_m": 2484.4,
+   "alert": null
+  },
+  {
+   "t_min": 26.31,
+   "lonlat": [
+    137.3855702,
+    -4.7987411
+   ],
+   "cell": [
+    295,
+    200
+   ],
+   "progress": 0.3134,
+   "o2_left_L": 272.45,
+   "return_o2_L": 18.24,
+   "reserve_L": 248.74,
+   "dose_mSv": 0.01138,
+   "next_wp": "T02",
+   "dist_left_m": 2480.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 26.4,
+   "lonlat": [
+    137.3855027,
+    -4.7987411
+   ],
+   "cell": [
+    295,
+    199
+   ],
+   "progress": 0.3145,
+   "o2_left_L": 272.38,
+   "return_o2_L": 18.3,
+   "reserve_L": 248.58,
+   "dose_mSv": 0.01142,
+   "next_wp": "T02",
+   "dist_left_m": 2476.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 26.49,
+   "lonlat": [
+    137.3854353,
+    -4.7987411
+   ],
+   "cell": [
+    295,
+    198
+   ],
+   "progress": 0.3156,
+   "o2_left_L": 272.31,
+   "return_o2_L": 18.37,
+   "reserve_L": 248.43,
+   "dose_mSv": 0.01146,
+   "next_wp": "T02",
+   "dist_left_m": 2472.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 26.57,
+   "lonlat": [
+    137.3853678,
+    -4.7987411
+   ],
+   "cell": [
+    295,
+    197
+   ],
+   "progress": 0.3168,
+   "o2_left_L": 272.25,
+   "return_o2_L": 18.44,
+   "reserve_L": 248.28,
+   "dose_mSv": 0.01149,
+   "next_wp": "T02",
+   "dist_left_m": 2468.4,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 26.7,
+   "lonlat": [
+    137.3853003,
+    -4.7988085
+   ],
+   "cell": [
+    296,
+    196
+   ],
+   "progress": 0.3183,
+   "o2_left_L": 272.15,
+   "return_o2_L": 18.53,
+   "reserve_L": 248.07,
+   "dose_mSv": 0.01155,
+   "next_wp": "T02",
+   "dist_left_m": 2462.8,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 26.91,
+   "lonlat": [
+    137.3852328,
+    -4.798876
+   ],
+   "cell": [
+    297,
+    195
+   ],
+   "progress": 0.3199,
+   "o2_left_L": 271.95,
+   "return_o2_L": 18.62,
+   "reserve_L": 247.75,
+   "dose_mSv": 0.01164,
+   "next_wp": "T02",
+   "dist_left_m": 2457.1,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 27.12,
+   "lonlat": [
+    137.3851653,
+    -4.7989435
+   ],
+   "cell": [
+    298,
+    194
+   ],
+   "progress": 0.3214,
+   "o2_left_L": 271.77,
+   "return_o2_L": 18.74,
+   "reserve_L": 247.4,
+   "dose_mSv": 0.01173,
+   "next_wp": "T02",
+   "dist_left_m": 2451.5,
+   "alert": null
+  },
+  {
+   "t_min": 27.25,
+   "lonlat": [
+    137.3850978,
+    -4.799011
+   ],
+   "cell": [
+    299,
+    193
+   ],
+   "progress": 0.323,
+   "o2_left_L": 271.64,
+   "return_o2_L": 18.87,
+   "reserve_L": 247.11,
+   "dose_mSv": 0.01179,
+   "next_wp": "T02",
+   "dist_left_m": 2445.8,
+   "alert": null
+  },
+  {
+   "t_min": 27.37,
+   "lonlat": [
+    137.3850304,
+    -4.7990785
+   ],
+   "cell": [
+    300,
+    192
+   ],
+   "progress": 0.3246,
+   "o2_left_L": 271.54,
+   "return_o2_L": 18.96,
+   "reserve_L": 246.89,
+   "dose_mSv": 0.01184,
+   "next_wp": "T02",
+   "dist_left_m": 2440.2,
+   "alert": null
+  },
+  {
+   "t_min": 27.5,
+   "lonlat": [
+    137.3849629,
+    -4.7991459
+   ],
+   "cell": [
+    301,
+    191
+   ],
+   "progress": 0.3261,
+   "o2_left_L": 271.39,
+   "return_o2_L": 19.05,
+   "reserve_L": 246.63,
+   "dose_mSv": 0.01189,
+   "next_wp": "T02",
+   "dist_left_m": 2434.5,
+   "alert": null
+  },
+  {
+   "t_min": 27.62,
+   "lonlat": [
+    137.3848954,
+    -4.7992134
+   ],
+   "cell": [
+    302,
+    190
+   ],
+   "progress": 0.3277,
+   "o2_left_L": 271.23,
+   "return_o2_L": 19.13,
+   "reserve_L": 246.36,
+   "dose_mSv": 0.01195,
+   "next_wp": "T02",
+   "dist_left_m": 2428.8,
+   "alert": null
+  },
+  {
+   "t_min": 27.75,
+   "lonlat": [
+    137.3848279,
+    -4.7992809
+   ],
+   "cell": [
+    303,
+    189
+   ],
+   "progress": 0.3293,
+   "o2_left_L": 271.09,
+   "return_o2_L": 19.22,
+   "reserve_L": 246.1,
+   "dose_mSv": 0.012,
+   "next_wp": "T02",
+   "dist_left_m": 2423.2,
+   "alert": null
+  },
+  {
+   "t_min": 27.87,
+   "lonlat": [
+    137.3847604,
+    -4.7993484
+   ],
+   "cell": [
+    304,
+    188
+   ],
+   "progress": 0.3308,
+   "o2_left_L": 270.97,
+   "return_o2_L": 19.31,
+   "reserve_L": 245.87,
+   "dose_mSv": 0.01206,
+   "next_wp": "T02",
+   "dist_left_m": 2417.5,
+   "alert": null
+  },
+  {
+   "t_min": 27.96,
+   "lonlat": [
+    137.384693,
+    -4.7993484
+   ],
+   "cell": [
+    304,
+    187
+   ],
+   "progress": 0.332,
+   "o2_left_L": 270.91,
+   "return_o2_L": 19.37,
+   "reserve_L": 245.72,
+   "dose_mSv": 0.0121,
+   "next_wp": "T02",
+   "dist_left_m": 2413.5,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 28.05,
+   "lonlat": [
+    137.3846255,
+    -4.7993484
+   ],
+   "cell": [
+    304,
+    186
+   ],
+   "progress": 0.3331,
+   "o2_left_L": 270.84,
+   "return_o2_L": 19.44,
+   "reserve_L": 245.57,
+   "dose_mSv": 0.01213,
+   "next_wp": "T02",
+   "dist_left_m": 2409.5,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 28.14,
+   "lonlat": [
+    137.384558,
+    -4.7993484
+   ],
+   "cell": [
+    304,
+    185
+   ],
+   "progress": 0.3342,
+   "o2_left_L": 270.78,
+   "return_o2_L": 19.52,
+   "reserve_L": 245.41,
+   "dose_mSv": 0.01217,
+   "next_wp": "T02",
+   "dist_left_m": 2405.5,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 28.27,
+   "lonlat": [
+    137.3844905,
+    -4.7994159
+   ],
+   "cell": [
+    305,
+    184
+   ],
+   "progress": 0.3357,
+   "o2_left_L": 270.69,
+   "return_o2_L": 19.61,
+   "reserve_L": 245.2,
+   "dose_mSv": 0.01223,
+   "next_wp": "T02",
+   "dist_left_m": 2399.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 28.36,
+   "lonlat": [
+    137.384423,
+    -4.7994159
+   ],
+   "cell": [
+    305,
+    183
+   ],
+   "progress": 0.3368,
+   "o2_left_L": 270.62,
+   "return_o2_L": 19.7,
+   "reserve_L": 245.02,
+   "dose_mSv": 0.01227,
+   "next_wp": "T02",
+   "dist_left_m": 2395.9,
+   "alert": {
+    "level": "info",
+    "code": "SLOPE_AHEAD",
+    "msg": "Caution slope (10–20°) within 20 m."
+   }
+  },
+  {
+   "t_min": 28.56,
+   "lonlat": [
+    137.3843555,
+    -4.7994834
+   ],
+   "cell": [
+    306,
+    182
+   ],
+   "progress": 0.3384,
+   "o2_left_L": 270.44,
+   "return_o2_L": 19.79,
+   "reserve_L": 244.72,
+   "dose_mSv": 0.01236,
+   "next_wp": "T02",
+   "dist_left_m": 2390.2,
+   "alert": null
+  },
+  {
+   "t_min": 28.69,
+   "lonlat": [
+    137.3842881,
+    -4.7995508
+   ],
+   "cell": [
+    307,
+    181
+   ],
+   "progress": 0.34,
+   "o2_left_L": 270.31,
+   "return_o2_L": 14.51,
+   "reserve_L": 251.45,
+   "dose_mSv": 0.01241,
+   "next_wp": "T02",
+   "dist_left_m": 2384.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 28.82,
+   "lonlat": [
+    137.3842206,
+    -4.7996183
+   ],
+   "cell": [
+    308,
+    180
+   ],
+   "progress": 0.6965,
+   "o2_left_L": 270.16,
+   "return_o2_L": 14.36,
+   "reserve_L": 251.49,
+   "dose_mSv": 0.04389,
+   "next_wp": "T08",
+   "dist_left_m": 537.7,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 28.9,
+   "lonlat": [
+    137.3842206,
+    -4.7996858
+   ],
+   "cell": [
+    309,
+    180
+   ],
+   "progress": 0.6987,
+   "o2_left_L": 270.04,
+   "return_o2_L": 14.24,
+   "reserve_L": 251.53,
+   "dose_mSv": 0.06615,
+   "next_wp": "T08",
+   "dist_left_m": 533.7,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.03,
+   "lonlat": [
+    137.3841531,
+    -4.7997533
+   ],
+   "cell": [
+    310,
+    179
+   ],
+   "progress": 0.7019,
+   "o2_left_L": 269.86,
+   "return_o2_L": 14.06,
+   "reserve_L": 251.58,
+   "dose_mSv": 0.09763,
+   "next_wp": "T08",
+   "dist_left_m": 528.0,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.16,
+   "lonlat": [
+    137.3840856,
+    -4.7998208
+   ],
+   "cell": [
+    311,
+    178
+   ],
+   "progress": 0.7051,
+   "o2_left_L": 269.7,
+   "return_o2_L": 13.9,
+   "reserve_L": 251.63,
+   "dose_mSv": 0.12911,
+   "next_wp": "T08",
+   "dist_left_m": 522.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.28,
+   "lonlat": [
+    137.3840181,
+    -4.7998883
+   ],
+   "cell": [
+    312,
+    177
+   ],
+   "progress": 0.7083,
+   "o2_left_L": 269.57,
+   "return_o2_L": 13.77,
+   "reserve_L": 251.67,
+   "dose_mSv": 0.1606,
+   "next_wp": "T08",
+   "dist_left_m": 516.7,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.41,
+   "lonlat": [
+    137.3839506,
+    -4.7999557
+   ],
+   "cell": [
+    313,
+    176
+   ],
+   "progress": 0.7115,
+   "o2_left_L": 269.46,
+   "return_o2_L": 13.66,
+   "reserve_L": 251.7,
+   "dose_mSv": 0.19208,
+   "next_wp": "T08",
+   "dist_left_m": 511.1,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.5,
+   "lonlat": [
+    137.3839506,
+    -4.8000232
+   ],
+   "cell": [
+    314,
+    176
+   ],
+   "progress": 0.7138,
+   "o2_left_L": 269.39,
+   "return_o2_L": 13.59,
+   "reserve_L": 251.72,
+   "dose_mSv": 0.21434,
+   "next_wp": "T08",
+   "dist_left_m": 507.1,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.62,
+   "lonlat": [
+    137.3838832,
+    -4.8000907
+   ],
+   "cell": [
+    315,
+    175
+   ],
+   "progress": 0.717,
+   "o2_left_L": 269.26,
+   "return_o2_L": 13.46,
+   "reserve_L": 251.76,
+   "dose_mSv": 0.24582,
+   "next_wp": "T08",
+   "dist_left_m": 501.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.77,
+   "lonlat": [
+    137.3838832,
+    -4.8001582
+   ],
+   "cell": [
+    316,
+    175
+   ],
+   "progress": 0.7192,
+   "o2_left_L": 269.08,
+   "return_o2_L": 13.28,
+   "reserve_L": 251.82,
+   "dose_mSv": 0.28292,
+   "next_wp": "T08",
+   "dist_left_m": 497.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.86,
+   "lonlat": [
+    137.3838832,
+    -4.8002257
+   ],
+   "cell": [
+    317,
+    175
+   ],
+   "progress": 0.7215,
+   "o2_left_L": 268.93,
+   "return_o2_L": 13.13,
+   "reserve_L": 251.86,
+   "dose_mSv": 0.30518,
+   "next_wp": "T08",
+   "dist_left_m": 493.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 29.95,
+   "lonlat": [
+    137.3838832,
+    -4.8002932
+   ],
+   "cell": [
+    318,
+    175
+   ],
+   "progress": 0.7237,
+   "o2_left_L": 268.78,
+   "return_o2_L": 12.98,
+   "reserve_L": 251.9,
+   "dose_mSv": 0.32744,
+   "next_wp": "T08",
+   "dist_left_m": 489.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.04,
+   "lonlat": [
+    137.3838832,
+    -4.8003606
+   ],
+   "cell": [
+    319,
+    175
+   ],
+   "progress": 0.726,
+   "o2_left_L": 268.65,
+   "return_o2_L": 12.85,
+   "reserve_L": 251.94,
+   "dose_mSv": 0.3497,
+   "next_wp": "T08",
+   "dist_left_m": 485.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.13,
+   "lonlat": [
+    137.3838832,
+    -4.8004281
+   ],
+   "cell": [
+    320,
+    175
+   ],
+   "progress": 0.7283,
+   "o2_left_L": 268.53,
+   "return_o2_L": 12.73,
+   "reserve_L": 251.98,
+   "dose_mSv": 0.37196,
+   "next_wp": "T08",
+   "dist_left_m": 481.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.21,
+   "lonlat": [
+    137.3838832,
+    -4.8004956
+   ],
+   "cell": [
+    321,
+    175
+   ],
+   "progress": 0.7305,
+   "o2_left_L": 268.41,
+   "return_o2_L": 12.61,
+   "reserve_L": 252.01,
+   "dose_mSv": 0.39422,
+   "next_wp": "T08",
+   "dist_left_m": 477.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.3,
+   "lonlat": [
+    137.3838832,
+    -4.8005631
+   ],
+   "cell": [
+    322,
+    175
+   ],
+   "progress": 0.7328,
+   "o2_left_L": 268.31,
+   "return_o2_L": 12.51,
+   "reserve_L": 252.05,
+   "dose_mSv": 0.41648,
+   "next_wp": "T08",
+   "dist_left_m": 473.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.39,
+   "lonlat": [
+    137.3838832,
+    -4.8006306
+   ],
+   "cell": [
+    323,
+    175
+   ],
+   "progress": 0.735,
+   "o2_left_L": 268.22,
+   "return_o2_L": 12.42,
+   "reserve_L": 252.07,
+   "dose_mSv": 0.43875,
+   "next_wp": "T08",
+   "dist_left_m": 469.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.48,
+   "lonlat": [
+    137.3838832,
+    -4.800698
+   ],
+   "cell": [
+    324,
+    175
+   ],
+   "progress": 0.7373,
+   "o2_left_L": 268.14,
+   "return_o2_L": 12.34,
+   "reserve_L": 252.1,
+   "dose_mSv": 0.46101,
+   "next_wp": "T08",
+   "dist_left_m": 465.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.57,
+   "lonlat": [
+    137.3838832,
+    -4.8007655
+   ],
+   "cell": [
+    325,
+    175
+   ],
+   "progress": 0.7395,
+   "o2_left_L": 268.06,
+   "return_o2_L": 12.27,
+   "reserve_L": 252.12,
+   "dose_mSv": 0.48327,
+   "next_wp": "T08",
+   "dist_left_m": 461.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.66,
+   "lonlat": [
+    137.3838832,
+    -4.800833
+   ],
+   "cell": [
+    326,
+    175
+   ],
+   "progress": 0.7418,
+   "o2_left_L": 268.0,
+   "return_o2_L": 12.2,
+   "reserve_L": 252.14,
+   "dose_mSv": 0.50553,
+   "next_wp": "T08",
+   "dist_left_m": 457.4,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.79,
+   "lonlat": [
+    137.3838157,
+    -4.8009005
+   ],
+   "cell": [
+    327,
+    174
+   ],
+   "progress": 0.745,
+   "o2_left_L": 267.89,
+   "return_o2_L": 12.09,
+   "reserve_L": 252.17,
+   "dose_mSv": 0.53701,
+   "next_wp": "T08",
+   "dist_left_m": 451.8,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 30.93,
+   "lonlat": [
+    137.3838157,
+    -4.800968
+   ],
+   "cell": [
+    328,
+    174
+   ],
+   "progress": 0.7473,
+   "o2_left_L": 267.71,
+   "return_o2_L": 11.91,
+   "reserve_L": 252.22,
+   "dose_mSv": 0.57411,
+   "next_wp": "T08",
+   "dist_left_m": 447.8,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.06,
+   "lonlat": [
+    137.3837482,
+    -4.8010355
+   ],
+   "cell": [
+    329,
+    173
+   ],
+   "progress": 0.7504,
+   "o2_left_L": 267.55,
+   "return_o2_L": 11.75,
+   "reserve_L": 252.27,
+   "dose_mSv": 0.60559,
+   "next_wp": "T08",
+   "dist_left_m": 442.1,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.18,
+   "lonlat": [
+    137.3836807,
+    -4.8011029
+   ],
+   "cell": [
+    330,
+    172
+   ],
+   "progress": 0.7536,
+   "o2_left_L": 267.4,
+   "return_o2_L": 11.6,
+   "reserve_L": 252.32,
+   "dose_mSv": 0.63707,
+   "next_wp": "T08",
+   "dist_left_m": 436.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.31,
+   "lonlat": [
+    137.3836132,
+    -4.8011704
+   ],
+   "cell": [
+    331,
+    171
+   ],
+   "progress": 0.7568,
+   "o2_left_L": 267.28,
+   "return_o2_L": 11.49,
+   "reserve_L": 252.35,
+   "dose_mSv": 0.66855,
+   "next_wp": "T08",
+   "dist_left_m": 430.8,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.44,
+   "lonlat": [
+    137.3835458,
+    -4.8012379
+   ],
+   "cell": [
+    332,
+    170
+   ],
+   "progress": 0.76,
+   "o2_left_L": 267.19,
+   "return_o2_L": 11.41,
+   "reserve_L": 252.36,
+   "dose_mSv": 0.70004,
+   "next_wp": "T08",
+   "dist_left_m": 425.1,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.56,
+   "lonlat": [
+    137.3834783,
+    -4.8013054
+   ],
+   "cell": [
+    333,
+    169
+   ],
+   "progress": 0.7632,
+   "o2_left_L": 267.1,
+   "return_o2_L": 11.33,
+   "reserve_L": 252.37,
+   "dose_mSv": 0.73152,
+   "next_wp": "T08",
+   "dist_left_m": 419.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.69,
+   "lonlat": [
+    137.3834108,
+    -4.8013729
+   ],
+   "cell": [
+    334,
+    168
+   ],
+   "progress": 0.7664,
+   "o2_left_L": 266.95,
+   "return_o2_L": 11.18,
+   "reserve_L": 252.41,
+   "dose_mSv": 0.763,
+   "next_wp": "T08",
+   "dist_left_m": 413.8,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.81,
+   "lonlat": [
+    137.3833433,
+    -4.8014404
+   ],
+   "cell": [
+    335,
+    167
+   ],
+   "progress": 0.7696,
+   "o2_left_L": 266.82,
+   "return_o2_L": 11.05,
+   "reserve_L": 252.45,
+   "dose_mSv": 0.79448,
+   "next_wp": "T08",
+   "dist_left_m": 408.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 31.94,
+   "lonlat": [
+    137.3832758,
+    -4.8015078
+   ],
+   "cell": [
+    336,
+    166
+   ],
+   "progress": 0.7728,
+   "o2_left_L": 266.7,
+   "return_o2_L": 10.93,
+   "reserve_L": 252.49,
+   "dose_mSv": 0.82596,
+   "next_wp": "T08",
+   "dist_left_m": 402.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.06,
+   "lonlat": [
+    137.3832083,
+    -4.8015753
+   ],
+   "cell": [
+    337,
+    165
+   ],
+   "progress": 0.776,
+   "o2_left_L": 266.56,
+   "return_o2_L": 10.79,
+   "reserve_L": 252.53,
+   "dose_mSv": 0.85744,
+   "next_wp": "T08",
+   "dist_left_m": 396.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.21,
+   "lonlat": [
+    137.3832083,
+    -4.8016428
+   ],
+   "cell": [
+    338,
+    165
+   ],
+   "progress": 0.7783,
+   "o2_left_L": 266.38,
+   "return_o2_L": 10.61,
+   "reserve_L": 252.59,
+   "dose_mSv": 0.89454,
+   "next_wp": "T08",
+   "dist_left_m": 392.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.34,
+   "lonlat": [
+    137.3831409,
+    -4.8017103
+   ],
+   "cell": [
+    339,
+    164
+   ],
+   "progress": 0.7814,
+   "o2_left_L": 266.18,
+   "return_o2_L": 10.41,
+   "reserve_L": 252.64,
+   "dose_mSv": 0.92602,
+   "next_wp": "T08",
+   "dist_left_m": 387.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.43,
+   "lonlat": [
+    137.3831409,
+    -4.8017778
+   ],
+   "cell": [
+    340,
+    164
+   ],
+   "progress": 0.7837,
+   "o2_left_L": 266.04,
+   "return_o2_L": 10.27,
+   "reserve_L": 252.69,
+   "dose_mSv": 0.94828,
+   "next_wp": "T08",
+   "dist_left_m": 383.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.52,
+   "lonlat": [
+    137.3831409,
+    -4.8018452
+   ],
+   "cell": [
+    341,
+    164
+   ],
+   "progress": 0.786,
+   "o2_left_L": 265.91,
+   "return_o2_L": 10.14,
+   "reserve_L": 252.73,
+   "dose_mSv": 0.97055,
+   "next_wp": "T08",
+   "dist_left_m": 379.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.61,
+   "lonlat": [
+    137.3831409,
+    -4.8019127
+   ],
+   "cell": [
+    342,
+    164
+   ],
+   "progress": 0.7882,
+   "o2_left_L": 265.79,
+   "return_o2_L": 10.02,
+   "reserve_L": 252.76,
+   "dose_mSv": 0.99281,
+   "next_wp": "T08",
+   "dist_left_m": 375.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.69,
+   "lonlat": [
+    137.3831409,
+    -4.8019802
+   ],
+   "cell": [
+    343,
+    164
+   ],
+   "progress": 0.7905,
+   "o2_left_L": 265.68,
+   "return_o2_L": 9.91,
+   "reserve_L": 252.8,
+   "dose_mSv": 1.01507,
+   "next_wp": "T08",
+   "dist_left_m": 371.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.78,
+   "lonlat": [
+    137.3831409,
+    -4.8020477
+   ],
+   "cell": [
+    344,
+    164
+   ],
+   "progress": 0.7927,
+   "o2_left_L": 265.58,
+   "return_o2_L": 9.81,
+   "reserve_L": 252.83,
+   "dose_mSv": 1.03733,
+   "next_wp": "T08",
+   "dist_left_m": 367.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.87,
+   "lonlat": [
+    137.3831409,
+    -4.8021152
+   ],
+   "cell": [
+    345,
+    164
+   ],
+   "progress": 0.795,
+   "o2_left_L": 265.49,
+   "return_o2_L": 9.72,
+   "reserve_L": 252.85,
+   "dose_mSv": 1.05959,
+   "next_wp": "T08",
+   "dist_left_m": 363.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 32.96,
+   "lonlat": [
+    137.3831409,
+    -4.8021827
+   ],
+   "cell": [
+    346,
+    164
+   ],
+   "progress": 0.7972,
+   "o2_left_L": 265.41,
+   "return_o2_L": 9.64,
+   "reserve_L": 252.88,
+   "dose_mSv": 1.08185,
+   "next_wp": "T08",
+   "dist_left_m": 359.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.05,
+   "lonlat": [
+    137.3831409,
+    -4.8022501
+   ],
+   "cell": [
+    347,
+    164
+   ],
+   "progress": 0.7995,
+   "o2_left_L": 265.33,
+   "return_o2_L": 9.56,
+   "reserve_L": 252.9,
+   "dose_mSv": 1.10411,
+   "next_wp": "T08",
+   "dist_left_m": 355.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.14,
+   "lonlat": [
+    137.3831409,
+    -4.8023176
+   ],
+   "cell": [
+    348,
+    164
+   ],
+   "progress": 0.8018,
+   "o2_left_L": 265.26,
+   "return_o2_L": 9.5,
+   "reserve_L": 252.92,
+   "dose_mSv": 1.12637,
+   "next_wp": "T08",
+   "dist_left_m": 351.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.26,
+   "lonlat": [
+    137.3830734,
+    -4.8023851
+   ],
+   "cell": [
+    349,
+    163
+   ],
+   "progress": 0.805,
+   "o2_left_L": 265.14,
+   "return_o2_L": 9.37,
+   "reserve_L": 252.96,
+   "dose_mSv": 1.15785,
+   "next_wp": "T08",
+   "dist_left_m": 345.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.41,
+   "lonlat": [
+    137.3830734,
+    -4.8024526
+   ],
+   "cell": [
+    350,
+    163
+   ],
+   "progress": 0.8072,
+   "o2_left_L": 264.96,
+   "return_o2_L": 9.19,
+   "reserve_L": 253.01,
+   "dose_mSv": 1.19495,
+   "next_wp": "T08",
+   "dist_left_m": 341.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.5,
+   "lonlat": [
+    137.3830734,
+    -4.8025201
+   ],
+   "cell": [
+    351,
+    163
+   ],
+   "progress": 0.8095,
+   "o2_left_L": 264.81,
+   "return_o2_L": 9.04,
+   "reserve_L": 253.05,
+   "dose_mSv": 1.21721,
+   "next_wp": "T08",
+   "dist_left_m": 337.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.59,
+   "lonlat": [
+    137.3830734,
+    -4.8025876
+   ],
+   "cell": [
+    352,
+    163
+   ],
+   "progress": 0.8117,
+   "o2_left_L": 264.67,
+   "return_o2_L": 8.9,
+   "reserve_L": 253.1,
+   "dose_mSv": 1.23947,
+   "next_wp": "T08",
+   "dist_left_m": 333.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.68,
+   "lonlat": [
+    137.3830734,
+    -4.802655
+   ],
+   "cell": [
+    353,
+    163
+   ],
+   "progress": 0.814,
+   "o2_left_L": 264.53,
+   "return_o2_L": 8.77,
+   "reserve_L": 253.14,
+   "dose_mSv": 1.26173,
+   "next_wp": "T08",
+   "dist_left_m": 329.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.77,
+   "lonlat": [
+    137.3830734,
+    -4.8027225
+   ],
+   "cell": [
+    354,
+    163
+   ],
+   "progress": 0.8162,
+   "o2_left_L": 264.41,
+   "return_o2_L": 8.64,
+   "reserve_L": 253.18,
+   "dose_mSv": 1.284,
+   "next_wp": "T08",
+   "dist_left_m": 325.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.86,
+   "lonlat": [
+    137.3830734,
+    -4.80279
+   ],
+   "cell": [
+    355,
+    163
+   ],
+   "progress": 0.8185,
+   "o2_left_L": 264.3,
+   "return_o2_L": 8.53,
+   "reserve_L": 253.21,
+   "dose_mSv": 1.30626,
+   "next_wp": "T08",
+   "dist_left_m": 321.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 33.95,
+   "lonlat": [
+    137.3830734,
+    -4.8028575
+   ],
+   "cell": [
+    356,
+    163
+   ],
+   "progress": 0.8208,
+   "o2_left_L": 264.19,
+   "return_o2_L": 8.43,
+   "reserve_L": 253.24,
+   "dose_mSv": 1.32852,
+   "next_wp": "T08",
+   "dist_left_m": 317.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.03,
+   "lonlat": [
+    137.3830734,
+    -4.802925
+   ],
+   "cell": [
+    357,
+    163
+   ],
+   "progress": 0.823,
+   "o2_left_L": 264.1,
+   "return_o2_L": 8.33,
+   "reserve_L": 253.27,
+   "dose_mSv": 1.35078,
+   "next_wp": "T08",
+   "dist_left_m": 313.5,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.16,
+   "lonlat": [
+    137.3831409,
+    -4.8029924
+   ],
+   "cell": [
+    358,
+    164
+   ],
+   "progress": 0.8262,
+   "o2_left_L": 263.98,
+   "return_o2_L": 8.24,
+   "reserve_L": 253.27,
+   "dose_mSv": 1.38226,
+   "next_wp": "T08",
+   "dist_left_m": 307.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.25,
+   "lonlat": [
+    137.3831409,
+    -4.8030599
+   ],
+   "cell": [
+    359,
+    164
+   ],
+   "progress": 0.8285,
+   "o2_left_L": 263.9,
+   "return_o2_L": 8.16,
+   "reserve_L": 253.29,
+   "dose_mSv": 1.40452,
+   "next_wp": "T08",
+   "dist_left_m": 303.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.34,
+   "lonlat": [
+    137.3831409,
+    -4.8031274
+   ],
+   "cell": [
+    360,
+    164
+   ],
+   "progress": 0.8307,
+   "o2_left_L": 263.83,
+   "return_o2_L": 8.09,
+   "reserve_L": 253.31,
+   "dose_mSv": 1.42678,
+   "next_wp": "T08",
+   "dist_left_m": 299.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.43,
+   "lonlat": [
+    137.3831409,
+    -4.8031949
+   ],
+   "cell": [
+    361,
+    164
+   ],
+   "progress": 0.833,
+   "o2_left_L": 263.77,
+   "return_o2_L": 8.02,
+   "reserve_L": 253.33,
+   "dose_mSv": 1.44904,
+   "next_wp": "T08",
+   "dist_left_m": 295.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.52,
+   "lonlat": [
+    137.3831409,
+    -4.8032624
+   ],
+   "cell": [
+    362,
+    164
+   ],
+   "progress": 0.8352,
+   "o2_left_L": 263.64,
+   "return_o2_L": 7.9,
+   "reserve_L": 253.37,
+   "dose_mSv": 1.4713,
+   "next_wp": "T08",
+   "dist_left_m": 291.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.66,
+   "lonlat": [
+    137.3831409,
+    -4.8033299
+   ],
+   "cell": [
+    363,
+    164
+   ],
+   "progress": 0.8375,
+   "o2_left_L": 263.46,
+   "return_o2_L": 7.72,
+   "reserve_L": 253.43,
+   "dose_mSv": 1.5084,
+   "next_wp": "T08",
+   "dist_left_m": 287.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.75,
+   "lonlat": [
+    137.3831409,
+    -4.8033973
+   ],
+   "cell": [
+    364,
+    164
+   ],
+   "progress": 0.8398,
+   "o2_left_L": 263.31,
+   "return_o2_L": 7.57,
+   "reserve_L": 253.47,
+   "dose_mSv": 1.53066,
+   "next_wp": "T08",
+   "dist_left_m": 283.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.84,
+   "lonlat": [
+    137.3831409,
+    -4.8034648
+   ],
+   "cell": [
+    365,
+    164
+   ],
+   "progress": 0.842,
+   "o2_left_L": 263.17,
+   "return_o2_L": 7.43,
+   "reserve_L": 253.51,
+   "dose_mSv": 1.55292,
+   "next_wp": "T08",
+   "dist_left_m": 279.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 34.93,
+   "lonlat": [
+    137.3831409,
+    -4.8035323
+   ],
+   "cell": [
+    366,
+    164
+   ],
+   "progress": 0.8443,
+   "o2_left_L": 263.04,
+   "return_o2_L": 7.3,
+   "reserve_L": 253.55,
+   "dose_mSv": 1.57518,
+   "next_wp": "T08",
+   "dist_left_m": 275.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.02,
+   "lonlat": [
+    137.3831409,
+    -4.8035998
+   ],
+   "cell": [
+    367,
+    164
+   ],
+   "progress": 0.8465,
+   "o2_left_L": 262.92,
+   "return_o2_L": 7.17,
+   "reserve_L": 253.59,
+   "dose_mSv": 1.59745,
+   "next_wp": "T08",
+   "dist_left_m": 271.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.11,
+   "lonlat": [
+    137.3831409,
+    -4.8036673
+   ],
+   "cell": [
+    368,
+    164
+   ],
+   "progress": 0.8488,
+   "o2_left_L": 262.8,
+   "return_o2_L": 7.06,
+   "reserve_L": 253.62,
+   "dose_mSv": 1.61971,
+   "next_wp": "T08",
+   "dist_left_m": 267.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.2,
+   "lonlat": [
+    137.3831409,
+    -4.8037348
+   ],
+   "cell": [
+    369,
+    164
+   ],
+   "progress": 0.851,
+   "o2_left_L": 262.7,
+   "return_o2_L": 6.96,
+   "reserve_L": 253.65,
+   "dose_mSv": 1.64197,
+   "next_wp": "T08",
+   "dist_left_m": 263.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.29,
+   "lonlat": [
+    137.3831409,
+    -4.8038022
+   ],
+   "cell": [
+    370,
+    164
+   ],
+   "progress": 0.8533,
+   "o2_left_L": 262.61,
+   "return_o2_L": 6.87,
+   "reserve_L": 253.68,
+   "dose_mSv": 1.66423,
+   "next_wp": "T08",
+   "dist_left_m": 259.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.37,
+   "lonlat": [
+    137.3831409,
+    -4.8038697
+   ],
+   "cell": [
+    371,
+    164
+   ],
+   "progress": 0.8556,
+   "o2_left_L": 262.53,
+   "return_o2_L": 6.79,
+   "reserve_L": 253.7,
+   "dose_mSv": 1.68649,
+   "next_wp": "T08",
+   "dist_left_m": 255.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.46,
+   "lonlat": [
+    137.3831409,
+    -4.8039372
+   ],
+   "cell": [
+    372,
+    164
+   ],
+   "progress": 0.8578,
+   "o2_left_L": 262.46,
+   "return_o2_L": 6.71,
+   "reserve_L": 253.73,
+   "dose_mSv": 1.70875,
+   "next_wp": "T08",
+   "dist_left_m": 251.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.55,
+   "lonlat": [
+    137.3831409,
+    -4.8040047
+   ],
+   "cell": [
+    373,
+    164
+   ],
+   "progress": 0.8601,
+   "o2_left_L": 262.39,
+   "return_o2_L": 6.65,
+   "reserve_L": 253.75,
+   "dose_mSv": 1.73101,
+   "next_wp": "T08",
+   "dist_left_m": 247.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.68,
+   "lonlat": [
+    137.3830734,
+    -4.8040722
+   ],
+   "cell": [
+    374,
+    163
+   ],
+   "progress": 0.8633,
+   "o2_left_L": 262.28,
+   "return_o2_L": 6.53,
+   "reserve_L": 253.78,
+   "dose_mSv": 1.76249,
+   "next_wp": "T08",
+   "dist_left_m": 242.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.83,
+   "lonlat": [
+    137.3830734,
+    -4.8041396
+   ],
+   "cell": [
+    375,
+    163
+   ],
+   "progress": 0.8655,
+   "o2_left_L": 262.1,
+   "return_o2_L": 6.35,
+   "reserve_L": 253.84,
+   "dose_mSv": 1.79959,
+   "next_wp": "T08",
+   "dist_left_m": 238.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 35.92,
+   "lonlat": [
+    137.3830734,
+    -4.8042071
+   ],
+   "cell": [
+    376,
+    163
+   ],
+   "progress": 0.8678,
+   "o2_left_L": 261.95,
+   "return_o2_L": 6.2,
+   "reserve_L": 253.88,
+   "dose_mSv": 1.82185,
+   "next_wp": "T08",
+   "dist_left_m": 234.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.0,
+   "lonlat": [
+    137.3830734,
+    -4.8042746
+   ],
+   "cell": [
+    377,
+    163
+   ],
+   "progress": 0.87,
+   "o2_left_L": 261.8,
+   "return_o2_L": 6.06,
+   "reserve_L": 253.92,
+   "dose_mSv": 1.84411,
+   "next_wp": "T08",
+   "dist_left_m": 230.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.09,
+   "lonlat": [
+    137.3830734,
+    -4.8043421
+   ],
+   "cell": [
+    378,
+    163
+   ],
+   "progress": 0.8723,
+   "o2_left_L": 261.67,
+   "return_o2_L": 5.92,
+   "reserve_L": 253.96,
+   "dose_mSv": 1.86637,
+   "next_wp": "T08",
+   "dist_left_m": 226.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.18,
+   "lonlat": [
+    137.3830734,
+    -4.8044096
+   ],
+   "cell": [
+    379,
+    163
+   ],
+   "progress": 0.8746,
+   "o2_left_L": 261.54,
+   "return_o2_L": 5.8,
+   "reserve_L": 254.0,
+   "dose_mSv": 1.88863,
+   "next_wp": "T08",
+   "dist_left_m": 222.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.27,
+   "lonlat": [
+    137.3830734,
+    -4.8044771
+   ],
+   "cell": [
+    380,
+    163
+   ],
+   "progress": 0.8768,
+   "o2_left_L": 261.43,
+   "return_o2_L": 5.68,
+   "reserve_L": 254.04,
+   "dose_mSv": 1.9109,
+   "next_wp": "T08",
+   "dist_left_m": 218.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.36,
+   "lonlat": [
+    137.3830734,
+    -4.8045445
+   ],
+   "cell": [
+    381,
+    163
+   ],
+   "progress": 0.8791,
+   "o2_left_L": 261.32,
+   "return_o2_L": 5.58,
+   "reserve_L": 254.07,
+   "dose_mSv": 1.93316,
+   "next_wp": "T08",
+   "dist_left_m": 214.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.45,
+   "lonlat": [
+    137.3830734,
+    -4.804612
+   ],
+   "cell": [
+    382,
+    163
+   ],
+   "progress": 0.8813,
+   "o2_left_L": 261.23,
+   "return_o2_L": 5.49,
+   "reserve_L": 254.1,
+   "dose_mSv": 1.95542,
+   "next_wp": "T08",
+   "dist_left_m": 210.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.54,
+   "lonlat": [
+    137.3830734,
+    -4.8046795
+   ],
+   "cell": [
+    383,
+    163
+   ],
+   "progress": 0.8836,
+   "o2_left_L": 261.14,
+   "return_o2_L": 5.4,
+   "reserve_L": 254.12,
+   "dose_mSv": 1.97768,
+   "next_wp": "T08",
+   "dist_left_m": 206.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.63,
+   "lonlat": [
+    137.3830734,
+    -4.804747
+   ],
+   "cell": [
+    384,
+    163
+   ],
+   "progress": 0.8859,
+   "o2_left_L": 261.07,
+   "return_o2_L": 5.33,
+   "reserve_L": 254.14,
+   "dose_mSv": 1.99994,
+   "next_wp": "T08",
+   "dist_left_m": 202.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.72,
+   "lonlat": [
+    137.3830734,
+    -4.8048145
+   ],
+   "cell": [
+    385,
+    163
+   ],
+   "progress": 0.8881,
+   "o2_left_L": 261.0,
+   "return_o2_L": 5.26,
+   "reserve_L": 254.16,
+   "dose_mSv": 2.0222,
+   "next_wp": "T08",
+   "dist_left_m": 198.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.8,
+   "lonlat": [
+    137.3830734,
+    -4.804882
+   ],
+   "cell": [
+    386,
+    163
+   ],
+   "progress": 0.8904,
+   "o2_left_L": 260.93,
+   "return_o2_L": 5.19,
+   "reserve_L": 254.18,
+   "dose_mSv": 2.04446,
+   "next_wp": "T08",
+   "dist_left_m": 194.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 36.89,
+   "lonlat": [
+    137.3830734,
+    -4.8049494
+   ],
+   "cell": [
+    387,
+    163
+   ],
+   "progress": 0.8926,
+   "o2_left_L": 260.79,
+   "return_o2_L": 5.05,
+   "reserve_L": 254.23,
+   "dose_mSv": 2.06672,
+   "next_wp": "T08",
+   "dist_left_m": 190.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.04,
+   "lonlat": [
+    137.3830734,
+    -4.8050169
+   ],
+   "cell": [
+    388,
+    163
+   ],
+   "progress": 0.8949,
+   "o2_left_L": 260.61,
+   "return_o2_L": 4.87,
+   "reserve_L": 254.28,
+   "dose_mSv": 2.10382,
+   "next_wp": "T08",
+   "dist_left_m": 186.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.13,
+   "lonlat": [
+    137.3830734,
+    -4.8050844
+   ],
+   "cell": [
+    389,
+    163
+   ],
+   "progress": 0.8971,
+   "o2_left_L": 260.47,
+   "return_o2_L": 4.72,
+   "reserve_L": 254.32,
+   "dose_mSv": 2.12608,
+   "next_wp": "T08",
+   "dist_left_m": 182.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.22,
+   "lonlat": [
+    137.3830734,
+    -4.8051519
+   ],
+   "cell": [
+    390,
+    163
+   ],
+   "progress": 0.8994,
+   "o2_left_L": 260.33,
+   "return_o2_L": 4.58,
+   "reserve_L": 254.37,
+   "dose_mSv": 2.14834,
+   "next_wp": "T08",
+   "dist_left_m": 178.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.31,
+   "lonlat": [
+    137.3830734,
+    -4.8052194
+   ],
+   "cell": [
+    391,
+    163
+   ],
+   "progress": 0.9017,
+   "o2_left_L": 260.19,
+   "return_o2_L": 4.45,
+   "reserve_L": 254.41,
+   "dose_mSv": 2.1706,
+   "next_wp": "T08",
+   "dist_left_m": 174.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.4,
+   "lonlat": [
+    137.3830734,
+    -4.8052868
+   ],
+   "cell": [
+    392,
+    163
+   ],
+   "progress": 0.9039,
+   "o2_left_L": 260.07,
+   "return_o2_L": 4.33,
+   "reserve_L": 254.44,
+   "dose_mSv": 2.19286,
+   "next_wp": "T08",
+   "dist_left_m": 170.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.49,
+   "lonlat": [
+    137.3830734,
+    -4.8053543
+   ],
+   "cell": [
+    393,
+    163
+   ],
+   "progress": 0.9062,
+   "o2_left_L": 259.96,
+   "return_o2_L": 4.22,
+   "reserve_L": 254.48,
+   "dose_mSv": 2.21512,
+   "next_wp": "T08",
+   "dist_left_m": 166.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.57,
+   "lonlat": [
+    137.3830734,
+    -4.8054218
+   ],
+   "cell": [
+    394,
+    163
+   ],
+   "progress": 0.9084,
+   "o2_left_L": 259.86,
+   "return_o2_L": 4.12,
+   "reserve_L": 254.51,
+   "dose_mSv": 2.23739,
+   "next_wp": "T08",
+   "dist_left_m": 162.2,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.7,
+   "lonlat": [
+    137.3831409,
+    -4.8054893
+   ],
+   "cell": [
+    395,
+    164
+   ],
+   "progress": 0.9116,
+   "o2_left_L": 259.74,
+   "return_o2_L": 4.05,
+   "reserve_L": 254.47,
+   "dose_mSv": 2.26887,
+   "next_wp": "T08",
+   "dist_left_m": 156.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.79,
+   "lonlat": [
+    137.3831409,
+    -4.8055568
+   ],
+   "cell": [
+    396,
+    164
+   ],
+   "progress": 0.9139,
+   "o2_left_L": 259.66,
+   "return_o2_L": 3.97,
+   "reserve_L": 254.5,
+   "dose_mSv": 2.29113,
+   "next_wp": "T08",
+   "dist_left_m": 152.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 37.88,
+   "lonlat": [
+    137.3831409,
+    -4.8056243
+   ],
+   "cell": [
+    397,
+    164
+   ],
+   "progress": 0.9161,
+   "o2_left_L": 259.58,
+   "return_o2_L": 3.89,
+   "reserve_L": 254.52,
+   "dose_mSv": 2.31339,
+   "next_wp": "T08",
+   "dist_left_m": 148.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.0,
+   "lonlat": [
+    137.3832083,
+    -4.8056917
+   ],
+   "cell": [
+    398,
+    165
+   ],
+   "progress": 0.9193,
+   "o2_left_L": 259.48,
+   "return_o2_L": 3.84,
+   "reserve_L": 254.5,
+   "dose_mSv": 2.34487,
+   "next_wp": "T08",
+   "dist_left_m": 142.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.09,
+   "lonlat": [
+    137.3832083,
+    -4.8057592
+   ],
+   "cell": [
+    399,
+    165
+   ],
+   "progress": 0.9216,
+   "o2_left_L": 259.42,
+   "return_o2_L": 3.77,
+   "reserve_L": 254.52,
+   "dose_mSv": 2.36713,
+   "next_wp": "T08",
+   "dist_left_m": 138.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.18,
+   "lonlat": [
+    137.3832083,
+    -4.8058267
+   ],
+   "cell": [
+    400,
+    165
+   ],
+   "progress": 0.9238,
+   "o2_left_L": 259.29,
+   "return_o2_L": 3.64,
+   "reserve_L": 254.55,
+   "dose_mSv": 2.38939,
+   "next_wp": "T08",
+   "dist_left_m": 134.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.33,
+   "lonlat": [
+    137.3832083,
+    -4.8058942
+   ],
+   "cell": [
+    401,
+    165
+   ],
+   "progress": 0.9261,
+   "o2_left_L": 259.11,
+   "return_o2_L": 3.46,
+   "reserve_L": 254.61,
+   "dose_mSv": 2.42649,
+   "next_wp": "T08",
+   "dist_left_m": 130.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.46,
+   "lonlat": [
+    137.3831409,
+    -4.8059617
+   ],
+   "cell": [
+    402,
+    164
+   ],
+   "progress": 0.9293,
+   "o2_left_L": 258.91,
+   "return_o2_L": 3.27,
+   "reserve_L": 254.67,
+   "dose_mSv": 2.45797,
+   "next_wp": "T08",
+   "dist_left_m": 125.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.54,
+   "lonlat": [
+    137.3831409,
+    -4.8060292
+   ],
+   "cell": [
+    403,
+    164
+   ],
+   "progress": 0.9316,
+   "o2_left_L": 258.78,
+   "return_o2_L": 3.13,
+   "reserve_L": 254.71,
+   "dose_mSv": 2.48023,
+   "next_wp": "T08",
+   "dist_left_m": 121.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.63,
+   "lonlat": [
+    137.3831409,
+    -4.8060966
+   ],
+   "cell": [
+    404,
+    164
+   ],
+   "progress": 0.9338,
+   "o2_left_L": 258.65,
+   "return_o2_L": 3.0,
+   "reserve_L": 254.75,
+   "dose_mSv": 2.50249,
+   "next_wp": "T08",
+   "dist_left_m": 117.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.72,
+   "lonlat": [
+    137.3831409,
+    -4.8061641
+   ],
+   "cell": [
+    405,
+    164
+   ],
+   "progress": 0.9361,
+   "o2_left_L": 258.53,
+   "return_o2_L": 2.88,
+   "reserve_L": 254.78,
+   "dose_mSv": 2.52475,
+   "next_wp": "T08",
+   "dist_left_m": 113.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.81,
+   "lonlat": [
+    137.3831409,
+    -4.8062316
+   ],
+   "cell": [
+    406,
+    164
+   ],
+   "progress": 0.9383,
+   "o2_left_L": 258.42,
+   "return_o2_L": 2.77,
+   "reserve_L": 254.82,
+   "dose_mSv": 2.54702,
+   "next_wp": "T08",
+   "dist_left_m": 109.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.9,
+   "lonlat": [
+    137.3831409,
+    -4.8062991
+   ],
+   "cell": [
+    407,
+    164
+   ],
+   "progress": 0.9406,
+   "o2_left_L": 258.32,
+   "return_o2_L": 2.67,
+   "reserve_L": 254.84,
+   "dose_mSv": 2.56928,
+   "next_wp": "T08",
+   "dist_left_m": 105.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 38.99,
+   "lonlat": [
+    137.3831409,
+    -4.8063666
+   ],
+   "cell": [
+    408,
+    164
+   ],
+   "progress": 0.9428,
+   "o2_left_L": 258.23,
+   "return_o2_L": 2.59,
+   "reserve_L": 254.87,
+   "dose_mSv": 2.59154,
+   "next_wp": "T08",
+   "dist_left_m": 101.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.08,
+   "lonlat": [
+    137.3831409,
+    -4.8064341
+   ],
+   "cell": [
+    409,
+    164
+   ],
+   "progress": 0.9451,
+   "o2_left_L": 258.15,
+   "return_o2_L": 2.51,
+   "reserve_L": 254.89,
+   "dose_mSv": 2.6138,
+   "next_wp": "T08",
+   "dist_left_m": 97.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.17,
+   "lonlat": [
+    137.3831409,
+    -4.8065015
+   ],
+   "cell": [
+    410,
+    164
+   ],
+   "progress": 0.9474,
+   "o2_left_L": 258.08,
+   "return_o2_L": 2.43,
+   "reserve_L": 254.92,
+   "dose_mSv": 2.63606,
+   "next_wp": "T08",
+   "dist_left_m": 93.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.26,
+   "lonlat": [
+    137.3831409,
+    -4.806569
+   ],
+   "cell": [
+    411,
+    164
+   ],
+   "progress": 0.9496,
+   "o2_left_L": 258.01,
+   "return_o2_L": 2.37,
+   "reserve_L": 254.94,
+   "dose_mSv": 2.65832,
+   "next_wp": "T08",
+   "dist_left_m": 89.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.34,
+   "lonlat": [
+    137.3831409,
+    -4.8066365
+   ],
+   "cell": [
+    412,
+    164
+   ],
+   "progress": 0.9519,
+   "o2_left_L": 257.91,
+   "return_o2_L": 2.27,
+   "reserve_L": 254.95,
+   "dose_mSv": 2.68058,
+   "next_wp": "T08",
+   "dist_left_m": 85.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.49,
+   "lonlat": [
+    137.3831409,
+    -4.806704
+   ],
+   "cell": [
+    413,
+    164
+   ],
+   "progress": 0.9541,
+   "o2_left_L": 257.73,
+   "return_o2_L": 2.09,
+   "reserve_L": 255.01,
+   "dose_mSv": 2.71768,
+   "next_wp": "T08",
+   "dist_left_m": 81.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.62,
+   "lonlat": [
+    137.3830734,
+    -4.8067715
+   ],
+   "cell": [
+    414,
+    163
+   ],
+   "progress": 0.9573,
+   "o2_left_L": 257.55,
+   "return_o2_L": 1.91,
+   "reserve_L": 255.06,
+   "dose_mSv": 2.74916,
+   "next_wp": "T08",
+   "dist_left_m": 75.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.71,
+   "lonlat": [
+    137.3830734,
+    -4.8068389
+   ],
+   "cell": [
+    415,
+    163
+   ],
+   "progress": 0.9596,
+   "o2_left_L": 257.4,
+   "return_o2_L": 1.77,
+   "reserve_L": 255.1,
+   "dose_mSv": 2.77142,
+   "next_wp": "T08",
+   "dist_left_m": 71.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.8,
+   "lonlat": [
+    137.3830734,
+    -4.8069064
+   ],
+   "cell": [
+    416,
+    163
+   ],
+   "progress": 0.9618,
+   "o2_left_L": 257.27,
+   "return_o2_L": 1.65,
+   "reserve_L": 255.12,
+   "dose_mSv": 2.79368,
+   "next_wp": "T08",
+   "dist_left_m": 67.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.89,
+   "lonlat": [
+    137.3830734,
+    -4.8069739
+   ],
+   "cell": [
+    417,
+    163
+   ],
+   "progress": 0.9641,
+   "o2_left_L": 257.15,
+   "return_o2_L": 1.54,
+   "reserve_L": 255.15,
+   "dose_mSv": 2.81594,
+   "next_wp": "T08",
+   "dist_left_m": 63.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 39.97,
+   "lonlat": [
+    137.3830734,
+    -4.8070414
+   ],
+   "cell": [
+    418,
+    163
+   ],
+   "progress": 0.9664,
+   "o2_left_L": 257.04,
+   "return_o2_L": 1.43,
+   "reserve_L": 255.18,
+   "dose_mSv": 2.8382,
+   "next_wp": "T08",
+   "dist_left_m": 59.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.06,
+   "lonlat": [
+    137.3830734,
+    -4.8071089
+   ],
+   "cell": [
+    419,
+    163
+   ],
+   "progress": 0.9686,
+   "o2_left_L": 256.94,
+   "return_o2_L": 1.33,
+   "reserve_L": 255.21,
+   "dose_mSv": 2.86047,
+   "next_wp": "T08",
+   "dist_left_m": 55.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.15,
+   "lonlat": [
+    137.3830734,
+    -4.8071764
+   ],
+   "cell": [
+    420,
+    163
+   ],
+   "progress": 0.9709,
+   "o2_left_L": 256.85,
+   "return_o2_L": 1.25,
+   "reserve_L": 255.23,
+   "dose_mSv": 2.88273,
+   "next_wp": "T08",
+   "dist_left_m": 51.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.24,
+   "lonlat": [
+    137.3830734,
+    -4.8072438
+   ],
+   "cell": [
+    421,
+    163
+   ],
+   "progress": 0.9731,
+   "o2_left_L": 256.77,
+   "return_o2_L": 1.17,
+   "reserve_L": 255.25,
+   "dose_mSv": 2.90499,
+   "next_wp": "T08",
+   "dist_left_m": 47.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.33,
+   "lonlat": [
+    137.3830734,
+    -4.8073113
+   ],
+   "cell": [
+    422,
+    163
+   ],
+   "progress": 0.9754,
+   "o2_left_L": 256.69,
+   "return_o2_L": 1.09,
+   "reserve_L": 255.27,
+   "dose_mSv": 2.92725,
+   "next_wp": "T08",
+   "dist_left_m": 43.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.42,
+   "lonlat": [
+    137.3830734,
+    -4.8073788
+   ],
+   "cell": [
+    423,
+    163
+   ],
+   "progress": 0.9776,
+   "o2_left_L": 256.63,
+   "return_o2_L": 1.03,
+   "reserve_L": 255.29,
+   "dose_mSv": 2.94951,
+   "next_wp": "T08",
+   "dist_left_m": 39.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.54,
+   "lonlat": [
+    137.3830059,
+    -4.8074463
+   ],
+   "cell": [
+    424,
+    162
+   ],
+   "progress": 0.9808,
+   "o2_left_L": 256.52,
+   "return_o2_L": 0.92,
+   "reserve_L": 255.32,
+   "dose_mSv": 2.98099,
+   "next_wp": "T08",
+   "dist_left_m": 33.9,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.75,
+   "lonlat": [
+    137.3829384,
+    -4.8075138
+   ],
+   "cell": [
+    425,
+    161
+   ],
+   "progress": 0.984,
+   "o2_left_L": 256.32,
+   "return_o2_L": 0.72,
+   "reserve_L": 255.38,
+   "dose_mSv": 3.03346,
+   "next_wp": "T08",
+   "dist_left_m": 28.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 40.96,
+   "lonlat": [
+    137.3828709,
+    -4.8075813
+   ],
+   "cell": [
+    426,
+    160
+   ],
+   "progress": 0.9872,
+   "o2_left_L": 256.14,
+   "return_o2_L": 0.54,
+   "reserve_L": 255.44,
+   "dose_mSv": 3.08593,
+   "next_wp": "T08",
+   "dist_left_m": 22.6,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 41.09,
+   "lonlat": [
+    137.3828034,
+    -4.8076487
+   ],
+   "cell": [
+    427,
+    159
+   ],
+   "progress": 0.9904,
+   "o2_left_L": 256.02,
+   "return_o2_L": 0.42,
+   "reserve_L": 255.47,
+   "dose_mSv": 3.11741,
+   "next_wp": "T08",
+   "dist_left_m": 17.0,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 41.21,
+   "lonlat": [
+    137.382736,
+    -4.8077162
+   ],
+   "cell": [
+    428,
+    158
+   ],
+   "progress": 0.9936,
+   "o2_left_L": 255.91,
+   "return_o2_L": 0.31,
+   "reserve_L": 255.51,
+   "dose_mSv": 3.14889,
+   "next_wp": "T08",
+   "dist_left_m": 11.3,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 41.34,
+   "lonlat": [
+    137.3826685,
+    -4.8077837
+   ],
+   "cell": [
+    429,
+    157
+   ],
+   "progress": 0.9968,
+   "o2_left_L": 255.76,
+   "return_o2_L": 0.16,
+   "reserve_L": 255.55,
+   "dose_mSv": 3.18037,
+   "next_wp": "T08",
+   "dist_left_m": 5.7,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  },
+  {
+   "t_min": 41.47,
+   "lonlat": [
+    137.382601,
+    -4.8078512
+   ],
+   "cell": [
+    430,
+    156
+   ],
+   "progress": 1.0,
+   "o2_left_L": 255.6,
+   "return_o2_L": 0.0,
+   "reserve_L": 255.6,
+   "dose_mSv": 3.21185,
+   "next_wp": "T08",
+   "dist_left_m": 0.0,
+   "alert": {
+    "level": "rtb",
+    "code": "SEP_EVENT",
+    "msg": "Solar particle event: go to shelter (T08)."
+   }
+  }
+ ],
+ "replanned_route": null,
+ "diversion": {
+  "at_index": 247,
+  "to": "T08",
+  "path": [
+   [
+    137.3842881,
+    -4.7995508
+   ],
+   [
+    137.3842206,
+    -4.7996183
+   ],
+   [
+    137.3842206,
+    -4.7996858
+   ],
+   [
+    137.3841531,
+    -4.7997533
+   ],
+   [
+    137.3840856,
+    -4.7998208
+   ],
+   [
+    137.3840181,
+    -4.7998883
+   ],
+   [
+    137.3839506,
+    -4.7999557
+   ],
+   [
+    137.3839506,
+    -4.8000232
+   ],
+   [
+    137.3838832,
+    -4.8000907
+   ],
+   [
+    137.3838832,
+    -4.8001582
+   ],
+   [
+    137.3838832,
+    -4.8002257
+   ],
+   [
+    137.3838832,
+    -4.8002932
+   ],
+   [
+    137.3838832,
+    -4.8003606
+   ],
+   [
+    137.3838832,
+    -4.8004281
+   ],
+   [
+    137.3838832,
+    -4.8004956
+   ],
+   [
+    137.3838832,
+    -4.8005631
+   ],
+   [
+    137.3838832,
+    -4.8006306
+   ],
+   [
+    137.3838832,
+    -4.800698
+   ],
+   [
+    137.3838832,
+    -4.8007655
+   ],
+   [
+    137.3838832,
+    -4.800833
+   ],
+   [
+    137.3838157,
+    -4.8009005
+   ],
+   [
+    137.3838157,
+    -4.800968
+   ],
+   [
+    137.3837482,
+    -4.8010355
+   ],
+   [
+    137.3836807,
+    -4.8011029
+   ],
+   [
+    137.3836132,
+    -4.8011704
+   ],
+   [
+    137.3835458,
+    -4.8012379
+   ],
+   [
+    137.3834783,
+    -4.8013054
+   ],
+   [
+    137.3834108,
+    -4.8013729
+   ],
+   [
+    137.3833433,
+    -4.8014404
+   ],
+   [
+    137.3832758,
+    -4.8015078
+   ],
+   [
+    137.3832083,
+    -4.8015753
+   ],
+   [
+    137.3832083,
+    -4.8016428
+   ],
+   [
+    137.3831409,
+    -4.8017103
+   ],
+   [
+    137.3831409,
+    -4.8017778
+   ],
+   [
+    137.3831409,
+    -4.8018452
+   ],
+   [
+    137.3831409,
+    -4.8019127
+   ],
+   [
+    137.3831409,
+    -4.8019802
+   ],
+   [
+    137.3831409,
+    -4.8020477
+   ],
+   [
+    137.3831409,
+    -4.8021152
+   ],
+   [
+    137.3831409,
+    -4.8021827
+   ],
+   [
+    137.3831409,
+    -4.8022501
+   ],
+   [
+    137.3831409,
+    -4.8023176
+   ],
+   [
+    137.3830734,
+    -4.8023851
+   ],
+   [
+    137.3830734,
+    -4.8024526
+   ],
+   [
+    137.3830734,
+    -4.8025201
+   ],
+   [
+    137.3830734,
+    -4.8025876
+   ],
+   [
+    137.3830734,
+    -4.802655
+   ],
+   [
+    137.3830734,
+    -4.8027225
+   ],
+   [
+    137.3830734,
+    -4.80279
+   ],
+   [
+    137.3830734,
+    -4.8028575
+   ],
+   [
+    137.3830734,
+    -4.802925
+   ],
+   [
+    137.3831409,
+    -4.8029924
+   ],
+   [
+    137.3831409,
+    -4.8030599
+   ],
+   [
+    137.3831409,
+    -4.8031274
+   ],
+   [
+    137.3831409,
+    -4.8031949
+   ],
+   [
+    137.3831409,
+    -4.8032624
+   ],
+   [
+    137.3831409,
+    -4.8033299
+   ],
+   [
+    137.3831409,
+    -4.8033973
+   ],
+   [
+    137.3831409,
+    -4.8034648
+   ],
+   [
+    137.3831409,
+    -4.8035323
+   ],
+   [
+    137.3831409,
+    -4.8035998
+   ],
+   [
+    137.3831409,
+    -4.8036673
+   ],
+   [
+    137.3831409,
+    -4.8037348
+   ],
+   [
+    137.3831409,
+    -4.8038022
+   ],
+   [
+    137.3831409,
+    -4.8038697
+   ],
+   [
+    137.3831409,
+    -4.8039372
+   ],
+   [
+    137.3831409,
+    -4.8040047
+   ],
+   [
+    137.3830734,
+    -4.8040722
+   ],
+   [
+    137.3830734,
+    -4.8041396
+   ],
+   [
+    137.3830734,
+    -4.8042071
+   ],
+   [
+    137.3830734,
+    -4.8042746
+   ],
+   [
+    137.3830734,
+    -4.8043421
+   ],
+   [
+    137.3830734,
+    -4.8044096
+   ],
+   [
+    137.3830734,
+    -4.8044771
+   ],
+   [
+    137.3830734,
+    -4.8045445
+   ],
+   [
+    137.3830734,
+    -4.804612
+   ],
+   [
+    137.3830734,
+    -4.8046795
+   ],
+   [
+    137.3830734,
+    -4.804747
+   ],
+   [
+    137.3830734,
+    -4.8048145
+   ],
+   [
+    137.3830734,
+    -4.804882
+   ],
+   [
+    137.3830734,
+    -4.8049494
+   ],
+   [
+    137.3830734,
+    -4.8050169
+   ],
+   [
+    137.3830734,
+    -4.8050844
+   ],
+   [
+    137.3830734,
+    -4.8051519
+   ],
+   [
+    137.3830734,
+    -4.8052194
+   ],
+   [
+    137.3830734,
+    -4.8052868
+   ],
+   [
+    137.3830734,
+    -4.8053543
+   ],
+   [
+    137.3830734,
+    -4.8054218
+   ],
+   [
+    137.3831409,
+    -4.8054893
+   ],
+   [
+    137.3831409,
+    -4.8055568
+   ],
+   [
+    137.3831409,
+    -4.8056243
+   ],
+   [
+    137.3832083,
+    -4.8056917
+   ],
+   [
+    137.3832083,
+    -4.8057592
+   ],
+   [
+    137.3832083,
+    -4.8058267
+   ],
+   [
+    137.3832083,
+    -4.8058942
+   ],
+   [
+    137.3831409,
+    -4.8059617
+   ],
+   [
+    137.3831409,
+    -4.8060292
+   ],
+   [
+    137.3831409,
+    -4.8060966
+   ],
+   [
+    137.3831409,
+    -4.8061641
+   ],
+   [
+    137.3831409,
+    -4.8062316
+   ],
+   [
+    137.3831409,
+    -4.8062991
+   ],
+   [
+    137.3831409,
+    -4.8063666
+   ],
+   [
+    137.3831409,
+    -4.8064341
+   ],
+   [
+    137.3831409,
+    -4.8065015
+   ],
+   [
+    137.3831409,
+    -4.806569
+   ],
+   [
+    137.3831409,
+    -4.8066365
+   ],
+   [
+    137.3831409,
+    -4.806704
+   ],
+   [
+    137.3830734,
+    -4.8067715
+   ],
+   [
+    137.3830734,
+    -4.8068389
+   ],
+   [
+    137.3830734,
+    -4.8069064
+   ],
+   [
+    137.3830734,
+    -4.8069739
+   ],
+   [
+    137.3830734,
+    -4.8070414
+   ],
+   [
+    137.3830734,
+    -4.8071089
+   ],
+   [
+    137.3830734,
+    -4.8071764
+   ],
+   [
+    137.3830734,
+    -4.8072438
+   ],
+   [
+    137.3830734,
+    -4.8073113
+   ],
+   [
+    137.3830734,
+    -4.8073788
+   ],
+   [
+    137.3830059,
+    -4.8074463
+   ],
+   [
+    137.3829384,
+    -4.8075138
+   ],
+   [
+    137.3828709,
+    -4.8075813
+   ],
+   [
+    137.3828034,
+    -4.8076487
+   ],
+   [
+    137.382736,
+    -4.8077162
+   ],
+   [
+    137.3826685,
+    -4.8077837
+   ],
+   [
+    137.382601,
+    -4.8078512
+   ]
+  ]
+ },
+ "rideback": null,
+ "assumptions": {
+  "eva.body_kg": {
+   "value": 75.0,
+   "kind": "modelado",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.load_kg": {
+   "value": 45.0,
+   "kind": "modelado",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.g_ratio": {
+   "value": 0.37943640284908714,
+   "kind": "físico",
+   "source": "3.721 / 9.80665"
+  },
+  "eva.suit_multiplier": {
+   "value": 1.25,
+   "kind": "modelado",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.terrain_factor_eta": {
+   "value": 1.2,
+   "kind": "modelado",
+   "source": "Pandolf et al. 1977"
+  },
+  "eva.v_nominal_m_s": {
+   "value": 0.75,
+   "kind": "modelado",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.caution_speed_factor": {
+   "value": 0.6,
+   "kind": "supuesto",
+   "source": "mission_params.json"
+  },
+  "eva.stop_rate_W": {
+   "value": 220.0,
+   "kind": "modelado",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.kJ_per_L_O2": {
+   "value": 20.1,
+   "kind": "modelado",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.o2_capacity_L": {
+   "value": 300.0,
+   "kind": "modelado",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.return_safety_factor": {
+   "value": 1.3,
+   "kind": "supuesto",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "eva.caution_margin_threshold": {
+   "value": 0.2,
+   "kind": "supuesto",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "scenario.suit_leak_multiplier": {
+   "value": 1.5,
+   "kind": "supuesto",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "scenario.injury_speed_multiplier": {
+   "value": 0.5,
+   "kind": "supuesto",
+   "source": "Pandolf, Givoni & Goldman (1977) J. Appl. Physiol. 43(4), scaled to 0.38g + NASA-STD-3001 xEMU PLSS"
+  },
+  "scenario.dust_storm_speed_factor": {
+   "value": 0.7,
+   "kind": "supuesto",
+   "source": "Curiosity Mastcam Solar Tau & MRO MARCI Context"
+  },
+  "radiation.gcr_dose_mSv_per_sol": {
+   "value": 0.64,
+   "kind": "medido",
+   "source": "Curiosity RAD Surface Measurements (Hassler et al. 2014, Science 343)"
+  },
+  "radiation.sep_dose_rate_mSv_per_h": {
+   "value": 15.0,
+   "kind": "modelado",
+   "source": "NASA DONKI & RAD SPE Modeling (Guo et al. 2026)"
+  },
+  "radiation.eva_nominal_budget_mSv": {
+   "value": 0.15,
+   "kind": "supuesto",
+   "source": "NASA-STD-3001 Spaceflight Human-System Standard"
+  },
+  "eva.science_radius_m": {
+   "value": 15.0,
+   "kind": "supuesto",
+   "source": "mission_params.json"
+  },
+  "eva.slope_caution_deg": {
+   "value": 10.0,
+   "kind": "supuesto",
+   "source": "NASA EVA Walkback & Apollo/Constellation Slope Traversability Thresholds"
+  },
+  "eva.slope_nogo_deg": {
+   "value": 20.0,
+   "kind": "supuesto",
+   "source": "NASA EVA Walkback & Apollo/Constellation Slope Traversability Thresholds"
+  },
+  "rover.mass_kg": {
+   "value": 4000.0,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.crr": {
+   "value": 0.15,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.drivetrain_eff": {
+   "value": 0.8,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.hotel_kW": {
+   "value": 1.5,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.battery_kWh": {
+   "value": 100.0,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.battery_reserve_fraction": {
+   "value": 0.3,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.v_nominal_kmh": {
+   "value": 5.0,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.v_caution_kmh": {
+   "value": 3.0,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.v_max_kmh": {
+   "value": 10.0,
+   "kind": "medido (NASA SEV, ~10 km/h)",
+   "source": "mission_params.json → rover"
+  },
+  "rover.cabin_dose_factor": {
+   "value": 0.5,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.slope_caution_deg": {
+   "value": 15.0,
+   "kind": "supuesto (referencia LRV 25°, NASA TM X-64623, a verificar)",
+   "source": "mission_params.json → rover"
+  },
+  "rover.slope_nogo_deg": {
+   "value": 25.0,
+   "kind": "supuesto (referencia LRV 25°, NASA TM X-64623, a verificar)",
+   "source": "mission_params.json → rover"
+  },
+  "rover.no_night_drive": {
+   "value": true,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.egress_min": {
+   "value": 30.0,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "rover.ingress_min": {
+   "value": 30.0,
+   "kind": "supuesto",
+   "source": "mission_params.json → rover"
+  },
+  "window.eva_start": {
+   "value": 9.5,
+   "kind": "modelado",
+   "source": "env.json → eva_window"
+  },
+  "window.eva_end": {
+   "value": 15.5,
+   "kind": "modelado",
+   "source": "env.json → eva_window"
+  },
+  "window.eva_max_duration_min": {
+   "value": 360.0,
+   "kind": "modelado",
+   "source": "env.json → eva_window"
+  },
+  "window.sunrise": {
+   "value": 5.8,
+   "kind": "modelado",
+   "source": "Mars24 Sunclock & MSL Curiosity Ephemeris"
+  },
+  "window.sunset": {
+   "value": 17.866666666666667,
+   "kind": "modelado",
+   "source": "Mars24 Sunclock & MSL Curiosity Ephemeris"
+  },
+  "profile.scientific": {
+   "value": {
+    "w_risk": 1.0,
+    "w_science": 0.5
+   },
+   "kind": "supuesto",
+   "source": "env.json → reference_eva.profiles + mission_params.json"
+  },
+  "profile.fast": {
+   "value": {
+    "w_risk": 0.0,
+    "w_science": 0.0
+   },
+   "kind": "supuesto",
+   "source": "env.json → reference_eva.profiles + mission_params.json"
+  },
+  "profile.safe": {
+   "value": {
+    "w_risk": 3.5,
+    "w_science": 0.1
+   },
+   "kind": "supuesto",
+   "source": "env.json → reference_eva.profiles + mission_params.json"
+  },
+  "base.lonlat": {
+   "value": [
+    137.42009295,
+    -4.59310427
+   ],
+   "kind": "propuesta",
+   "source": "Calef III et al. 2015, First Landing Site/EZ Workshop (NASA) — team-provided coordinates"
+  },
+  "terrain.local": {
+   "value": {
+    "cell_size_m": 4.0,
+    "shape": [
+     501,
+     503
+    ]
+   },
+   "kind": "synthetic",
+   "source": "Synthetic boxwork DEM (fitted to target elevations)"
+  }
+ }
+}

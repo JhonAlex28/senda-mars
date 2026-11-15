@@ -5,8 +5,9 @@ from __future__ import annotations
 from typing import Protocol
 
 from senda.domain.models.environment import EnvironmentSnapshot
+from senda.domain.models.params import MissionParams
 from senda.domain.models.target import ScienceTarget
-from senda.domain.models.terrain import TerrainGrid
+from senda.domain.models.terrain import Scale, TerrainGrid
 
 
 class TargetRepository(Protocol):
@@ -19,4 +20,9 @@ class EnvironmentRepository(Protocol):
 
 
 class TerrainProvider(Protocol):
-    def get_grid(self) -> TerrainGrid: ...
+    """local = boxwork (EVA, classes_human); regional = corredor (rover, classes_rover)."""
+    def get_grid(self, scale: Scale) -> TerrainGrid: ...
+
+
+class MissionParamsRepository(Protocol):
+    def get(self) -> MissionParams: ...

@@ -12,6 +12,7 @@ _BACKEND_ROOT = Path(__file__).resolve().parents[2]
 class Settings:
     data_dir: Path
     cors_origins: list[str]
+    max_planning_cells: int = 300_000
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -22,4 +23,5 @@ class Settings:
         return cls(
             data_dir=data_dir,
             cors_origins=[o.strip() for o in origins.split(",") if o.strip()],
+            max_planning_cells=int(os.getenv("SENDA_MAX_PLANNING_CELLS", "300000")),
         )

@@ -1,0 +1,38 @@
+[
+ {
+  "id": "none",
+  "label": "Nominal",
+  "effect": "No contingency.",
+  "kind": "supuesto"
+ },
+ {
+  "id": "dust_storm",
+  "label": "Dust storm",
+  "effect": "Walking speed × dust_storm_speed_factor (0.70) and terrain risk × 1.5 (env.json → dust).",
+  "kind": "supuesto"
+ },
+ {
+  "id": "sep_event",
+  "label": "Solar particle event",
+  "effect": "Dose rate + unshielded SEP rate (env.json → radiation.solar_storm); return to shelter.",
+  "kind": "modelado"
+ },
+ {
+  "id": "suit_leak",
+  "label": "Suit leak",
+  "effect": "O2 consumption × suit_leak_multiplier (1.5) from the event on.",
+  "kind": "supuesto"
+ },
+ {
+  "id": "injury",
+  "label": "Crew injury",
+  "effect": "Walking speed × injury_speed_multiplier (0.5) from the event on.",
+  "kind": "supuesto"
+ },
+ {
+  "id": "blocked_path",
+  "label": "Blocked path",
+  "effect": "Terrain ahead becomes no-go (10 m radius) → replanning from the current position.",
+  "kind": "supuesto"
+ }
+]
