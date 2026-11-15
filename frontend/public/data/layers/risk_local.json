@@ -1,0 +1,20 @@
+{
+  "layer": "risk_local",
+  "scale": "local",
+  "bbox_lonlat": [
+    137.37203798970677,
+    -4.812609965455096,
+    137.40596477607644,
+    -4.7787844027145745
+  ],
+  "shape": [
+    2005,
+    2011
+  ],
+  "units": "normalized_risk_0_1",
+  "thresholds": [
+    0.33,
+    0.66
+  ],
+  "source": "risk.npy"
+}
