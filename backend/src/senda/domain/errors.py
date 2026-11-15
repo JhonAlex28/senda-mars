@@ -20,3 +20,8 @@ class OutsideSite(DomainError):
 
 class InvalidRequest(DomainError):
     pass
+
+
+class AssistantUnavailable(DomainError):
+    def __init__(self, detail: str) -> None:
+        super().__init__(f"Assistant unavailable: {detail}")

@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useCallback, useMemo, type ReactNode } from 'react';
 import { WeatherStrip, useReadiness, type Readiness } from '@/features/environment';
 import { ExecutionView, buildItinerary } from '@/features/field-simulation';
 import { LayersPanel } from '@/features/layers';
@@ -9,6 +9,7 @@ import {
   EvaPanel,
   GoalsCard,
   LaunchCard,
+  MarsWeatherCard,
   MissionHeader,
   PlanningMap,
   TraversePanel,
@@ -63,9 +64,11 @@ function PlanView({ projection, site, readiness }: ViewProps) {
 
   return (
     <>
-      <div className="grid min-h-0 flex-1 grid-cols-[260px_1fr_380px] gap-md p-md">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[260px_1fr_380px]">
         <aside className="scroll-thin flex min-h-0 flex-col gap-md overflow-y-auto">
           <LayersPanel />
+          <MarsWeatherCard readiness={readiness} />
+          <SuppliesCard pct={route?.resource.remaining_pct ?? null} hint="Rover battery left at the end of the chosen path" />
         </aside>
         <PlanningMap projection={projection} site={site} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto pr-xs">
@@ -75,15 +78,13 @@ function PlanView({ projection, site, readiness }: ViewProps) {
           {ready && <LaunchCard readiness={readiness} />}
         </aside>
       </div>
-      <WeatherStrip readiness={readiness}>
-        <SuppliesCard pct={route?.resource.remaining_pct ?? null} hint="Rover battery left at the end of the chosen path" />
-      </WeatherStrip>
     </>
   );
 }
 
 function GoView({ projection, site, readiness }: ViewProps) {
-  const { state, dispatch, targets } = useMission();
+  const { state, dispatch, targets, addProcedureRecord } = useMission();
+  const onProcedureCompleted = useCallback((targetId: string) => addProcedureRecord(targetId), [addProcedureRecord]);
   // El itinerario se fija al entrar en Go: la simulación trabaja sobre su propia copia
   const legs = useMemo(() => {
     const rover = selectedTraverse(state);
@@ -101,8 +102,13 @@ function GoView({ projection, site, readiness }: ViewProps) {
       hazards={state.hazards}
       parkings={state.traverse.parkings}
       targets={targets}
+      onProcedureCompleted={onProcedureCompleted}
       projection={projection}
       site={site}
+      vehicleId={state.vehicleId}
+      vehicleSpeedKmh={state.vehicleSpeedKmh}
+      crew={state.crew}
+      quantumSummary={state.quantumSummary}
       renderFooter={(supplies: ReactNode) => <WeatherStrip readiness={readiness}>{supplies}</WeatherStrip>}
       onReplan={() => dispatch({ type: 'setPhase', phase: 'plan' })}
       onExit={() => dispatch({ type: 'backToGlobe' })}

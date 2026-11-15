@@ -2,6 +2,7 @@ import type { MissionAction, MissionState } from './types';
 
 export const initialMissionState: MissionState = {
   phase: 'globe',
+  missionId: 'mount-sharp',
   base: null,
   goals: [],
   hazards: [],
@@ -11,6 +12,17 @@ export const initialMissionState: MissionState = {
   traverseProfile: 'safe',
   activeParkingId: null,
   evaPlans: {},
+  vehicleId: 'SEV_PRESSURIZED',
+  vehicleSpeedKmh: 8.0,
+  crew: {
+    teamName: 'SENDA-ARES CREW',
+    members: [
+      { id: 'EVA-1', name: 'WATNEY', role: 'CDR', suitId: 'xEMU-01', restingBpm: 68, massKg: 78 },
+      { id: 'EVA-2', name: 'LEWIS', role: 'GEO', suitId: 'xEMU-02', restingBpm: 64, massKg: 68 },
+    ],
+  },
+  env: { tau: 0.62, lmstHour: 13, speActive: false },
+  quantumSummary: null,
   notice: null,
 };
 
@@ -37,7 +49,7 @@ function move<T>(list: T[], from: number, to: number): T[] {
 export function missionReducer(state: MissionState, action: MissionAction): MissionState {
   switch (action.type) {
     case 'openMission':
-      return { ...state, phase: 'plan' };
+      return { ...state, missionId: action.missionId, phase: 'plan' };
     case 'backToGlobe':
       return { ...state, phase: 'globe' };
     case 'setPhase':
@@ -95,7 +107,72 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       return { ...state, evaPlans: { ...state.evaPlans, [action.parkingId]: { ...plan, profile: action.profile } } };
     }
 
+    case 'setVehicle':
+      return { ...state, vehicleId: action.vehicleId };
+    case 'setVehicleSpeed':
+      return { ...state, vehicleSpeedKmh: action.speedKmh };
+    case 'setCrew':
+      return { ...state, crew: action.crew };
+    case 'setEnv':
+      return { ...state, env: { ...state.env, ...action.env } };
+    case 'applyQuantumGoals':
+      return invalidatePlan(
+        { ...state, goals: action.goals, quantumSummary: action.summary },
+        `IBM Quantum QAOA (${action.summary.bestBitstring}) updated your mission sequence.`,
+      );
+    case 'loadDemo':
+      return {
+        ...state,
+        phase: 'plan',
+        goals: action.goals,
+        traverse: null,
+        evaPlans: {},
+        activeParkingId: null,
+        tool: 'select',
+        notice: 'Quick Demo loaded (3 Gale Crater science targets). Click "Find Rover Routes" to compute traverse!',
+      };
+    case 'resetMission':
+      return {
+        ...initialMissionState,
+        phase: 'plan',
+        base: state.base,
+        crew: state.crew,
+        notice: 'Mission reset. Select science targets or click Quick Demo.',
+      };
+
     case 'dismissNotice':
       return { ...state, notice: null };
+
+    case 'planLoaded':
+      return {
+        ...state,
+        phase: 'walk',
+        tool: 'select',
+        goals: action.goals,
+        hazards: action.hazards,
+        traverse: action.traverse,
+        traverseProfile: action.traverseProfile,
+        evaPlans: action.evaPlans,
+        activeParkingId: action.traverse.parkings[0]?.id ?? null,
+        focusedTargetId: null,
+        notice: null,
+      };
+    case 'viewChanged': {
+      let next = state;
+      if (action.profile) {
+        const profile = action.profile;
+        const evaPlans = Object.fromEntries(
+          Object.entries(state.evaPlans).map(([id, plan]) => [id, { ...plan, profile }]),
+        );
+        next = { ...next, traverseProfile: profile, evaPlans };
+      }
+      // Solo se abre una pantalla si lo que necesita ya está planificado
+      const phase = action.phase;
+      const allowed =
+        phase === 'plan' ||
+        (phase === 'walk' && !!next.traverse) ||
+        (phase === 'go' && !!next.traverse && next.traverse.parkings.every((p) => next.evaPlans[p.id]));
+      return phase && allowed ? { ...next, phase, tool: 'select', focusedTargetId: null } : next;
+    }
   }
 }

@@ -8,12 +8,15 @@ Cada uno devuelve las tres alternativas (safe, scientific, fast) para que el usu
 """
 from __future__ import annotations
 
+from dataclasses import replace
+
 import numpy as np
 
 from senda.application.planner_context import PlannerContext, hazard_mask
 from senda.application.route_mapper import eva_to_plan, rover_to_plan
 from senda.domain.errors import NoRouteFound
 from senda.domain.models.geo import GeoPoint
+from senda.domain.models.params import RoverParams
 from senda.domain.models.route import (Conditions, Hazard, RoutePlan, RouteProfile, StopKind,
                                        TraversePlan, TravelMode, Waypoint)
 from senda.domain.models.target import ScienceTarget
@@ -103,9 +106,14 @@ class PlanTraverse:
         self._p = _Planner(ctx)
 
     def execute(self, base: GeoPoint, target_ids: list[str], hazards: list[Hazard],
-                conditions: Conditions) -> TraversePlan:
+                conditions: Conditions, vehicle_id: str | None = None,
+                speed_kmh: float | None = None) -> TraversePlan:
+        """`vehicle_id`: solo el SEV presurizado está modelado (doc §0.4); cualquier otro id se
+        planifica con los parámetros del SEV. `speed_kmh` escala la velocidad nominal del SEV,
+        acotada a su máximo."""
         targets = self._p.resolve_targets(target_ids)
         ctx = self._p.ctx
+        conditions = with_cruise_speed(conditions, speed_kmh, ctx.params.rover)
         grid = ctx.regional()
         ctx.regional_cell(base, "base")            # valida que la base esté en el área de misión
         for t in targets:
@@ -149,3 +157,10 @@ class PlanPath:
 def target_stop(t: ScienceTarget) -> Waypoint:
     return Waypoint(t.location, StopKind.TARGET, t.id, t.task_minutes)
 
+
+def with_cruise_speed(cond: Conditions, speed_kmh: float | None, rover: RoverParams) -> Conditions:
+    """Velocidad de crucero pedida por la UI → factor sobre la nominal del SEV (≤ v_max)."""
+    if speed_kmh is None or speed_kmh <= 0:
+        return cond
+    factor = min(speed_kmh, rover.v_max_kmh) / rover.v_nominal_kmh
+    return replace(cond, speed_factor=cond.speed_factor * factor)

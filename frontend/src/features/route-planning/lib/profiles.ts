@@ -20,8 +20,8 @@ export const PROFILE_META: Record<RouteProfile, ProfileMeta> = {
   scientific: {
     label: 'Science route',
     hint: 'Goes past more interesting rocks on the way.',
-    color: '#D9532B',
-    swatch: 'bg-primary',
+    color: '#A78BFA',
+    swatch: 'bg-route-science',
     dashed: true,
   },
   fast: {

@@ -1,5 +1,6 @@
-import { createContext, useContext, useMemo, useReducer, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useReducer, useState, type ReactNode } from 'react';
 import { LAYERS, type LayerId } from '../catalog';
+import { subscribeRasterUpdates } from '../lib/rasters';
 
 export interface LayerView {
   visible: boolean;
@@ -10,7 +11,7 @@ type LayersState = Record<LayerId, LayerView>;
 type LayersAction = { type: 'toggle'; id: LayerId } | { type: 'opacity'; id: LayerId; opacity: number };
 
 const initial = Object.fromEntries(
-  LAYERS.map((l) => [l.id, { visible: l.available, opacity: l.defaultOpacity }]),
+  LAYERS.map((l) => [l.id, { visible: l.available && (l.defaultVisible ?? true), opacity: l.defaultOpacity }]),
 ) as LayersState;
 
 function reducer(state: LayersState, action: LayersAction): LayersState {
@@ -32,6 +33,8 @@ const LayersContext = createContext<LayersValue | null>(null);
 /** Qué capas se ven y con qué opacidad. Lo comparten el panel y los mapas (Plan y Simulation). */
 export function LayersProvider({ children }: { children: ReactNode }) {
   const [layers, dispatch] = useReducer(reducer, initial);
+  const [rasterVersion, setRasterVersion] = useState(0);
+  useEffect(() => subscribeRasterUpdates(() => setRasterVersion((v) => v + 1)), []);
   const value = useMemo<LayersValue>(
     () => ({
       layers,
@@ -39,7 +42,7 @@ export function LayersProvider({ children }: { children: ReactNode }) {
       toggle: (id) => dispatch({ type: 'toggle', id }),
       setOpacity: (id, opacity) => dispatch({ type: 'opacity', id, opacity }),
     }),
-    [layers],
+    [layers, rasterVersion],
   );
   return <LayersContext.Provider value={value}>{children}</LayersContext.Provider>;
 }

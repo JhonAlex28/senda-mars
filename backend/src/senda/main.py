@@ -5,8 +5,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from senda.adapters.inbound.http.routers import (environment, health, mission, routes, safety,
-                                                 simulate, targets, terrain)
+from senda.adapters.inbound.http.routers import (assistant, environment, health, mission, quantum,
+                                                 routes, safety, simulate, targets, terrain)
 from senda.container import get_container
 from senda.domain.errors import InvalidRequest, NoRouteFound, OutsideSite, TargetNotFound
 
@@ -34,7 +34,7 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router)
     for r in (targets.router, environment.router, terrain.router, routes.router,
-              mission.router, simulate.router, safety.router):
+              mission.router, simulate.router, safety.router, assistant.router, quantum.router):
         app.include_router(r, prefix=API_PREFIX)
     return app
 

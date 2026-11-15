@@ -64,7 +64,7 @@ class CompositeTerrainProvider:
     Si la grilla supera `max_cells`, la submuestrea para planificar (< 5 s, doc §6.3),
     reclasificando la pendiente con los umbrales de la escala (`slopes`) si se dan."""
 
-    def __init__(self, real: NpyTerrainProvider, fallback, root: Path,
+    def __init__(self, real: NpyTerrainProvider, fallback, root: Path | None,
                  max_cells: int = 300_000,
                  slopes: dict[Scale, tuple[float, float]] | None = None) -> None:
         self._real = real
@@ -76,7 +76,8 @@ class CompositeTerrainProvider:
 
     def get_grid(self, scale: Scale) -> TerrainGrid:
         if scale not in self._cache:
-            src = (self._real if NpyTerrainProvider.available(self._root, scale) else self._fallback)
+            use_real = self._root is not None and NpyTerrainProvider.available(self._root, scale)
+            src = self._real if use_real else self._fallback
             grid = src.get_grid(scale)
             n = grid.spec.rows * grid.spec.cols
             factor = math.ceil(math.sqrt(n / self._max_cells)) if n > self._max_cells else 1

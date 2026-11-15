@@ -2,6 +2,7 @@ import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { distinctProfiles, routeFor } from '../lib/profiles';
 import type { RoutePlan, RouteProfile } from '../types';
+import { ElevationProfileSVG } from './ElevationProfileSVG';
 import { RouteAlternative, RouteDetails } from './RouteOptionCard';
 
 interface RouteComparatorProps {
@@ -24,9 +25,24 @@ export function RouteComparator({ title, routes, selected, onSelect }: RouteComp
     .map((p) => routeFor(routes, p))
     .filter((r): r is RoutePlan => !!r);
 
+  const paretoScore = (r: RoutePlan) =>
+    (r.safety_pct / 100) * (r.resource.remaining_pct / 100) / Math.max(0.5, r.duration_min / 60);
+  const bestPareto = [...routes].sort((a, b) => paretoScore(b) - paretoScore(a))[0];
+
   return (
     <Card title={title} className="gap-sm">
+      <div className="flex items-center justify-between rounded border border-outline-variant bg-surface px-sm py-xs font-mono text-[10px]">
+        <span className="text-on-surface-variant">PARETO OPTIMAL:</span>
+        <span className="font-bold text-success">
+          {bestPareto.profile.toUpperCase()} ({bestPareto.safety_pct}% safety · {Math.round(bestPareto.resource.remaining_pct)}% reserve)
+        </span>
+      </div>
+      <div className="flex items-center justify-between rounded border border-accent/40 bg-accent/10 px-sm py-xs font-mono text-[10px]">
+        <span className="text-accent">⚛ IBM QUANTUM QAOA:</span>
+        <span className="text-on-surface-variant">Available in NASA Labs → IBM Quantum</span>
+      </div>
       <RouteDetails key={current.profile} route={current} />
+      <ElevationProfileSVG route={current} />
       {others.length > 0 ? (
         <div className="flex flex-col gap-xs">
           <p className="font-label text-label-sm uppercase text-on-surface-variant">Other options</p>

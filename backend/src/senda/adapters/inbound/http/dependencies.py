@@ -1,14 +1,22 @@
 """Inyección de dependencias de FastAPI hacia los casos de uso."""
 from __future__ import annotations
 
+from collections.abc import Callable
+
+from senda.application.assistant.tools import MissionContext, MissionTools
 from senda.application.planner_context import PlannerContext
+from senda.application.ports.outbound import AssistantModel
+from senda.application.use_cases.assistant import ChatWithAssistant
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
 from senda.application.use_cases.plan_mission import PlanMission
+from senda.application.use_cases.plan_outing import PlanOuting
 from senda.application.use_cases.plan_routes import PlanEva, PlanPath, PlanTraverse
+from senda.application.use_cases.quantum import OptimizeTargetsQuantum
 from senda.application.use_cases.return_field import GetReturnField, ListScenarios
 from senda.application.use_cases.simulate_eva import SimulateEva
 from senda.application.use_cases.targets import GetTarget, ListTargets
 from senda.application.use_cases.terrain import GetTerrain
+from senda.config import Settings
 from senda.container import get_container
 
 
@@ -64,3 +72,36 @@ def return_field_uc() -> GetReturnField:
 
 def list_scenarios_uc() -> ListScenarios:
     return ListScenarios()
+
+
+# --- Asistente y cuántico (main) --------------------------------------------
+def optimize_quantum_uc() -> OptimizeTargetsQuantum:
+    c = get_container()
+    return OptimizeTargetsQuantum(c.target_repo, c.quantum)
+
+
+def assistant_settings() -> Settings:
+    return get_container().settings
+
+
+def assistant_model() -> AssistantModel | None:
+    return get_container().assistant_model
+
+
+def chat_uc() -> Callable[[MissionContext], ChatWithAssistant] | None:
+    """Fábrica por petición: el registro de planes es propio de cada conversación y
+    las herramientas parten de lo que el usuario tiene en pantalla."""
+    c = get_container()
+    model = c.assistant_model
+    if model is None:
+        return None
+
+    def build(context: MissionContext) -> ChatWithAssistant:
+        assess = AssessReadiness(c.environment_repo)
+        targets = ListTargets(c.target_repo)
+        outing = PlanOuting(assess, targets, PlanTraverse(c.planner), PlanEva(c.planner))
+        tools = MissionTools(assess, GetEnvironment(c.environment_repo), targets, outing,
+                             c.knowledge, context)
+        return ChatWithAssistant(model, tools)
+
+    return build

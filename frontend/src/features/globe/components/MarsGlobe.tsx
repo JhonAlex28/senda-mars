@@ -21,8 +21,8 @@ export function MarsGlobe({ children }: { children?: ReactNode }) {
           <radialGradient id="mars-shade" cx="32%" cy="28%" r="80%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.22" />
             <stop offset="40%" stopColor="#FFFFFF" stopOpacity="0" />
-            <stop offset="85%" stopColor="#120D0D" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#120D0D" stopOpacity="0.85" />
+            <stop offset="85%" stopColor="#070D17" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#070D17" stopOpacity="0.85" />
           </radialGradient>
           <filter id="mars-noise" x="0" y="0" width="100%" height="100%">
             <feTurbulence type="fractalNoise" baseFrequency="0.011 0.018" numOctaves="5" seed="11" />
@@ -56,7 +56,7 @@ export function MarsGlobe({ children }: { children?: ReactNode }) {
           <path d={`M ${R - 150} ${R - 10} C ${R - 80} ${R - 30}, ${R - 20} ${R + 5}, ${R + 70} ${R - 15}`} stroke="#5A2010" strokeWidth={5} strokeOpacity={0.45} fill="none" strokeLinecap="round" />
         </g>
         <circle cx={R} cy={R} r={R - 1} fill="url(#mars-shade)" />
-        <circle cx={R} cy={R} r={R - 1} fill="none" stroke="#3D2B28" strokeOpacity={0.6} />
+        <circle cx={R} cy={R} r={R - 1} fill="none" stroke="#1F3352" strokeOpacity={0.6} />
       </svg>
       {children}
     </div>

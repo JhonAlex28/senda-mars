@@ -18,7 +18,7 @@ def plan_traverse(body: TraverseIn, uc: PlanTraverse = Depends(plan_traverse_uc)
     """Recorrido del rover: base → estacionamientos → base, en tres alternativas."""
     try:
         plan = uc.execute(body.base.to_domain(), body.target_ids, body.domain_hazards(),
-                          body.conditions.to_domain())
+                          body.conditions.to_domain(), body.vehicle_id, body.speed_kmh)
     except (TargetNotFound, NoRouteFound, OutsideSite, InvalidRequest) as e:
         raise _http_error(e) from e
     return TraverseOut.from_domain(plan)

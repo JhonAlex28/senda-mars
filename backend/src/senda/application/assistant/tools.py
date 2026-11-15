@@ -1,0 +1,333 @@
+"""Herramientas del asistente: cada una delega en un caso de uso existente.
+
+El asistente no calcula nada por su cuenta. Las cifras que recibe son un resumen de lo que
+devolvió el planificador; los planes completos y los cambios de vista se guardan en
+`MissionTools.log`, y el frontend los aplica tal cual en la pantalla del usuario."""
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass, field
+from typing import Any, Callable
+
+from senda.application.assistant.conversation import ToolCall, ToolResult, ToolSpec
+from senda.application.ports.outbound import KnowledgeBase
+from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
+from senda.application.use_cases.plan_outing import OutingPlan, PlanOuting
+from senda.application.use_cases.targets import ListTargets
+from senda.domain.errors import DomainError, TargetNotFound
+from senda.domain.models.geo import GeoPoint
+from senda.domain.models.route import Conditions, Hazard, RoutePlan, RouteProfile
+from senda.domain.models.target import ScienceTarget
+from senda.domain.services.readiness import Readiness, Verdict
+
+PROFILES = [p.value for p in RouteProfile]
+SCREENS = ["plan", "walk", "go"]
+_SCREEN_WORDS = {"plan": "plan", "rover": "plan", "walk": "walk", "eva": "walk",
+                 "spacewalks": "walk", "go": "go", "simulation": "go", "simulate": "go",
+                 "start": "go"}
+
+SPECS: tuple[ToolSpec, ...] = (
+    ToolSpec(
+        "plan_outing",
+        "Plan a complete outing and load it on the user's screen. It checks the conditions, "
+        "picks science targets (by priority if none are given) that fit the time available, "
+        "plans the rover traverse and the walking EVA at each parking spot, and picks the "
+        "safest route that can return. Use it whenever the user asks for a route, outing, "
+        "plan, EVA, traverse or where to go.",
+        {"type": "object", "properties": {
+            "target_ids": {"type": "array", "items": {"type": "string"},
+                           "description": "Target ids in priority order. Omit to choose by "
+                                          "priority."},
+            "time_available_min": {"type": "number", "minimum": 30, "maximum": 720,
+                                   "description": "Total time the crew has, in minutes "
+                                                  "(3 hours = 180)."},
+            "profile": {"type": "string", "enum": PROFILES,
+                        "description": "Only if the user asks for one."},
+            "speed_factor": {"type": "number", "exclusiveMinimum": 0.1, "maximum": 1.5,
+                             "description": "0.7 for a dust storm. Default 1."},
+            "o2_multiplier": {"type": "number", "minimum": 1, "maximum": 3,
+                              "description": "1.5 for a suit leak. Default 1."},
+            "hazards": {"type": "array", "description": "New circular no-go zones.",
+                        "items": {"type": "object", "properties": {
+                            "lon": {"type": "number"}, "lat": {"type": "number"},
+                            "radius_m": {"type": "number", "exclusiveMinimum": 0,
+                                         "maximum": 500}},
+                            "required": ["lon", "lat", "radius_m"]}},
+        }},
+    ),
+    ToolSpec(
+        "adjust_view",
+        "Change what the user sees without planning again: the route profile and/or the "
+        "screen (plan = rover route, walk = spacewalks, go = start the simulation).",
+        {"type": "object", "properties": {
+            "profile": {"type": "string", "enum": PROFILES},
+            "screen": {"type": "string", "enum": SCREENS},
+        }},
+    ),
+    ToolSpec(
+        "get_mission_conditions",
+        "Current Martian environment and the EVA readiness verdict (go / caution / no_go) "
+        "with each measurement and its instrument. Only for questions about the weather or "
+        "conditions; to plan an outing use plan_outing, which checks them itself.",
+        {"type": "object", "properties": {}},
+    ),
+    ToolSpec(
+        "list_science_targets",
+        "All science targets: id, name, category, priority score (out of 15) and on-site task "
+        "duration. Use it when the user asks about the targets or places.",
+        {"type": "object", "properties": {}},
+    ),
+)
+
+
+@dataclass(frozen=True)
+class MissionContext:
+    """Lo que el usuario tiene ahora en pantalla (lo envía el frontend)."""
+    base: GeoPoint | None = None
+    goals: tuple[str, ...] = ()
+    hazards: tuple[Hazard, ...] = ()
+    has_plan: bool = False
+
+    def describe(self) -> str:
+        goals = ", ".join(self.goals) or "none"
+        plan = "a plan is loaded" if self.has_plan else "no plan loaded yet"
+        return (f"Current screen: selected targets: {goals}; danger zones marked: "
+                f"{len(self.hazards)}; {plan}.")
+
+
+@dataclass(frozen=True)
+class ViewChange:
+    profile: RouteProfile | None = None
+    screen: str | None = None
+
+
+@dataclass
+class PlanLog:
+    """Resultados reales de esta conversación, para aplicarlos en la pantalla."""
+    readiness: Readiness | None = None
+    outing: OutingPlan | None = None
+    view: ViewChange | None = None
+    tools_used: list[str] = field(default_factory=list)
+
+
+class InvalidToolInput(Exception):
+    pass
+
+
+def _explain_spec(topics: dict[str, str]) -> ToolSpec:
+    listing = "; ".join(f"{name} ({title})" for name, title in topics.items())
+    return ToolSpec(
+        "explain_system",
+        "Official SENDA documentation on one topic. Use it to explain how SENDA works. "
+        f"Topics: {listing}.",
+        {"type": "object",
+         "properties": {"topic": {"type": "string", "enum": list(topics)}},
+         "required": ["topic"]},
+    )
+
+
+class MissionTools:
+    """Ejecuta las llamadas a herramientas del modelo contra los casos de uso."""
+
+    def __init__(self, assess: AssessReadiness, environment: GetEnvironment,
+                 targets: ListTargets, outing: PlanOuting, knowledge: KnowledgeBase,
+                 context: MissionContext = MissionContext()) -> None:
+        self._assess = assess
+        self._environment = environment
+        self._targets = targets
+        self._outing = outing
+        self._knowledge = knowledge
+        self._context = context
+        self.specs: tuple[ToolSpec, ...] = (*SPECS, _explain_spec(knowledge.topics()))
+        self.log = PlanLog()
+        self._handlers: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
+            "plan_outing": self._plan_outing,
+            "adjust_view": self._adjust_view,
+            "get_mission_conditions": self._conditions,
+            "list_science_targets": self._list_targets,
+            "explain_system": self._explain,
+        }
+
+    def context_note(self) -> str:
+        """Estado de la pantalla y catálogo de objetivos: así el modelo no inventa ids."""
+        science = sorted((t for t in self._targets.execute() if not t.is_base),
+                         key=lambda t: -t.rubric.total)
+        catalog = "; ".join(f"{t.id} = {t.name} (priority {t.rubric.total})" for t in science)
+        return f"{self._context.describe()}\nValid target ids, by priority: {catalog}."
+
+    def execute(self, call: ToolCall) -> ToolResult:
+        self.log.tools_used.append(call.name)
+        handler = self._handlers.get(call.name)
+        if handler is None:
+            return ToolResult(call.id, f"Unknown tool '{call.name}'", is_error=True)
+        try:
+            payload = handler(call.arguments or {})
+        except TargetNotFound as e:
+            valid = ", ".join(t.id for t in self._targets.execute() if not t.is_base)
+            return ToolResult(call.id, f"{e}. Valid target ids: {valid}", is_error=True)
+        except (DomainError, InvalidToolInput) as e:
+            return ToolResult(call.id, str(e), is_error=True)
+        return ToolResult(call.id, json.dumps(payload, ensure_ascii=False))
+
+    # ---------- handlers ----------
+
+    def _plan_outing(self, args: dict[str, Any]) -> dict[str, Any]:
+        ids = args.get("target_ids") or None
+        if ids is not None and not (isinstance(ids, list) and all(isinstance(i, str) for i in ids)):
+            raise InvalidToolInput("target_ids must be a list of target ids")
+        if ids:   # el modelo a veces copia "T05 Valle de la Luna": vale el id inicial
+            bases = {t.id for t in self._targets.execute() if t.is_base}
+            ids = [i.strip().split()[0].strip(",;:") for i in ids if i.strip()]
+            ids = [i for i in ids if i not in bases] or None
+        budget = _number(args, "time_available_min", None, 30, 720)
+        conditions = Conditions(_number(args, "speed_factor", 1.0, 0.1, 1.5),
+                                _number(args, "o2_multiplier", 1.0, 1.0, 3.0))
+        hazards = [*self._context.hazards, *_hazards(args.get("hazards"))]
+        plan = self._outing.execute(self._context.base or self._base().location, ids, budget,
+                                    hazards, conditions, _profile(args.get("profile")))
+        self.log.outing = plan
+        self.log.readiness = plan.readiness
+        self.log.view = None   # el plan nuevo trae su propia vista
+        return _outing_summary(plan, self._names())
+
+    def _adjust_view(self, args: dict[str, Any]) -> dict[str, Any]:
+        # Los modelos pequeños confunden los campos (profile="go"): se interpreta cada valor
+        # por lo que significa, no por el campo en que llegó.
+        values = [str(v).strip().lower() for v in (args.get("profile"), args.get("screen")) if v]
+        profile = next((RouteProfile(v) for v in values if v in PROFILES), None)
+        screen = next((_SCREEN_WORDS[v] for v in values if v in _SCREEN_WORDS), None)
+        if profile is None and screen is None:
+            raise InvalidToolInput(f"Give a profile ({PROFILES}) and/or a screen ({SCREENS})")
+        if not (self.log.outing or self._context.has_plan):
+            raise InvalidToolInput("There is no plan on screen yet; call plan_outing first")
+        self.log.view = ViewChange(profile, screen)
+        return {"applied": True, "profile": profile.value if profile else None,
+                "screen": screen}
+
+    def _conditions(self, _: dict[str, Any]) -> dict[str, Any]:
+        readiness = self._assess.execute()
+        env = self._environment.execute()
+        self.log.readiness = readiness
+        return {
+            "sol": env.sol,
+            "local_solar_time": env.local_solar_time,
+            "note": "Single snapshot of the current sol; no forecast is available.",
+            "temp_min_c": env.temp_min_c,
+            "temp_max_c": env.temp_max_c,
+            "verdict": readiness.verdict.value,
+            "checks": [{"label": c.label, "value": c.value, "unit": c.unit,
+                        "verdict": c.verdict.value, "source": c.source}
+                       for c in readiness.checks],
+        }
+
+    def _list_targets(self, _: dict[str, Any]) -> dict[str, Any]:
+        science = sorted((t for t in self._targets.execute() if not t.is_base),
+                         key=lambda t: -t.rubric.total)
+        return {"targets_by_priority": [_target_summary(t) for t in science]}
+
+    def _explain(self, args: dict[str, Any]) -> dict[str, Any]:
+        topic = str(args.get("topic", ""))
+        text = self._knowledge.get(topic)
+        if text is None:
+            available = ", ".join(self._knowledge.topics())
+            raise InvalidToolInput(f"Unknown topic '{topic}'. Available: {available}")
+        return {"topic": topic, "content": text}
+
+    # ---------- helpers ----------
+
+    def _base(self) -> ScienceTarget:
+        base = next((t for t in self._targets.execute() if t.is_base), None)
+        if base is None:
+            raise InvalidToolInput("The site has no base defined")
+        return base
+
+    def _names(self) -> dict[str, ScienceTarget]:
+        return {t.id: t for t in self._targets.execute()}
+
+
+def _outing_summary(plan: OutingPlan, targets: dict[str, ScienceTarget]) -> dict[str, Any]:
+    """Lo mínimo que el modelo necesita para explicar el plan, con unidades explícitas."""
+    def name(i: str) -> str:
+        return targets[i].name if i in targets else i
+
+    out: dict[str, Any] = {"verdict": plan.readiness.verdict.value,
+                           "planned": plan.planned}
+    flagged = [c for c in plan.readiness.checks if c.verdict is not Verdict.GO]
+    if flagged:
+        out["conditions_flagged"] = [f"{c.label}: {c.value} {c.unit} ({c.verdict.value}, "
+                                     f"{c.source})" for c in flagged]
+    if not plan.planned:
+        out["why_not_planned"] = ("conditions are no_go" if plan.readiness.verdict is Verdict.NO_GO
+                                  else "no target has a safe return")
+        out["dropped"] = [{"id": d.id, "name": name(d.id), "reason": d.reason}
+                          for d in plan.dropped]
+        return out
+
+    rover = plan.chosen_traverse()
+    out.update({
+        "shown_on_screen": True,
+        "targets": [{"id": i, "name": name(i), "priority": targets[i].rubric.total,
+                     "task_min": targets[i].task_minutes}
+                    for i in plan.target_ids if i in targets and not targets[i].is_base],
+        "dropped": [{"id": d.id, "name": name(d.id),
+                     "reason": "not enough time" if d.reason == "time" else "no safe return"}
+                    for d in plan.dropped],
+        "time_available_min": plan.budget_min,
+        "total_duration_min": plan.total_min,
+        "rover": _leg(rover, "battery_left_pct") if rover else None,
+        "spacewalks": [
+            {"parking": p.id, "targets": p.target_ids,
+             **_leg(r, "oxygen_left_pct")}
+            for p in plan.traverse.parkings if (r := plan.chosen_eva(p.id))
+        ],
+        "scenario": {"speed_factor": plan.conditions.speed_factor,
+                     "o2_multiplier": plan.conditions.o2_multiplier,
+                     "danger_zones": len(plan.hazards)},
+    })
+    return out
+
+
+def _leg(r: RoutePlan, resource_key: str) -> dict[str, Any]:
+    return {"profile": r.profile.value, "duration_min": round(r.duration_min, 1),
+            "distance_m": round(r.distance_m), "max_slope_deg": round(r.max_slope_deg, 1),
+            "safety_pct": r.safety_pct, resource_key: round(r.resource.remaining_pct, 1)}
+
+
+def _target_summary(t: ScienceTarget) -> dict[str, Any]:
+    return {"id": t.id, "name": t.name, "category": t.category,
+            "priority": t.rubric.total, "task_min": t.task_minutes,
+            "description": t.description}
+
+
+def _number(args: dict[str, Any], key: str, default: float | None,
+            low: float, high: float) -> Any:
+    raw = args.get(key)
+    if raw is None:
+        return default
+    try:
+        value = float(raw)
+    except (TypeError, ValueError) as e:
+        raise InvalidToolInput(f"{key} must be a number") from e
+    if not low <= value <= high:
+        raise InvalidToolInput(f"{key} must be between {low} and {high}")
+    return value
+
+
+def _profile(raw: Any) -> RouteProfile | None:
+    if raw in (None, ""):
+        return None
+    try:
+        return RouteProfile(raw)
+    except ValueError as e:
+        raise InvalidToolInput(f"profile must be one of {PROFILES}") from e
+
+
+def _hazards(raw: Any) -> list[Hazard]:
+    try:
+        hazards = [Hazard(GeoPoint(float(h["lon"]), float(h["lat"])), float(h["radius_m"]))
+                   for h in raw or []]
+    except (KeyError, TypeError, ValueError) as e:
+        raise InvalidToolInput(f"Invalid hazard: {e}") from e
+    if any(not 0 < h.radius_m <= 500 for h in hazards):
+        raise InvalidToolInput("hazard radius_m must be in (0, 500]")
+    return hazards

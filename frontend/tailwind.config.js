@@ -1,29 +1,32 @@
-/** Tokens de diseño SENDA (los mismos de los mockups). */
+/** Tokens de diseño SENDA. Paleta azul uniforme: primary = acciones, accent = realces,
+ *  mars = solo marca (logo, planeta). Los componentes usan estos tokens, no colores sueltos. */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        primary: '#D9532B',
-        'on-primary': '#161616',
-        accent: '#F0875A',
-        'on-accent': '#120D0D',
-        surface: '#120D0D',
-        'surface-container': '#1E1514',
-        'surface-container-high': '#2A1E1C',
-        'on-surface': '#FFFFFF',
-        'on-surface-variant': '#B8A9A7',
-        outline: '#3D2B28',
-        'outline-variant': '#2B1E1C',
+        primary: '#3B82F6',
+        'on-primary': '#FFFFFF',
+        mars: '#E05A2B',
+        accent: '#38BDF8',
+        'on-accent': '#070D17',
+        surface: '#070D17',
+        'surface-container': '#0D1626',
+        'surface-container-high': '#142138',
+        'on-surface': '#F0F6FC',
+        'on-surface-variant': '#8BA3C7',
+        outline: '#1F3352',
+        'outline-variant': '#15243B',
         success: '#22C55E',
         'on-success': '#052E16',
         warning: '#F59E0B',
         'on-warning': '#271A03',
         error: '#EF4444',
         'on-error': '#1C1C1C',
-        'route-fast': '#3B82F6',
+        'route-fast': '#38BDF8',
         'route-safe': '#22C55E',
+        'route-science': '#A78BFA',
       },
       spacing: { xs: '4px', sm: '8px', md: '16px', lg: '24px', xl: '32px', '2xl': '48px' },
       fontFamily: {
