@@ -8,6 +8,7 @@ from typing import Any, Protocol
 from senda.application.assistant.conversation import AssistantMessage, Message, ToolSpec
 from senda.domain.models.environment import EnvironmentSnapshot
 from senda.domain.models.geo import BoundingBox, GeoPoint
+from senda.domain.models.mission_log import Crew, ProcedureRecord, SavedPlan
 from senda.domain.models.target import ScienceTarget
 from senda.domain.models.terrain import TerrainGrid
 
@@ -53,3 +54,22 @@ class QuantumOptimizer(Protocol):
     def optimize(self, base: GeoPoint, targets: Sequence[ScienceTarget],
                  selected_goal_ids: Sequence[str], speed_kmh: float, qpu_backend: str,
                  layers: int, shots: int, noise_profile: str) -> dict[str, Any]: ...
+
+
+class PlanRepository(Protocol):
+    """Planes guardados por sol (base de datos)."""
+
+    def find(self, sol: int | None = None) -> list[SavedPlan]: ...
+    def get(self, plan_id: str) -> SavedPlan | None: ...
+    def save(self, plan: SavedPlan) -> SavedPlan: ...
+    def delete(self, plan_id: str) -> bool: ...
+
+
+class CrewRepository(Protocol):
+    def get(self) -> Crew | None: ...
+    def save(self, crew: Crew) -> Crew: ...
+
+
+class ProcedureRepository(Protocol):
+    def find(self, site_id: str | None = None) -> list[ProcedureRecord]: ...
+    def add(self, record: ProcedureRecord) -> ProcedureRecord: ...

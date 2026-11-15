@@ -21,3 +21,13 @@ class OutsideSite(DomainError):
 class AssistantUnavailable(DomainError):
     def __init__(self, detail: str) -> None:
         super().__init__(f"Assistant unavailable: {detail}")
+
+
+class PlanNotFound(DomainError):
+    def __init__(self, plan_id: str) -> None:
+        super().__init__(f"Saved plan '{plan_id}' not found")
+        self.plan_id = plan_id
+
+
+class InvalidMissionLog(DomainError):
+    """Dato inválido al guardar un plan, la tripulación o un procedimiento."""

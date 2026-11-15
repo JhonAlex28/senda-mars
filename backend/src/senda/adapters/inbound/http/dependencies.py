@@ -7,6 +7,7 @@ from senda.application.assistant.tools import MissionContext, MissionTools
 from senda.application.ports.outbound import AssistantModel
 from senda.application.use_cases.assistant import ChatWithAssistant
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
+from senda.application.use_cases.mission_log import CrewRoster, MissionCalendar, ProcedureLog
 from senda.application.use_cases.plan_outing import PlanOuting
 from senda.application.use_cases.plan_routes import PlanEva, PlanPath, PlanTraverse
 from senda.application.use_cases.quantum import OptimizeTargetsQuantum
@@ -54,6 +55,19 @@ def plan_path_uc() -> PlanPath:
 def optimize_quantum_uc() -> OptimizeTargetsQuantum:
     c = get_container()
     return OptimizeTargetsQuantum(c.target_repo, c.quantum)
+
+
+def mission_calendar_uc() -> MissionCalendar:
+    c = get_container()
+    return MissionCalendar(c.plans, c.environment_repo)
+
+
+def crew_roster_uc() -> CrewRoster:
+    return CrewRoster(get_container().crew)
+
+
+def procedure_log_uc() -> ProcedureLog:
+    return ProcedureLog(get_container().procedures)
 
 
 def assistant_settings() -> Settings:

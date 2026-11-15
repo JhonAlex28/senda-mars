@@ -18,6 +18,9 @@ class Settings:
     cors_origins: list[str]
     # "dem" = terreno real del USGS (data/terrain); "synthetic" = terreno por fórmula (demo)
     terrain: str = "dem"
+    # Registro de la misión (planes por sol, tripulación, procedimientos). SQLite por defecto;
+    # en la nube, un Postgres gratis (Neon, Supabase) con DATABASE_URL
+    database_url: str = ""
     # Asistente de IA local (Ollama). Desactivado por defecto: en Render no hay modelo
     assistant_enabled: bool = False
     llm_model: str = "qwen3:1.7b"
@@ -40,6 +43,8 @@ class Settings:
             data_dir=data_dir,
             cors_origins=[o.strip() for o in origins.split(",") if o.strip()],
             terrain=os.getenv("SENDA_TERRAIN", "dem").strip().lower(),
+            database_url=os.getenv("DATABASE_URL", "").strip()
+            or f"sqlite:///{(data_dir / 'senda.db').as_posix()}",
             assistant_enabled=_flag(os.getenv("SENDA_ASSISTANT_ENABLED", "false")),
             llm_model=os.getenv("SENDA_LLM_MODEL", "qwen3:1.7b"),
             ollama_url=os.getenv("SENDA_OLLAMA_URL", "http://localhost:11434"),

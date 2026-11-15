@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+from datetime import datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
@@ -11,6 +12,7 @@ from senda.application.use_cases.assistant import AssistantReply
 from senda.application.use_cases.plan_outing import OutingPlan
 from senda.domain.models.environment import EnvironmentSnapshot
 from senda.domain.models.geo import BoundingBox, GeoPoint
+from senda.domain.models.mission_log import Crew, CrewMember, ProcedureRecord, SavedPlan
 from senda.domain.models.route import (Conditions, Hazard, ParkingSpot, RoutePlan, RouteProfile,
                                        StopKind, TraversePlan, TravelMode, Waypoint)
 from senda.domain.models.target import ScienceTarget
@@ -447,3 +449,86 @@ class AssistantStatusOut(BaseModel):
     enabled: bool
     reachable: bool
     model: str | None
+
+
+# ---------- Registro de la misión ----------
+
+
+class PlanIn(BaseModel):
+    """Plan a guardar: el contenido que dibuja la interfaz (payload) y su resumen."""
+    title: str = Field(min_length=1, max_length=120)
+    day: Literal["today", "tomorrow"] | int = "today"
+    site_id: str = Field("mount-sharp", max_length=40)
+    created_by: str | None = Field(None, max_length=20)
+    status: Literal["planned", "done"] = "planned"
+    summary: dict[str, Any] = {}
+    payload: dict[str, Any] = {}
+
+
+class PlanStatusIn(BaseModel):
+    status: Literal["planned", "done"]
+
+
+class PlanOut(BaseModel):
+    id: str
+    title: str
+    sol: int
+    site_id: str
+    status: str
+    created_by: str | None
+    summary: dict[str, Any]
+    created_at: datetime | None
+    updated_at: datetime | None
+    payload: dict[str, Any] | None = Field(None, description="Solo al pedir un plan concreto")
+
+    @classmethod
+    def from_domain(cls, p: SavedPlan, with_payload: bool = False) -> "PlanOut":
+        return cls(id=p.id, title=p.title, sol=p.sol, site_id=p.site_id, status=p.status,
+                   created_by=p.created_by, summary=p.summary, created_at=p.created_at,
+                   updated_at=p.updated_at, payload=p.payload if with_payload else None)
+
+
+class PlanListOut(BaseModel):
+    today_sol: int
+    plans: list[PlanOut]
+
+
+class CrewMemberDto(BaseModel):
+    id: str = Field(min_length=1, max_length=20)
+    name: str = Field(min_length=1, max_length=40)
+    role: str = Field("", max_length=20)
+    suit_id: str = Field("", max_length=20)
+    resting_bpm: int = Field(65, ge=30, le=200)
+    mass_kg: float = Field(70.0, gt=20, le=200)
+
+
+class CrewDto(BaseModel):
+    team_name: str = Field(min_length=1, max_length=60)
+    members: list[CrewMemberDto] = Field(min_length=1, max_length=8)
+
+    def to_domain(self) -> Crew:
+        return Crew(self.team_name, tuple(CrewMember(**m.model_dump()) for m in self.members))
+
+    @classmethod
+    def from_domain(cls, c: Crew) -> "CrewDto":
+        return cls(team_name=c.team_name, members=[CrewMemberDto(**m.__dict__) for m in c.members])
+
+
+class ProcedureIn(BaseModel):
+    site_id: str = Field(min_length=1, max_length=40)
+    target_id: str = Field(min_length=1, max_length=20)
+    crew_member: str | None = Field(None, max_length=20)
+    plan_id: str | None = Field(None, max_length=36)
+
+
+class ProcedureOut(BaseModel):
+    id: str
+    site_id: str
+    target_id: str
+    completed_at: datetime
+    crew_member: str | None
+    plan_id: str | None
+
+    @classmethod
+    def from_domain(cls, r: ProcedureRecord) -> "ProcedureOut":
+        return cls(**r.__dict__)

@@ -10,6 +10,7 @@ node_modules/
 dist/
 
 # Entorno
+backend/data/*.db
 .env
 .env.local
 
