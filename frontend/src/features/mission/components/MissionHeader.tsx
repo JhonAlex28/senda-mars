@@ -40,7 +40,7 @@ export function MissionHeader() {
         <div className="flex flex-col">
           <h1 className="font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
           <span className="font-mono text-[10px] text-on-surface-variant">
-            MSL REMS: −34°C · 740 Pa · Dust τ=0.62 · RAD 0.67 mSv/sol · Gale EZ 100 km
+            MSL REMS: 845 Pa · Dust τ={state.env.tau.toFixed(2)} · RAD {state.env.speActive ? '1.85' : '0.65'} mSv/sol · Gale EZ 100 km
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-sm">
