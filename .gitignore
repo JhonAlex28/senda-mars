@@ -19,3 +19,17 @@ backend/data/*.db
 .idea/
 Thumbs.db
 .DS_Store
+
+
+# Extra
+
+# SENDA - Geospatial terrain processing
+# Intermediate GeoTIFFs and processing outputs
+/tools/terrain/outputs/
+
+# Generated working arrays and visualization layers
+# Official deliverables belong in backend/ and frontend/
+/tools/terrain/data/
+
+# Local processing backups
+/tools/terrain/backups/

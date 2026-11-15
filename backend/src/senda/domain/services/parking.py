@@ -8,11 +8,11 @@ from senda.domain.models.geo import GeoPoint
 from senda.domain.models.route import ParkingSpot
 from senda.domain.models.target import ScienceTarget
 from senda.domain.models.terrain import Cell, TerrainGrid
-from senda.domain.services.mobility import CAUTION_SLOPE_DEG
 
 EVA_RADIUS_M = 300.0       # distancia máxima a pie entre objetivos de una misma zona
 STANDOFF_M = 70.0          # el rover no entra al afloramiento: se estaciona a una caminata corta
 SEARCH_RADIUS_M = 250.0
+CAUTION_SLOPE_DEG = 10.0   # estacionar solo en terreno plano (env.json terrain_classes.caution)
 
 
 def group_by_walking_zone(targets: list[ScienceTarget]) -> list[list[ScienceTarget]]:
@@ -57,3 +57,33 @@ def propose_parkings(grid: TerrainGrid, targets: list[ScienceTarget],
         ParkingSpot(f"P{i}", _parking_location(grid, zone, blocked), [t.id for t in zone])
         for i, zone in enumerate(group_by_walking_zone(targets), start=1)
     ]
+
+
+def order_tour(base: GeoPoint, parkings: list[ParkingSpot]) -> list[ParkingSpot]:
+    """Orden de visita base → P… → base: vecino más cercano + 2-opt (distancia en línea recta).
+
+    El orden de prioridad de los objetivos no es un buen orden de manejo: subir y bajar el
+    Monte Sharp varias veces agota la batería del SEV. Se renumeran P1…Pn en orden de visita."""
+    if len(parkings) <= 2:
+        tour = list(parkings)
+    else:
+        left, tour, here = list(parkings), [], base
+        while left:
+            nxt = min(left, key=lambda p: here.distance_to(p.location))
+            left.remove(nxt)
+            tour.append(nxt)
+            here = nxt.location
+
+        def length(t: list[ParkingSpot]) -> float:
+            pts = [base, *(p.location for p in t), base]
+            return sum(a.distance_to(b) for a, b in zip(pts, pts[1:]))
+
+        improved = True
+        while improved:
+            improved = False
+            for i in range(len(tour) - 1):
+                for j in range(i + 1, len(tour)):
+                    cand = tour[:i] + tour[i:j + 1][::-1] + tour[j + 1:]
+                    if length(cand) < length(tour) - 1e-6:
+                        tour, improved = cand, True
+    return [ParkingSpot(f"P{i}", p.location, p.target_ids) for i, p in enumerate(tour, start=1)]

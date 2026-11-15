@@ -35,9 +35,21 @@ class ScienceTarget:
     rubric: Rubric
     description: str
     category: str
-    is_base: bool = False
-    task: ScienceTask | None = None
+    is_base: bool = False              # staging del SEV (T01)
+    task: ScienceTask | None = None    # eva_sampling
+    # Campos que usa el planificador (targets_v0.geojson, doc §4.3)
+    score_s: float = 0.0               # S = total_15 / 15
+    shielding_pct: float = 0.0         # shielding_reduction_pct
+    is_shelter: bool = False           # refugio alternativo (T08)
 
     @property
     def task_minutes(self) -> float:
         return self.task.duration_min if self.task else 0.0
+
+    @property
+    def eva_duration_min(self) -> float:
+        return self.task_minutes
+
+    @property
+    def science_points(self) -> int:
+        return self.rubric.total

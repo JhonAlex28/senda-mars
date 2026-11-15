@@ -1,0 +1,51 @@
+{
+  "_owner": "Mec. B (Planner/Safety). Ver docs/Planner_documentation.md §4.5",
+  "base": {
+    "lonlat": [137.42009295, -4.59310427],
+    "name": "Gale human base (Calef et al. 2015 proposal)",
+    "source": "Calef III et al. 2015, First Landing Site/EZ Workshop (NASA) — team-provided coordinates",
+    "kind": "propuesta"
+  },
+  "eva": {
+    "stop_rate_W": 220.0,
+    "science_radius_m": 15.0,
+    "caution_speed_factor": 0.6,
+    "nogo_dilation_cells": 1,
+    "kind": "supuesto"
+  },
+  "profiles": {
+    "safe": {"w_science": 0.1},
+    "fast": {"w_science": 0.0},
+    "scientific": {"w_science": 0.5},
+    "kind": "supuesto",
+    "note": "w_risk se lee de env.json → reference_eva.profiles"
+  },
+  "rover": {
+    "name": "NASA SEV (pressurized)",
+    "crew": 2,
+    "cabin_days": 14,
+    "v_max_kmh": 10.0,
+    "v_nominal_kmh": 5.0,
+    "v_caution_kmh": 3.0,
+    "mass_kg": 4000.0,
+    "crr": 0.15,
+    "drivetrain_eff": 0.8,
+    "hotel_kW": 1.5,
+    "battery_kWh": 100.0,
+    "battery_reserve_fraction": 0.30,
+    "w_risk": 1.0,
+    "cabin_dose_factor": 0.5,
+    "slope_classes": {"caution_min_deg": 15.0, "nogo_min_deg": 25.0},
+    "nogo_dilation_cells": 1,
+    "no_night_drive": true,
+    "egress_min": 30.0,
+    "ingress_min": 30.0,
+    "kind": {
+      "crew": "medido (NASA SEV, science.nasa.gov/3d-resources/space-exploration-vehicle)",
+      "cabin_days": "medido (NASA SEV)",
+      "v_max_kmh": "medido (NASA SEV, ~10 km/h)",
+      "slope_classes": "supuesto (referencia LRV 25°, NASA TM X-64623, a verificar)",
+      "resto": "supuesto"
+    }
+  }
+}

@@ -122,8 +122,8 @@ def _copilot(store, context=None):
     c = get_container()
     assess, targets = AssessReadiness(c.environment_repo), ListTargets(c.target_repo)
     tools = MissionTools(assess, GetEnvironment(c.environment_repo), targets,
-                         PlanOuting(assess, targets, PlanTraverse(c.target_repo, c.terrain),
-                                    PlanEva(c.target_repo, c.terrain)),
+                         PlanOuting(assess, targets, PlanTraverse(c.planner),
+                                    PlanEva(c.planner)),
                          c.knowledge, context or MissionContext(), _calendar(store),
                          CrewRoster(CrewStore(store)))
 
@@ -170,12 +170,12 @@ def test_copilot_opens_a_saved_plan(store):
 
 def test_planning_for_tomorrow_asks_to_save_it_for_that_day(store):
     tools, run = _copilot(store)
-    _, body = run("plan_outing", target_ids=["T03"], day="tomorrow")
+    _, body = run("plan_outing", target_ids=["S03"], day="tomorrow")
     sol = _calendar(store).today() + 1
     assert body["saved_in_calendar"] == {"day": "tomorrow", "sol": sol}
     assert tools.log.save.sol == sol
     tools, run = _copilot(store)
-    run("plan_outing", target_ids=["T03"])           # sin día: no se guarda solo
+    run("plan_outing", target_ids=["S03"])           # sin día: no se guarda solo
     assert tools.log.save is None
     result, _ = run("plan_outing", day="someday")
     assert result.is_error
