@@ -4,12 +4,12 @@ import { useMission } from '../state/MissionContext';
 import { CrewSuitModal } from './CrewSuitModal';
 import { GaleConceptModal } from './GaleConceptModal';
 import { NasaLabsModal } from './NasaLabsModal';
-import imagen from '../../../img/1bd25090-eadf-43a7-803a-a5fce4b4851e.png';
+import sendaLogo from '@/shared/assets/senda-logo.png';
 
 export function SendaLogo() {
   return (
     <div className="flex items-center gap-sm">
-      <img src={imagen} alt="Senda logo" className="h-20 w-20 rounded-full" />
+      <img src={sendaLogo} alt="SENDA" className="h-20 w-20 rounded-full" />
     </div>
   );
 }
