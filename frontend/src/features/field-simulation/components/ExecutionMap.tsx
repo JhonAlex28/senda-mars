@@ -161,17 +161,17 @@ export function ExecutionMap({ projection, site, sim, targets, parkings, base, h
           ))}
 
           {state.legs.slice(state.legIndex + 1).map((l) => (
-            <RouteLine key={l.id} points={l.points} color="#6b5450" dotted={l.mode === 'eva'} width={2} opacity={0.8} />
+            <RouteLine key={l.id} points={l.points} color="#3A5378" dotted={l.mode === 'eva'} width={2} opacity={0.8} />
           ))}
           {state.legs.slice(0, state.legIndex).map((l) => (
-            <RouteLine key={l.id} points={l.points} color="#B8A9A7" dotted={l.mode === 'eva'} width={3} opacity={0.6} />
+            <RouteLine key={l.id} points={l.points} color="#8BA3C7" dotted={l.mode === 'eva'} width={3} opacity={0.6} />
           ))}
           {state.trail.map((points, i) => (
-            <RouteLine key={`trail-${i}`} points={points} color="#B8A9A7" width={3} opacity={0.6} />
+            <RouteLine key={`trail-${i}`} points={points} color="#8BA3C7" width={3} opacity={0.6} />
           ))}
-          {travelled.length > 1 && <RouteLine points={[...travelled, here.point]} color="#B8A9A7" width={3} opacity={0.7} dotted={leg.mode === 'eva'} />}
+          {travelled.length > 1 && <RouteLine points={[...travelled, here.point]} color="#8BA3C7" width={3} opacity={0.7} dotted={leg.mode === 'eva'} />}
           {ahead.length > 0 && (
-            <RouteLine points={[here.point, ...ahead]} color={leg.mode === 'rover' ? '#D9532B' : '#F0875A'} width={4} halo dotted={leg.mode === 'eva'} />
+            <RouteLine points={[here.point, ...ahead]} color={leg.mode === 'rover' ? '#3B82F6' : '#38BDF8'} width={4} halo dotted={leg.mode === 'eva'} />
           )}
 
           <Clustered

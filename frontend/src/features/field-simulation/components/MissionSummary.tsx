@@ -76,7 +76,7 @@ export function MissionSummary({ state, roverCapacity, targetName, crew, quantum
         <div className="grid grid-cols-3 gap-xs rounded-md border border-outline-variant bg-surface p-xs font-mono text-[10px]">
           <div className="text-center">
             <span className="text-on-surface-variant">SAFETY (40%)</span>
-            <div className="font-bold text-emerald-400">{safetyScore}/100</div>
+            <div className="font-bold text-success">{safetyScore}/100</div>
           </div>
           <div className="text-center">
             <span className="text-on-surface-variant">SCIENCE (35%)</span>

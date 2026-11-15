@@ -256,7 +256,7 @@ export function MarsGlobe3D({ sites, selectedId, onSelect }: MarsGlobe3DProps) {
                 {site.active && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />}
                 <span
                   className={`relative h-4 w-4 rounded-full border-2 ${
-                    site.active ? 'border-on-surface bg-primary shadow-[0_0_14px_#D9532B]' : 'border-on-surface/80 bg-surface-container-high'
+                    site.active ? 'border-on-surface bg-primary shadow-[0_0_14px_#3B82F6]' : 'border-on-surface/80 bg-surface-container-high'
                   } ${selected ? 'ring-2 ring-accent ring-offset-2 ring-offset-transparent' : ''}`}
                 />
               </span>

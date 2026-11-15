@@ -75,7 +75,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
   return (
     <div className="flex flex-col gap-md">
       <div className="flex flex-wrap items-center justify-between gap-xs rounded border border-outline-variant bg-surface px-sm py-xs font-mono text-[10px]">
-        <span className="font-bold text-[#D2B4FF]">OPTIONAL QUANTUM CO-PROCESSOR (RESEARCH ACCELERATOR)</span>
+        <span className="font-bold text-accent">OPTIONAL QUANTUM CO-PROCESSOR (RESEARCH ACCELERATOR)</span>
         <span className="text-on-surface-variant">
           NASA Classical A* Core remains primary &amp; runs 100% standalone without Qiskit.
         </span>
@@ -88,7 +88,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as QuantumBackendMode)}
-            className="rounded border border-outline bg-[#0D131D] px-xs py-1 text-on-surface"
+            className="rounded border border-outline bg-surface px-xs py-1 text-on-surface"
           >
             <option value="browser-statevector">Browser Statevector QAOA</option>
             <option value="ibm-quantum-runtime">IBM Quantum Runtime (Qiskit API)</option>
@@ -101,7 +101,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
             value={qpuBackend}
             onChange={(e) => setQpuBackend(e.target.value as IbmQpuName)}
             disabled={mode === 'browser-statevector'}
-            className="rounded border border-outline bg-[#0D131D] px-xs py-1 text-on-surface disabled:opacity-50"
+            className="rounded border border-outline bg-surface px-xs py-1 text-on-surface disabled:opacity-50"
           >
             <option value="ibm_brisbane">ibm_brisbane (127q Eagle)</option>
             <option value="ibm_torino">ibm_torino (133q Heron)</option>
@@ -116,7 +116,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
             <select
               value={layers}
               onChange={(e) => setLayers(Number(e.target.value) as 1 | 2)}
-              className="rounded border border-outline bg-[#0D131D] px-xs py-1 text-on-surface"
+              className="rounded border border-outline bg-surface px-xs py-1 text-on-surface"
             >
               <option value={1}>p = 1</option>
               <option value={2}>p = 2</option>
@@ -127,7 +127,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
             <select
               value={shots}
               onChange={(e) => setShots(Number(e.target.value) as 512 | 1024 | 2048)}
-              className="rounded border border-outline bg-[#0D131D] px-xs py-1 text-on-surface"
+              className="rounded border border-outline bg-surface px-xs py-1 text-on-surface"
             >
               <option value={512}>512</option>
               <option value={1024}>1024</option>
@@ -141,7 +141,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
           <select
             value={noiseProfile}
             onChange={(e) => setNoiseProfile(e.target.value as QuantumNoiseProfile)}
-            className="rounded border border-outline bg-[#0D131D] px-xs py-1 text-on-surface"
+            className="rounded border border-outline bg-surface px-xs py-1 text-on-surface"
           >
             <option value="ideal">Ideal (Noiseless)</option>
             <option value="noisy-qpu">Noisy QPU (T1/T2 + Readout)</option>
@@ -154,7 +154,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
             type="button"
             onClick={() => void runOptimization()}
             disabled={running}
-            className="w-full rounded-md border border-[#A371F7] bg-[#1F1733] px-sm py-1.5 font-mono text-mono-sm font-bold text-[#D2B4FF] hover:bg-[#2C1F4A] disabled:opacity-60"
+            className="w-full rounded-md border border-accent bg-accent/10 px-sm py-1.5 font-mono text-mono-sm font-bold text-accent hover:bg-accent/15 disabled:opacity-60"
           >
             {running ? '⚛ RUNNING QAOA...' : '⚛ EXECUTE QAOA'}
           </button>
@@ -174,7 +174,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
           <div className="grid gap-sm sm:grid-cols-4 font-mono">
             <div className="rounded border border-outline bg-surface p-sm">
               <div className="text-[10px] text-on-surface-variant">OPTIMAL BITSTRING</div>
-              <div className="text-lg font-bold text-[#D2B4FF]">{result.bestBitstring}</div>
+              <div className="text-lg font-bold text-accent">{result.bestBitstring}</div>
               <div className="text-[10px] text-on-surface-variant">
                 {result.nQubits}q · p={result.layers}
                 {result.fidelityPct !== null ? ` · Fidelity ${result.fidelityPct}%` : ''} · ran on: {result.mode}
@@ -187,7 +187,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
             </div>
             <div className="rounded border border-outline bg-surface p-sm">
               <div className="text-[10px] text-on-surface-variant">QAOA ROUTE (SEV)</div>
-              <div className="text-lg font-bold text-emerald-400">
+              <div className="text-lg font-bold text-success">
                 {result.quantumMetrics.distanceKm} km · {result.quantumMetrics.energyKwh} kWh
               </div>
               <div className="text-[10px] text-on-surface-variant">
@@ -209,10 +209,10 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
             {/* QAOA Circuit Diagram SVG */}
             <div className="rounded border border-outline bg-surface p-sm">
               <div className="mb-xs flex items-center justify-between font-mono text-[11px]">
-                <span className="font-bold text-[#D2B4FF]">QAOA ANSATZ CIRCUIT ({result.backendName})</span>
+                <span className="font-bold text-accent">QAOA ANSATZ CIRCUIT ({result.backendName})</span>
                 <span className="text-on-surface-variant">Depth {result.gateSummary.totalDepth}</span>
               </div>
-              <svg viewBox="0 0 420 155" className="h-40 w-full rounded border border-outline-variant bg-[#070B10]">
+              <svg viewBox="0 0 420 155" className="h-40 w-full rounded border border-outline-variant bg-surface">
                 {Array.from({ length: result.nQubits }).map((_, q) => {
                   const y = 20 + q * 22;
                   return (
@@ -272,16 +272,16 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
                 {result.samples.map((s) => (
                   <div key={s.bitstring} className="flex flex-col gap-0.5 font-mono text-[11px]">
                     <div className="flex items-center justify-between">
-                      <span className={s.isOptimal ? 'font-bold text-emerald-400' : 'text-on-surface'}>
+                      <span className={s.isOptimal ? 'font-bold text-success' : 'text-on-surface'}>
                         {s.bitstring} {s.isOptimal ? '★ OPTIMAL' : ''}
                       </span>
                       <span className="text-on-surface-variant">
                         {s.probability}% ({s.counts}) · E={s.energy}
                       </span>
                     </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-[#0D131D]">
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-surface">
                       <div
-                        className={`h-full ${s.isOptimal ? 'bg-emerald-400' : 'bg-[#A371F7]'}`}
+                        className={`h-full ${s.isOptimal ? 'bg-success' : 'bg-accent'}`}
                         style={{ width: `${Math.max(4, (s.counts / maxCounts) * 100)}%` }}
                       />
                     </div>
@@ -292,9 +292,9 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
           </div>
 
           {/* Recommended Sequence + Apply */}
-          <div className="flex flex-wrap items-center justify-between gap-sm rounded-lg border border-emerald-500/40 bg-surface p-sm font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-sm rounded-lg border border-success/40 bg-surface p-sm font-mono">
             <div className="flex flex-col gap-xxs">
-              <span className="text-[10px] text-emerald-400 font-bold">
+              <span className="text-[10px] text-success font-bold">
                 QUANTUM-OPTIMIZED WAYPOINT SEQUENCE ({result.recommendedTargetIds.length} TARGETS)
               </span>
               <span className="text-xs text-on-surface">
@@ -306,7 +306,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
             <button
               type="button"
               onClick={applyQuantumRoute}
-              className="rounded-md border border-emerald-400 bg-emerald-500/20 px-md py-xs font-mono text-mono-sm font-bold text-emerald-300 hover:bg-emerald-500/30"
+              className="rounded-md border border-success bg-success/20 px-md py-xs font-mono text-mono-sm font-bold text-success hover:bg-success/30"
             >
               ✓ APPLY QUANTUM SEQUENCE
             </button>

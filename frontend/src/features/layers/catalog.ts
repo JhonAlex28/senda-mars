@@ -109,8 +109,8 @@ export const LAYERS: LayerDef[] = [
     defaultOpacity: 0.55,
     legend: [
       { label: 'Murray / Glen Torridon Clay', swatch: 'bg-accent' },
-      { label: 'Stimson Sandstone', swatch: 'bg-amber-400' },
-      { label: 'Sulfate Boxwork', swatch: 'bg-primary' },
+      { label: 'Stimson Sandstone', swatch: 'bg-warning' },
+      { label: 'Sulfate Boxwork', swatch: 'bg-route-science' },
     ],
   },
   {

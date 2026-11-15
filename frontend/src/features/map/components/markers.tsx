@@ -3,14 +3,14 @@ import type { GeoPoint } from '@/shared/types/geo';
 import { useMap } from '../context/MapContext';
 
 const COLORS = {
-  primary: '#D9532B',
-  accent: '#F0875A',
-  surface: '#1E1514',
-  outline: '#3D2B28',
+  primary: '#3B82F6',
+  accent: '#38BDF8',
+  surface: '#0D1626',
+  outline: '#1F3352',
   text: '#FFFFFF',
   success: '#22C55E',
   error: '#EF4444',
-  muted: '#B8A9A7',
+  muted: '#8BA3C7',
 };
 
 const stop = (handler?: () => void) => (e: MouseEvent) => {
@@ -38,7 +38,7 @@ export function RouteLine({ points, color, width = 3, dashed, dotted, opacity = 
   return (
     <g opacity={opacity} onClick={onClick ? stop(onClick) : undefined} style={onClick ? { cursor: 'pointer' } : undefined}>
       {halo && (
-        <polyline points={d} fill="none" stroke="#120D0D" strokeOpacity={0.7} strokeWidth={width + 4} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <polyline points={d} fill="none" stroke="#070D17" strokeOpacity={0.7} strokeWidth={width + 4} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
       )}
       {/* trazo invisible y ancho para que sea fácil hacer clic */}
       {onClick && <polyline points={d} fill="none" stroke="transparent" strokeWidth={14} vectorEffect="non-scaling-stroke" />}
@@ -165,10 +165,10 @@ export function ParkingMarker({ point, label, active, planned, onClick }: Parkin
       <title>{`Rover parking ${label}${planned ? ' · walk planned' : ''}`}</title>
       {active && <circle r={r * 1.9} fill={COLORS.accent} fillOpacity={0.2} />}
       <rect x={-r} y={-r} width={r * 2} height={r * 2} rx={4 * unit} fill={active ? COLORS.accent : COLORS.surface} stroke={COLORS.accent} strokeWidth={2} vectorEffect="non-scaling-stroke" />
-      <text y={3.5 * unit} textAnchor="middle" fill={active ? '#120D0D' : COLORS.accent} fontFamily="Space Grotesk" fontWeight={700} fontSize={9.5 * unit}>
+      <text y={3.5 * unit} textAnchor="middle" fill={active ? '#070D17' : COLORS.accent} fontFamily="Space Grotesk" fontWeight={700} fontSize={9.5 * unit}>
         {label}
       </text>
-      {planned && <circle cx={r} cy={-r} r={4.5 * unit} fill={COLORS.success} stroke="#120D0D" strokeWidth={1} vectorEffect="non-scaling-stroke" />}
+      {planned && <circle cx={r} cy={-r} r={4.5 * unit} fill={COLORS.success} stroke="#070D17" strokeWidth={1} vectorEffect="non-scaling-stroke" />}
     </g>
   );
 }

@@ -212,7 +212,7 @@ export function ExecutionPanel({ sim, targetName, vehicleId = 'SEV_PRESSURIZED',
               type="button"
               disabled={taskRunning || !!busy}
               onClick={() => sim.triggerContingency('dust')}
-              className="rounded border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 text-amber-300 hover:bg-amber-500/20 disabled:opacity-40"
+              className="rounded border border-warning/40 bg-warning/10 px-1.5 py-0.5 text-warning hover:bg-warning/20 disabled:opacity-40"
               title="Simulate Mars Dust Storm (τ > 2.5)"
             >
               Dust
@@ -221,7 +221,7 @@ export function ExecutionPanel({ sim, targetName, vehicleId = 'SEV_PRESSURIZED',
               type="button"
               disabled={taskRunning || !!busy}
               onClick={() => sim.triggerContingency('blocked')}
-              className="rounded border border-orange-500/40 bg-orange-500/10 px-1.5 py-0.5 text-orange-300 hover:bg-orange-500/20 disabled:opacity-40"
+              className="rounded border border-warning/40 bg-warning/10 px-1.5 py-0.5 text-warning hover:bg-warning/20 disabled:opacity-40"
               title="Simulate Solar Proton Event / Blocked Terrain"
             >
               SPE / Block
@@ -230,7 +230,7 @@ export function ExecutionPanel({ sim, targetName, vehicleId = 'SEV_PRESSURIZED',
               type="button"
               disabled={taskRunning || !!busy}
               onClick={() => sim.triggerContingency('leak')}
-              className="rounded border border-rose-500/40 bg-rose-500/10 px-1.5 py-0.5 text-rose-300 hover:bg-rose-500/20 disabled:opacity-40"
+              className="rounded border border-error/40 bg-error/10 px-1.5 py-0.5 text-error hover:bg-error/20 disabled:opacity-40"
               title="Simulate xEMU Suit Pressure Drop"
             >
               Suit Leak
@@ -248,7 +248,7 @@ export function ExecutionPanel({ sim, targetName, vehicleId = 'SEV_PRESSURIZED',
 
       <div className="rounded border border-outline-variant bg-surface px-xs py-1 font-mono text-[10px]">
         <div className="flex items-center justify-between">
-          <span className="font-bold text-emerald-400">MSR SAMPLE CACHE</span>
+          <span className="font-bold text-success">MSR SAMPLE CACHE</span>
           <span className="text-on-surface-variant">
             {state.completed.length} tube{state.completed.length === 1 ? '' : 's'} · {(state.completed.length * 0.25).toFixed(2)} kg
           </span>
@@ -256,7 +256,7 @@ export function ExecutionPanel({ sim, targetName, vehicleId = 'SEV_PRESSURIZED',
         {state.completed.length > 0 ? (
           <div className="mt-1 flex flex-wrap gap-1">
             {state.completed.map((id, idx) => (
-              <span key={id} className="rounded border border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-[9px] text-emerald-300">
+              <span key={id} className="rounded border border-success/40 bg-success/10 px-1.5 py-0.5 text-[9px] text-success">
                 MSR-Ti-0{idx + 1}: {targetName(id) ?? id}
               </span>
             ))}

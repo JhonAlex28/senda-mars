@@ -29,7 +29,7 @@ export function HelmetStatusCard({
   const healthy = o2Pct >= 25 && co2Pct < 1.2 && pressureKpa >= 26;
 
   return (
-    <div className="rounded-lg border border-outline bg-[#050A12] p-sm font-mono shadow-inner">
+    <div className="rounded-lg border border-outline bg-surface p-sm font-mono shadow-inner">
       <div className="mb-xs flex items-start justify-between border-b border-outline-variant pb-1">
         <div>
           <div className="text-[9px] tracking-widest text-warning">DATA</div>
@@ -73,24 +73,24 @@ export function HelmetStatusCard({
             <div className="text-body-sm font-bold text-on-surface">
               {valPct}% <span className="text-[9px] text-accent">({heartRateBpm})</span>
             </div>
-            <div className="text-[8px] text-emerald-400">{statusLabel}</div>
+            <div className="text-[8px] text-success">{statusLabel}</div>
           </div>
           <div className="rounded border border-outline-variant bg-surface px-1.5 py-1">
             <div className="text-[8px] text-warning">CO₂ LEVELS</div>
             <div className="text-body-sm font-bold text-on-surface">{co2Pct.toFixed(2)} %</div>
-            <div className="text-[8px] text-emerald-400">{co2Pct < 1.0 ? 'STABLE' : 'SCRUB'}</div>
+            <div className="text-[8px] text-success">{co2Pct < 1.0 ? 'STABLE' : 'SCRUB'}</div>
           </div>
           <div className="rounded border border-outline-variant bg-surface px-1.5 py-1">
             <div className="text-[8px] text-warning">O₂ TRUNK</div>
             <div className="text-body-sm font-bold text-on-surface">{Math.round(o2Pct)} %</div>
-            <div className={`text-[8px] ${o2Pct >= 25 ? 'text-emerald-400' : 'text-error'}`}>
+            <div className={`text-[8px] ${o2Pct >= 25 ? 'text-success' : 'text-error'}`}>
               {o2Pct >= 25 ? 'STABLE' : 'LOW O₂'}
             </div>
           </div>
           <div className="rounded border border-outline-variant bg-surface px-1.5 py-1">
             <div className="text-[8px] text-warning">O₂ PRESSURE</div>
             <div className="text-body-sm font-bold text-on-surface">{pressureKpa.toFixed(1)} kPa</div>
-            <div className="text-[8px] text-emerald-400">STABLE</div>
+            <div className="text-[8px] text-success">STABLE</div>
           </div>
         </div>
       </div>

@@ -35,7 +35,7 @@ export function GoalsCard() {
         <div className="mt-xs rounded-md border border-outline-variant bg-surface px-sm py-xs font-mono text-[10px]">
           <div className="flex items-center justify-between text-on-surface">
             <span className="text-on-surface-variant">NASA SCIENCE RUBRIC</span>
-            <strong className="text-emerald-400">{totalScience} pts (Avg {avgScience}/15)</strong>
+            <strong className="text-success">{totalScience} pts (Avg {avgScience}/15)</strong>
           </div>
           <div className="mt-0.5 flex justify-between text-on-surface-variant">
             <span>Novelty: {sumNovelty}</span>
@@ -75,14 +75,14 @@ export function GoalsCard() {
                   });
                 }
               }}
-              className="mt-xs w-full rounded border border-[#A371F7]/50 bg-[#1A132B] px-xs py-1 font-mono text-[10px] font-bold text-[#D2B4FF] hover:bg-[#271C40]"
+              className="mt-xs w-full rounded border border-accent/50 bg-accent/10 px-xs py-1 font-mono text-[10px] font-bold text-accent hover:bg-accent/20"
               title="Optional QAOA waypoint optimizer (runs locally without Qiskit)"
             >
               ⚛ Optional: Quantum Optimize Order
             </button>
           )}
           {state.quantumSummary && (
-            <div className="mt-xs flex items-center justify-between rounded border border-emerald-500/30 bg-emerald-500/10 px-xs py-0.5 font-mono text-[9px] text-emerald-300">
+            <div className="mt-xs flex items-center justify-between rounded border border-success/30 bg-success/10 px-xs py-0.5 font-mono text-[9px] text-success">
               <span>QAOA {state.quantumSummary.bestBitstring}</span>
               <span>
                 {(state.quantumSummary.deltaKm ?? 0) <= 0

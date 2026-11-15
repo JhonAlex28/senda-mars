@@ -1,12 +1,14 @@
-/** Tokens de diseño SENDA (los mismos de los mockups). */
+/** Tokens de diseño SENDA. Paleta azul uniforme: primary = acciones, accent = realces,
+ *  mars = solo marca (logo, planeta). Los componentes usan estos tokens, no colores sueltos. */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        primary: '#E05A2B',
-        'on-primary': '#070D17',
+        primary: '#3B82F6',
+        'on-primary': '#FFFFFF',
+        mars: '#E05A2B',
         accent: '#38BDF8',
         'on-accent': '#070D17',
         surface: '#070D17',
@@ -24,6 +26,7 @@ export default {
         'on-error': '#1C1C1C',
         'route-fast': '#38BDF8',
         'route-safe': '#22C55E',
+        'route-science': '#A78BFA',
       },
       spacing: { xs: '4px', sm: '8px', md: '16px', lg: '24px', xl: '32px', '2xl': '48px' },
       fontFamily: {

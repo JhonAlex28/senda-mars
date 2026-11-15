@@ -33,12 +33,12 @@ export function RouteComparator({ title, routes, selected, onSelect }: RouteComp
     <Card title={title} className="gap-sm">
       <div className="flex items-center justify-between rounded border border-outline-variant bg-surface px-sm py-xs font-mono text-[10px]">
         <span className="text-on-surface-variant">PARETO OPTIMAL:</span>
-        <span className="font-bold text-emerald-400">
+        <span className="font-bold text-success">
           {bestPareto.profile.toUpperCase()} ({bestPareto.safety_pct}% safety · {Math.round(bestPareto.resource.remaining_pct)}% reserve)
         </span>
       </div>
-      <div className="flex items-center justify-between rounded border border-[#A371F7]/40 bg-[#1A132B] px-sm py-xs font-mono text-[10px]">
-        <span className="text-[#D2B4FF]">⚛ IBM QUANTUM QAOA:</span>
+      <div className="flex items-center justify-between rounded border border-accent/40 bg-accent/10 px-sm py-xs font-mono text-[10px]">
+        <span className="text-accent">⚛ IBM QUANTUM QAOA:</span>
         <span className="text-on-surface-variant">Available in NASA Labs → IBM Quantum</span>
       </div>
       <RouteDetails key={current.profile} route={current} />

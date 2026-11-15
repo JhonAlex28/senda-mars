@@ -56,7 +56,7 @@ export function MapCanvas({
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#120b09]">
+    <div className="relative h-full w-full overflow-hidden bg-surface">
       {/* Full-bleed orbital Mars backdrop so widescreen viewports never show flat black bars */}
       <div
         aria-hidden="true"

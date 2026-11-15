@@ -41,23 +41,23 @@ export function LaunchCard({ readiness }: { readiness: Readiness | null }) {
         <div className="grid grid-cols-2 gap-xs rounded border border-outline-variant bg-surface p-xs font-mono text-[10px]">
           <div className="flex items-center justify-between">
             <span className="text-on-surface-variant">CREW/SUITS</span>
-            <span className="font-bold text-emerald-400">GO ({state.crew.members[0].suitId})</span>
+            <span className="font-bold text-success">GO ({state.crew.members[0].suitId})</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-on-surface-variant">SEV BATTERY</span>
-            <span className={`font-bold ${adjustedBatteryPct >= 20 ? 'text-emerald-400' : 'text-error'}`}>
+            <span className={`font-bold ${adjustedBatteryPct >= 20 ? 'text-success' : 'text-error'}`}>
               {adjustedBatteryPct >= 20 ? 'GO' : 'NO-GO'} ({Math.round(adjustedBatteryPct)}%)
             </span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-on-surface-variant">PLSS O₂</span>
-            <span className={`font-bold ${reserve.minO2Pct >= 20 ? 'text-emerald-400' : 'text-error'}`}>
+            <span className={`font-bold ${reserve.minO2Pct >= 20 ? 'text-success' : 'text-error'}`}>
               {reserve.minO2Pct >= 20 ? 'GO' : 'NO-GO'} ({Math.round(reserve.minO2Pct)}%)
             </span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-on-surface-variant">RAD / COMMS</span>
-            <span className={`font-bold ${state.env.speActive ? 'text-error' : 'text-emerald-400'}`}>
+            <span className={`font-bold ${state.env.speActive ? 'text-error' : 'text-success'}`}>
               {state.env.speActive ? 'NO-GO (SPE)' : 'GO (94% LOS)'}
             </span>
           </div>

@@ -164,7 +164,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
             <div className="grid gap-md md:grid-cols-3">
               <div className="rounded border border-outline bg-surface p-sm font-mono">
                 <div className="text-[10px] text-on-surface-variant">1,000-RUN SURVIVAL PROB.</div>
-                <div className="text-xl font-bold text-emerald-400">{survivalProb}% GO</div>
+                <div className="text-xl font-bold text-success">{survivalProb}% GO</div>
                 <div className="text-[10px] text-on-surface-variant">Vehicle: {veh.shortName}</div>
               </div>
               <div className="rounded border border-outline bg-surface p-sm font-mono">
@@ -175,7 +175,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
               <div className="rounded border border-outline bg-surface p-sm font-mono">
                 <div className="text-[10px] text-on-surface-variant">SUIT PRESSURE / LCVG</div>
                 <div className="text-xl font-bold text-on-surface">29.6 kPa</div>
-                <div className="text-[10px] text-emerald-400">Core 36.9 °C · LiOH Nominal</div>
+                <div className="text-[10px] text-success">Core 36.9 °C · LiOH Nominal</div>
               </div>
             </div>
 
@@ -205,11 +205,11 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
                 <span className="font-bold text-accent">1,000-Run O₂ Reserve Distribution (L)</span>
                 <span className="text-on-surface-variant">
                   P50: <strong className="text-on-surface">{mc.p50} L</strong> · P95 Worst:{' '}
-                  <strong className={mc.p95Worst >= 60 ? 'text-emerald-400' : 'text-warning'}>{mc.p95Worst} L</strong> · Safe (&gt;20%):{' '}
-                  <strong className="text-emerald-400">{survivalProb}%</strong>
+                  <strong className={mc.p95Worst >= 60 ? 'text-success' : 'text-warning'}>{mc.p95Worst} L</strong> · Safe (&gt;20%):{' '}
+                  <strong className="text-success">{survivalProb}%</strong>
                 </span>
               </div>
-              <svg viewBox="0 0 300 72" className="h-20 w-full rounded bg-[#070B10] p-1">
+              <svg viewBox="0 0 300 72" className="h-20 w-full rounded bg-surface p-1">
                 {mc.bins.map((count, idx) => {
                   const h = Math.max(2, (count / mc.maxBin) * 52);
                   const x = idx * 29 + 6;
@@ -242,7 +242,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
               <div className="mb-xs font-mono text-mono-sm font-bold text-accent">
                 RIMFAX SUBSURFACE GROUND-PENETRATING RADAR (0 to −15 m)
               </div>
-              <svg viewBox="0 0 600 150" className="h-40 w-full rounded border border-outline-variant bg-[#070B10]">
+              <svg viewBox="0 0 600 150" className="h-40 w-full rounded border border-outline-variant bg-surface">
                 <rect x="30" y="15" width="550" height="32" fill="rgba(140,88,58,0.22)" />
                 <rect x="30" y="47" width="550" height="52" fill="rgba(79,195,247,0.10)" />
                 <rect x="30" y="99" width="550" height="36" fill="rgba(163,113,247,0.12)" />
@@ -259,7 +259,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
                 </text>
               </svg>
               <p className="mt-xs text-body-sm text-on-surface-variant">
-                <strong className="text-emerald-400">SHERLOC UV-Raman &amp; ChemCam LIBS:</strong> Deep CaSO₄ fracture
+                <strong className="text-success">SHERLOC UV-Raman &amp; ChemCam LIBS:</strong> Deep CaSO₄ fracture
                 fills preserve up to 84% of organic biosignatures against galactic cosmic radiation at 8 cm drill depth.
               </p>
             </div>
@@ -278,7 +278,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
                     className="flex items-center justify-between rounded border border-outline bg-surface px-sm py-xs font-mono text-mono-sm"
                   >
                     <div>
-                      <span className="font-bold text-emerald-400">MSR-Ti-0{idx + 1}</span> ·{' '}
+                      <span className="font-bold text-success">MSR-Ti-0{idx + 1}</span> ·{' '}
                       <span className="text-on-surface">{t.id}</span>
                       <div className="text-[10px] text-on-surface-variant">{t.name}</div>
                     </div>
@@ -314,7 +314,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
             <div className="rounded-lg border border-outline bg-surface p-md">
               <div className="mb-xs flex items-center justify-between font-mono text-mono-sm">
                 <span className="font-bold text-accent">360° Polar Horizon &amp; Comms LOS</span>
-                <span className="text-emerald-400">MRO Relay: 14.2 min</span>
+                <span className="text-success">MRO Relay: 14.2 min</span>
               </div>
               <svg viewBox="0 0 220 220" className="mx-auto h-52 w-52">
                 <circle cx="110" cy="110" r="90" fill="#0B0F17" stroke="#2D3748" strokeWidth="1" />
@@ -326,7 +326,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
                 <polygon
                   points="110,48 134,54 156,74 168,108 164,148 142,172 110,180 76,166 56,138 52,102 68,68 90,52"
                   fill="rgba(217, 83, 43, 0.25)"
-                  stroke="#D9532B"
+                  stroke="#3B82F6"
                   strokeWidth="1.5"
                 />
                 {/* Sun & Earth DTE markers */}
@@ -345,7 +345,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
             <div className="rounded-lg border border-outline bg-surface p-md">
               <div className="mb-xs flex items-center justify-between font-mono text-mono-sm">
                 <span className="font-bold text-accent">Diurnal Sol Thermal &amp; Dust Cycle</span>
-                <span className="text-amber-300">τ = 0.48 · Peak −14°C</span>
+                <span className="text-warning">τ = 0.48 · Peak −14°C</span>
               </div>
               <svg viewBox="0 0 280 150" className="h-44 w-full">
                 <rect x="0" y="0" width="280" height="150" rx="6" fill="#0B0F17" />
@@ -356,7 +356,7 @@ export function NasaLabsModal({ open, onClose }: NasaLabsModalProps) {
                 <path
                   d="M 15 112 Q 60 120 95 72 T 155 36 T 215 86 T 265 114"
                   fill="none"
-                  stroke="#F0875A"
+                  stroke="#38BDF8"
                   strokeWidth="2.5"
                 />
                 {/* Dust Opacity Curve */}

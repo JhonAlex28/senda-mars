@@ -46,7 +46,7 @@ export function MissionHeader() {
             type="button"
             onClick={handleQuickDemo}
             title="Auto-load 3 Gale Crater science targets for instant presentation demo"
-            className="inline-flex items-center gap-xs rounded-full border border-emerald-500/50 bg-emerald-500/15 px-md py-xs font-mono text-mono-sm font-bold text-emerald-300 transition-colors duration-fast hover:bg-emerald-500/25"
+            className="inline-flex items-center gap-xs rounded-full border border-success/50 bg-success/15 px-md py-xs font-mono text-mono-sm font-bold text-success transition-colors duration-fast hover:bg-success/25"
           >
             <Icon name="play_arrow" className="text-[16px]" />
             <span>Quick Demo</span>
@@ -55,7 +55,7 @@ export function MissionHeader() {
             type="button"
             onClick={() => dispatch({ type: 'resetMission' })}
             title="Reset goals, routes, and environment for a fresh mission"
-            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface-variant transition-colors duration-fast hover:border-rose-400 hover:text-rose-300"
+            className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface-variant transition-colors duration-fast hover:border-error hover:text-error"
           >
             <Icon name="restart_alt" className="text-[16px]" />
             <span>Reset</span>
@@ -85,7 +85,7 @@ export function MissionHeader() {
             title="Open xEMU Monte Carlo, RIMFAX GPR, SHERLOC Raman, MSR Rack & CAPCOM"
             className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface px-md py-xs font-mono text-mono-sm text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
           >
-            <Icon name="science" className="text-[16px] text-emerald-400" />
+            <Icon name="science" className="text-[16px] text-success" />
             <span>NASA Labs</span>
           </button>
           <button

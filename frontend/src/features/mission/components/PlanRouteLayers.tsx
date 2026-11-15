@@ -68,7 +68,7 @@ export function PlanRouteLayers() {
           );
         }
         const walk = selectedEva(state, p.id);
-        return walk && <RouteLine key={p.id} points={walk.points} color="#F0875A" dotted width={2} opacity={0.8} />;
+        return walk && <RouteLine key={p.id} points={walk.points} color="#38BDF8" dotted width={2} opacity={0.8} />;
       })}
     </>
   );

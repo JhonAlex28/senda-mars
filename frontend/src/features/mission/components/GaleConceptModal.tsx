@@ -74,7 +74,7 @@ export function GaleConceptModal({ open, onClose }: GaleConceptModalProps) {
           </div>
           <div>
             <span className="block text-[10px] text-on-surface-variant">ELEVATION (MOLA)</span>
-            <strong className="text-emerald-400">−4497.77 m</strong>
+            <strong className="text-success">−4497.77 m</strong>
           </div>
           <div>
             <span className="block text-[10px] text-on-surface-variant">EASTING / NORTHING</span>
@@ -99,12 +99,12 @@ export function GaleConceptModal({ open, onClose }: GaleConceptModalProps) {
             <p className="text-body-sm leading-snug text-on-surface-variant">
               <strong className="text-on-surface">Yellow (25 km EZ) &amp; Orange (100 km EZ)</strong> centered at the
               Landing Site Star. Black traverse network links <strong className="text-on-surface">Science ROIs</strong>{' '}
-              (C, F, Ig, IC) and <strong className="text-emerald-400">ISRU Water ROIs (W1–W4)</strong>.
+              (C, F, Ig, IC) and <strong className="text-success">ISRU Water ROIs (W1–W4)</strong>.
             </p>
           </div>
 
           <div className="rounded-md border border-outline bg-surface p-sm">
-            <div className="mb-xs font-mono text-mono-sm font-bold uppercase text-emerald-400">
+            <div className="mb-xs font-mono text-mono-sm font-bold uppercase text-success">
               Space Exploration Vehicle (Pressurized SEV)
             </div>
             <img
@@ -152,7 +152,7 @@ export function GaleConceptModal({ open, onClose }: GaleConceptModalProps) {
             {visibleRois.map((r) => (
               <div key={r.id} className="rounded border border-outline-variant bg-surface-container px-sm py-xs text-[11px]">
                 <div className="flex items-center justify-between font-mono">
-                  <strong className={r.category === 'isru' ? 'text-emerald-400' : 'text-accent'}>{r.id}</strong>
+                  <strong className={r.category === 'isru' ? 'text-success' : 'text-accent'}>{r.id}</strong>
                   <span className="text-[10px] text-on-surface-variant">{r.zone}</span>
                 </div>
                 <div className="font-semibold text-on-surface">{r.kind}</div>
