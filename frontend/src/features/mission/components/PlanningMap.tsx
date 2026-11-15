@@ -239,7 +239,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
 
 function Notice({ text, onClose }: { text: string; onClose: () => void }) {
   return (
-    <div className="absolute bottom-[60px] left-1/2 z-30 flex -translate-x-1/2 animate-fade-up items-center gap-sm rounded-lg border border-warning/60 bg-surface-container/95 px-md py-sm font-body text-body-sm shadow-xl">
+    <div className="absolute bottom-[92px] left-1/2 z-30 flex -translate-x-1/2 animate-fade-up items-center gap-sm rounded-lg border border-warning/60 bg-surface-container/95 px-md py-sm font-body text-body-sm shadow-xl">
       <Icon name="info" className="text-[18px] text-warning" />
       <Phrase>{text}</Phrase>
       <button type="button" onClick={onClose} aria-label="Dismiss" className="text-on-surface-variant hover:text-on-surface">

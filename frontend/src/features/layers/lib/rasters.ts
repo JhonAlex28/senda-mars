@@ -166,11 +166,11 @@ function fetchNasaOrbitalLayers(
     },
   });
 
-  // 3. Shelter: Blend 200 m/px MGS MOLA + Mars Express HRSC Color Hillshade under RAD cliff shielding
+  // 3. Shelter: Shade radiation shelter pockets with 200 m/px MGS MOLA + Mars Express HRSC Color Hillshade
   drawGeoreferencedWmtsLayer(grid, 'Mars_MOLA_blend200ppx_HRSC_ClrShade_clon0dd_200mpp_lzw', 8, 'jpg', {
     baseCanvas: canvases.shelter,
-    alpha: 0.25,
-    composite: 'destination-over',
+    alpha: 0.35,
+    composite: 'source-atop',
     onDrawn: (dataUrl) => {
       out.shelter = dataUrl;
     },
