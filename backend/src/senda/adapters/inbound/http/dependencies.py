@@ -8,6 +8,7 @@ from senda.application.use_cases.assistant import ChatWithAssistant
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
 from senda.application.use_cases.plan_outing import PlanOuting
 from senda.application.use_cases.plan_routes import PlanEva, PlanPath, PlanTraverse
+from senda.application.use_cases.quantum import OptimizeTargetsQuantum
 from senda.application.use_cases.targets import GetTarget, ListTargets
 from senda.application.use_cases.terrain import GetTerrain
 from senda.config import Settings
@@ -47,6 +48,11 @@ def plan_eva_uc() -> PlanEva:
 def plan_path_uc() -> PlanPath:
     c = get_container()
     return PlanPath(c.target_repo, c.terrain)
+
+
+def optimize_quantum_uc() -> OptimizeTargetsQuantum:
+    c = get_container()
+    return OptimizeTargetsQuantum(c.target_repo, c.quantum)
 
 
 def assistant_settings() -> Settings:

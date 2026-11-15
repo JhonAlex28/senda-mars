@@ -286,6 +286,20 @@ class TraverseOut(BaseModel):
                    routes=[RouteOut.from_domain(r) for r in t.routes])
 
 
+# ---------- Cuántico (opcional) ----------
+
+
+class QuantumOptimizeIn(BaseModel):
+    """El token de IBM nunca viaja desde el navegador: se configura en el servidor."""
+    base: PointIn
+    selected_goal_ids: list[str] = Field(default_factory=list, max_length=20)
+    speed_kmh: float = Field(8.0, gt=0, le=40)
+    qpu_backend: str = Field("aer_simulator", max_length=40)
+    layers: int = Field(default=2, ge=1, le=2)
+    shots: int = Field(default=1024, ge=128, le=4096)
+    noise_profile: Literal["ideal", "noisy-qpu", "mitigated"] = "ideal"
+
+
 # ---------- Asistente ----------
 
 

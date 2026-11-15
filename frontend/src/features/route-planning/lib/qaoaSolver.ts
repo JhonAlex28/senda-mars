@@ -1,4 +1,5 @@
 import type { Target } from '@/features/targets';
+import { http } from '@/shared/api/httpClient';
 import type { GeoPoint } from '@/shared/types/geo';
 
 export type QuantumBackendMode = 'browser-statevector' | 'ibm-quantum-runtime';
@@ -24,11 +25,14 @@ export interface QaoaGateSummary {
   totalDepth: number;
 }
 
+/** Lo que realmente se ejecutó (el backend lo informa: QPU de IBM, simulador Aer o respaldo clásico). */
+export type QuantumExecutionMode = 'browser-statevector' | 'ibm-qpu' | 'qiskit-aer' | 'classical-fallback';
+
 export interface QuantumRouteResult {
-  mode: QuantumBackendMode;
+  mode: QuantumExecutionMode;
   backendName: string;
-  noiseProfile: QuantumNoiseProfile;
-  fidelityPct: number;
+  noiseProfile: QuantumNoiseProfile | 'n/a';
+  fidelityPct: number | null;
   jobId: string;
   nQubits: number;
   layers: number;
@@ -56,6 +60,7 @@ export interface QuantumRouteResult {
     solveMs: number;
   };
   note: string;
+  limitations?: string;
 }
 
 const MARS_RADIUS_M = 3_389_500;
@@ -325,10 +330,11 @@ export function runBrowserQaoaSolver(params: {
   const qStats = routeStats(params.base, orderedQuantum, params.speedKmh);
 
   // Classical greedy baseline on the first targetCountGoal candidates
+  const solveMs = Number((performance.now() - t0).toFixed(2));
+  const c0 = performance.now();
   const classicalTargets = candidates.slice(0, targetCountGoal);
   const classicalStats = routeStats(params.base, classicalTargets, params.speedKmh);
-
-  const solveMs = Number((performance.now() - t0).toFixed(2));
+  const classicalMs = Number((performance.now() - c0).toFixed(3));
   const rzzGates = (n * (n - 1)) / 2;
 
   return {
@@ -369,7 +375,7 @@ export function runBrowserQaoaSolver(params: {
     },
     classicalBaseline: {
       ...classicalStats,
-      solveMs: Number((solveMs * 0.35 + 0.4).toFixed(2)),
+      solveMs: classicalMs, // medido, no estimado
     },
     note: 'Executed on in-browser complex statevector QAOA simulator (exact 2^n amplitudes).',
   };
@@ -386,32 +392,23 @@ export async function optimizeRouteWithIbmQuantum(params: {
   speedKmh: number;
   mode: QuantumBackendMode;
   qpuBackend: IbmQpuName;
-  ibmToken?: string;
   layers?: number;
   shots?: number;
   noiseProfile?: QuantumNoiseProfile;
 }): Promise<QuantumRouteResult> {
   if (params.mode === 'ibm-quantum-runtime') {
     try {
-      const apiBase = import.meta.env.VITE_API_URL ?? '';
-      const resp = await fetch(`${apiBase}/api/v1/quantum/optimize-route`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          base: params.base,
-          selected_goal_ids: params.selectedGoalIds,
-          speed_kmh: params.speedKmh,
-          qpu_backend: params.qpuBackend,
-          ibm_token: params.ibmToken?.trim() || undefined,
-          layers: params.layers ?? 2,
-          shots: params.shots ?? 1024,
-          noise_profile: params.noiseProfile ?? 'ideal',
-        }),
+      // Cliente HTTP compartido: misma URL base que el resto de la API (VITE_API_BASE_URL).
+      // El token de IBM se configura en el servidor; nunca sale del navegador.
+      return await http.post<QuantumRouteResult>('/quantum/optimize-route', {
+        base: params.base,
+        selected_goal_ids: params.selectedGoalIds,
+        speed_kmh: params.speedKmh,
+        qpu_backend: params.qpuBackend,
+        layers: params.layers ?? 2,
+        shots: params.shots ?? 1024,
+        noise_profile: params.noiseProfile ?? 'ideal',
       });
-      if (resp.ok) {
-        const data = (await resp.json()) as QuantumRouteResult;
-        return data;
-      }
     } catch {
       // Backend offline -> fall back cleanly to browser Statevector QAOA
     }
@@ -421,7 +418,7 @@ export async function optimizeRouteWithIbmQuantum(params: {
   if (params.mode === 'ibm-quantum-runtime') {
     return {
       ...fallback,
-      note: `FastAPI Qiskit bridge offline — executed local Statevector QAOA fallback (target QPU: ${params.qpuBackend}).`,
+      note: `Backend quantum endpoint unreachable — ran the in-browser statevector simulator instead (no QPU, target was ${params.qpuBackend}).`,
     };
   }
   return fallback;

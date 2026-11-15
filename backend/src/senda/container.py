@@ -8,9 +8,11 @@ from senda.adapters.outbound.knowledge.markdown_kb import MarkdownKnowledgeBase
 from senda.adapters.outbound.llm.ollama_model import OllamaAssistantModel
 from senda.adapters.outbound.persistence.json_environment import JsonEnvironmentRepository
 from senda.adapters.outbound.persistence.json_targets import JsonTargetRepository
+from senda.adapters.outbound.quantum.qiskit_qaoa import QiskitQaoaOptimizer
 from senda.adapters.outbound.terrain.synthetic import SyntheticTerrainProvider
 from senda.application.ports.outbound import (AssistantModel, EnvironmentRepository,
-                                              KnowledgeBase, TargetRepository, TerrainProvider)
+                                              KnowledgeBase, QuantumOptimizer, TargetRepository,
+                                              TerrainProvider)
 from senda.config import Settings
 
 
@@ -21,6 +23,7 @@ class Container:
     environment_repo: EnvironmentRepository
     terrain: TerrainProvider
     knowledge: KnowledgeBase
+    quantum: QuantumOptimizer
     assistant_model: AssistantModel | None = None   # None = asistente desactivado
 
 
@@ -42,5 +45,7 @@ def get_container() -> Container:
         # Cambiar por un DEM real (geotiff_dem.py) solo toca esta línea
         terrain=SyntheticTerrainProvider(environment.site_bounds()),
         knowledge=MarkdownKnowledgeBase(s.data_dir / "knowledge"),
+        quantum=QiskitQaoaOptimizer(s.ibm_quantum_token, s.ibm_quantum_channel,
+                                    s.ibm_quantum_instance),
         assistant_model=_assistant_model(s),
     )

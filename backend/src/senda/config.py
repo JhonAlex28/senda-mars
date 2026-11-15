@@ -22,6 +22,10 @@ class Settings:
     ollama_url: str = "http://localhost:11434"
     llm_context_tokens: int = 8192
     ollama_token: str = ""
+    # IBM Quantum (opcional): solo en el servidor, nunca en el frontend ni en git
+    ibm_quantum_token: str = ""
+    ibm_quantum_channel: str = "ibm_quantum_platform"
+    ibm_quantum_instance: str = ""
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -38,6 +42,9 @@ class Settings:
             ollama_url=os.getenv("SENDA_OLLAMA_URL", "http://localhost:11434"),
             llm_context_tokens=int(os.getenv("SENDA_LLM_CONTEXT_TOKENS", "8192")),
             ollama_token=os.getenv("SENDA_OLLAMA_TOKEN", ""),
+            ibm_quantum_token=os.getenv("IBM_QUANTUM_TOKEN", ""),
+            ibm_quantum_channel=os.getenv("IBM_QUANTUM_CHANNEL", "ibm_quantum_platform"),
+            ibm_quantum_instance=os.getenv("IBM_QUANTUM_INSTANCE", ""),
         )
 
 

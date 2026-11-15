@@ -8,7 +8,7 @@
 [![React + TypeScript](https://img.shields.io/badge/Frontend-React_18_%2B_TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](frontend/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI_%2B_Python_3.11%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](backend/)
 [![Three.js 3D](https://img.shields.io/badge/3D_DEM-Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white)](frontend/src/features/terrain/components/Terrain3DView.tsx)
-[![IBM Quantum Optional](https://img.shields.io/badge/Optional-IBM_Quantum_%2B_Qiskit-6929C4?style=for-the-badge&logo=qiskit&logoColor=white)](backend/src/senda/adapters/quantum_qiskit.py)
+[![IBM Quantum Optional](https://img.shields.io/badge/Optional-IBM_Quantum_%2B_Qiskit-6929C4?style=for-the-badge&logo=qiskit&logoColor=white)](backend/src/senda/adapters/outbound/quantum/qiskit_qaoa.py)
 
 Monorepo con **backend** y **frontend** independientes (el frontend NASA funciona **100% standalone** o conectado al backend).
 
@@ -38,7 +38,7 @@ senda-v2/
 | 🧑‍🚀 **Crew & Suit Health HUD** | Configuración de equipo, nombres de astronautas y trajes (`xEMU-01` / `xEMU-02`), más telemetría biométrica en vivo (`HelmetStatusCard`) y registro de muestras `MSR-Ti`. |
 | 🌦️ **REMS / RAD Live** | Panel interactivo con opacidad de polvo ($\tau$), hora solar (`LMST`) y alertas de tormenta solar (`SPE`) conectados al checklist `GO / NO-GO` y al Monte Carlo de 1,000 corridas. |
 | 📊 **Evaluación & Exportación** | Rúbrica científica NASA (`/15`), badge Pareto Optimal, Score unificado (`0–100` + Grado `A+–D`) y descarga en **JSON**, **CSV**, **GeoJSON** y **Print / PDF Dossier**. |
-| ⚛️ **IBM Quantum QAOA (Opcional)** | Co-procesador opcional en `NASA Labs → ⚛ IBM Quantum QAOA` y `My goals`: simulador Statevector en el navegador + puente opcional a Qiskit / IBM Quantum Runtime (`AerSimulator`, `ibm_brisbane`, `ibm_torino`, `ibm_fez`) con modelo de ruido $T_1/T_2$. |
+| ⚛️ **IBM Quantum QAOA (Opcional)** | Co-procesador opcional en `NASA Labs → ⚛ IBM Quantum QAOA` y `My goals`: simulador Statevector en el navegador + puente opcional a Qiskit / IBM Quantum Runtime (`AerSimulator`, `ibm_brisbane`, `ibm_torino`, `ibm_fez`) con modelo de ruido $T_1/T_2$. La respuesta indica qué se ejecutó (`ibm-qpu`, `qiskit-aer` o `classical-fallback`) y sus limitaciones: los ángulos del circuito son fijos y las combinaciones se puntúan de forma clásica. |
 
 ---
 
@@ -76,8 +76,7 @@ backend/
 │   │   └── use_cases/            ListTargets, GetEnvironment, PlanRoutes…
 │   ├── adapters/                 ← mundo exterior
 │   │   ├── inbound/http/         FastAPI: routers, schemas (DTOs), dependencies
-│   │   ├── outbound/             implementaciones de los puertos (JSON, terreno, DEM…)
-│   │   └── quantum_qiskit.py     puente opcional QAOA con Qiskit Aer / IBM Quantum Runtime
+│   │   └── outbound/             implementaciones de los puertos (JSON, terreno, DEM, LLM, Qiskit…)
 │   ├── config.py                 variables de entorno
 │   ├── container.py              composition root: elige qué adaptador usar
 │   └── main.py                   crea la app FastAPI
@@ -105,6 +104,7 @@ python -m venv .venv
 pip install -e ".[dev]"
 # Opcional para habilitar Qiskit + IBM Quantum Runtime:
 # pip install -e ".[quantum]"
+# El token de IBM va en backend/.env (IBM_QUANTUM_TOKEN=...), nunca en el frontend ni en git
 pytest
 uvicorn senda.main:app --reload       # http://localhost:8000/docs
 ```
@@ -141,7 +141,7 @@ frontend/src/
 │   ├── targets/          catálogo de objetivos, ficha y lista "My goals"
 │   ├── environment/      clima: "Can I go today?" y franja inferior
 │   └── globe/            pantalla de inicio con el planeta 3D y anillos orbitales
-└── shared/         código común: api/httpClient (+ fallback offline), hooks, ui, lib (geo, astar, format), types
+└── shared/         código común: api/httpClient, hooks, ui, lib (geo, format), types
 ```
 
 ### Flujo de la aplicación

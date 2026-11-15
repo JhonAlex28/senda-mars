@@ -18,7 +18,6 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
   const { state, dispatch, targets } = useMission();
   const [mode, setMode] = useState<QuantumBackendMode>('browser-statevector');
   const [qpuBackend, setQpuBackend] = useState<IbmQpuName>('ibm_brisbane');
-  const [ibmToken, setIbmToken] = useState('');
   const [layers, setLayers] = useState<1 | 2>(2);
   const [shots, setShots] = useState<512 | 1024 | 2048>(1024);
   const [noiseProfile, setNoiseProfile] = useState<QuantumNoiseProfile>('ideal');
@@ -35,7 +34,6 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
         speedKmh: state.vehicleSpeedKmh,
         mode,
         qpuBackend,
-        ibmToken,
         layers,
         shots,
         noiseProfile,
@@ -164,18 +162,10 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
       </div>
 
       {mode === 'ibm-quantum-runtime' && (
-        <div className="flex flex-col gap-xxs rounded border border-outline-variant bg-surface p-sm font-mono text-[11px]">
-          <span className="text-on-surface-variant">
-            IBM QUANTUM API TOKEN (OPTIONAL — LEAVE BLANK FOR LOCAL QISKIT AER / BROWSER FALLBACK)
-          </span>
-          <input
-            type="password"
-            value={ibmToken}
-            onChange={(e) => setIbmToken(e.target.value)}
-            placeholder="Paste IBM Quantum Platform token (never stored)"
-            className="rounded border border-outline bg-[#0D131D] px-sm py-1 text-on-surface"
-          />
-        </div>
+        <p className="rounded border border-outline-variant bg-surface p-sm font-mono text-[11px] text-on-surface-variant">
+          Runs on the SENDA server: IBM QPU if the server has IBM_QUANTUM_TOKEN configured, otherwise the local Qiskit Aer
+          simulator, otherwise a classical fallback. The result says which one ran.
+        </p>
       )}
 
       {result && (
@@ -186,7 +176,8 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
               <div className="text-[10px] text-on-surface-variant">OPTIMAL BITSTRING</div>
               <div className="text-lg font-bold text-[#D2B4FF]">{result.bestBitstring}</div>
               <div className="text-[10px] text-on-surface-variant">
-                {result.nQubits}q · p={result.layers} · Fidelity {result.fidelityPct}%
+                {result.nQubits}q · p={result.layers}
+                {result.fidelityPct !== null ? ` · Fidelity ${result.fidelityPct}%` : ''} · ran on: {result.mode}
               </div>
             </div>
             <div className="rounded border border-outline bg-surface p-sm">
@@ -310,6 +301,7 @@ export function QuantumLabPanel({ onApplied }: QuantumLabPanelProps) {
                 Base Alpha → {result.recommendedTargetNames.join(' → ')} → Base Alpha
               </span>
               <span className="text-[10px] text-on-surface-variant">{result.note}</span>
+              {result.limitations && <span className="text-[10px] text-warning">Limitations: {result.limitations}</span>}
             </div>
             <button
               type="button"

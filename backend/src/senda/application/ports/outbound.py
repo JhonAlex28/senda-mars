@@ -3,11 +3,11 @@ Los adaptadores en senda.adapters.outbound los implementan."""
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Protocol
+from typing import Any, Protocol
 
 from senda.application.assistant.conversation import AssistantMessage, Message, ToolSpec
 from senda.domain.models.environment import EnvironmentSnapshot
-from senda.domain.models.geo import BoundingBox
+from senda.domain.models.geo import BoundingBox, GeoPoint
 from senda.domain.models.target import ScienceTarget
 from senda.domain.models.terrain import TerrainGrid
 
@@ -40,3 +40,12 @@ class KnowledgeBase(Protocol):
 
     def topics(self) -> dict[str, str]: ...          # tema → título
     def get(self, topic: str) -> str | None: ...
+
+
+class QuantumOptimizer(Protocol):
+    """Elige un subconjunto de objetivos con un optimizador cuántico (o su respaldo).
+    La respuesta incluye `mode`, que dice con honestidad qué se ejecutó."""
+
+    def optimize(self, base: GeoPoint, targets: Sequence[ScienceTarget],
+                 selected_goal_ids: Sequence[str], speed_kmh: float, qpu_backend: str,
+                 layers: int, shots: int, noise_profile: str) -> dict[str, Any]: ...
