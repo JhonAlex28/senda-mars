@@ -100,6 +100,27 @@ export function MarsGlobe3D({ sites, selectedId, onSelect }: MarsGlobe3DProps) {
     const air = atmosphere();
     scene.add(air);
 
+    // Subtle NASA telemetry grid + MRO/Odyssey/MAVEN orbital rings
+    const wire = new THREE.Mesh(
+      new THREE.SphereGeometry(1.012, 24, 16),
+      new THREE.MeshBasicMaterial({ color: '#38BDF8', wireframe: true, transparent: true, opacity: 0.08 }),
+    );
+    scene.add(wire);
+
+    const orbitSpecs: [number, number, number, number][] = [
+      [1.18, 0.45, 0.3, 0.28],
+      [1.24, -0.62, 0.55, 0.22],
+      [1.31, 0.95, -0.35, 0.16],
+    ];
+    for (const [radius, rx, rz, opacity] of orbitSpecs) {
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(radius, 0.0025, 8, 128),
+        new THREE.MeshBasicMaterial({ color: '#38BDF8', transparent: true, opacity }),
+      );
+      ring.rotation.set(rx, 0, rz);
+      scene.add(ring);
+    }
+
     let texture: THREE.Texture | null = null;
     let disposed = false;
     loadMarsTexture(2)

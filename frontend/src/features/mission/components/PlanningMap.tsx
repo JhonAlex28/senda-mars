@@ -7,18 +7,21 @@ import {
   MapCanvas,
   MapLegend,
   ParkingMarker,
+  RouteLine,
   TargetMarker,
   type Projection,
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
 import { PROFILE_META, distinctProfiles } from '@/features/route-planning';
 import { TargetCard, type Target } from '@/features/targets';
-import { TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
+import { Terrain3DView, TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
+import { computeGridAStar } from '@/shared/lib/astar';
 import { bboxAround } from '@/shared/lib/geo';
 import type { BBox, GeoPoint } from '@/shared/types/geo';
 import { Icon } from '@/shared/ui/Icon';
 import { Phrase } from '@/shared/ui/Text';
-import { activeParking } from '../state/selectors';
+import { activeParking, selectedEva, selectedTraverse } from '../state/selectors';
+import { ROVER_VEHICLES } from '../state/vehicles';
 import { useMission } from '../state/MissionContext';
 import { MapToolbar } from './MapToolbar';
 import { PlanRouteLayers } from './PlanRouteLayers';
@@ -38,8 +41,14 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const { state, dispatch, targets, targetById } = useMission();
   const { layers, shown } = useLayers();
   const [hover, setHover] = useState<GeoPoint | null>(null);
+  const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
+  const [customAStar, setCustomAStar] = useState<{ points: GeoPoint[]; distanceM: number; maxSlope: number } | null>(null);
   const walking = state.phase === 'walk';
   const parking = activeParking(state);
+  const activeRoverRoute = selectedTraverse(state);
+  const evaRoutesList = (state.traverse?.parkings ?? [])
+    .map((p) => selectedEva(state, p.id))
+    .filter((r): r is NonNullable<typeof r> => !!r);
 
   // Vista detallada (celdas de 3 m) alrededor del estacionamiento activo durante la fase Walk
   const evaBox = useMemo<BBox | null>(() => {
@@ -61,13 +70,49 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const onMapClick = (p: GeoPoint) => {
     if (state.tool === 'base') dispatch({ type: 'moveBase', point: p });
     else if (state.tool === 'hazard') dispatch({ type: 'addHazard', hazard: { ...p, radius_m: hazardRadius } });
-    else dispatch({ type: 'focusTarget', id: null });
+    else if (state.tool === 'astar' && state.base) {
+      const res = computeGridAStar(site.grid, state.base, p, state.hazards, { gridSize: 48, maxSlopeDeg: 20, slopeWeight: 1.5 });
+      setCustomAStar(res);
+    } else dispatch({ type: 'focusTarget', id: null });
   };
 
   return (
     <main className="relative flex min-h-0 flex-col overflow-hidden rounded-lg border border-outline bg-surface">
       <div className="relative min-h-0 flex-1">
-        <MapCanvas
+        {/* 2D GIS / 3D DEM View Mode Toggle */}
+        <div className="absolute bottom-12 left-1/2 z-30 flex -translate-x-1/2 items-center rounded-full border border-outline bg-surface-container/95 p-0.5 font-mono text-mono-sm shadow-lg backdrop-blur-sm">
+          <button
+            type="button"
+            onClick={() => setViewMode('2d')}
+            className={`rounded-full px-md py-1 transition-colors ${
+              viewMode === '2d' ? 'bg-primary text-on-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            2D GIS
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('3d')}
+            className={`rounded-full px-md py-1 transition-colors ${
+              viewMode === '3d' ? 'bg-primary text-on-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            3D DEM
+          </button>
+        </div>
+
+        {viewMode === '3d' ? (
+          <Terrain3DView
+            grid={evaTerrain?.grid ?? site.grid}
+            base={state.base}
+            targets={targets}
+            roverRoute={activeRoverRoute ?? null}
+            evaRoutes={evaRoutesList}
+            parkings={state.traverse?.parkings ?? []}
+            vehicleLabel={ROVER_VEHICLES[state.vehicleId].shortName}
+          />
+        ) : (
+          <MapCanvas
           projection={projection}
           rasters={terrainRasters([site, evaTerrain], layers)}
           focus={evaBox ?? site.grid.bbox}
@@ -91,9 +136,24 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
                 </div>
               )}
               {state.notice && <Notice text={state.notice} onClose={() => dispatch({ type: 'dismissNotice' })} />}
+              {customAStar && (
+                <div className="absolute bottom-md right-md z-30 flex items-center gap-sm rounded-md border border-success/60 bg-surface-container/95 px-md py-xs font-mono text-mono-sm shadow-lg">
+                  <span className="text-success">
+                    Scout path: {Math.round(customAStar.distanceM)} m · Max slope {customAStar.maxSlope.toFixed(1)}°
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setCustomAStar(null)}
+                    className="text-on-surface-variant hover:text-on-surface"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
             </>
           }
         >
+          {customAStar && <RouteLine points={customAStar.points} color="#7CD992" width={3} dotted />}
           {shown('hazards') &&
             state.hazards.map((h, i) => (
             <HazardCircle
@@ -143,6 +203,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
           {state.base && <BaseMarker point={state.base} label="BASE ALPHA" />}
           {state.tool === 'hazard' && hover && <CursorRing point={hover} radius={hazardRadius} />}
         </MapCanvas>
+        )}
       </div>
       <TerrainReadout grid={evaTerrain?.grid ?? site.grid} point={hover} />
     </main>

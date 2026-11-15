@@ -11,6 +11,17 @@ export const initialMissionState: MissionState = {
   traverseProfile: 'safe',
   activeParkingId: null,
   evaPlans: {},
+  vehicleId: 'SEV_PRESSURIZED',
+  vehicleSpeedKmh: 8.0,
+  crew: {
+    teamName: 'SENDA-ARES CREW',
+    members: [
+      { id: 'EVA-1', name: 'WATNEY', role: 'CDR', suitId: 'xEMU-01', restingBpm: 68, massKg: 78 },
+      { id: 'EVA-2', name: 'LEWIS', role: 'GEO', suitId: 'xEMU-02', restingBpm: 64, massKg: 68 },
+    ],
+  },
+  env: { tau: 0.62, lmstHour: 13, speActive: false },
+  quantumSummary: null,
   notice: null,
 };
 
@@ -94,6 +105,39 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       if (!plan) return state;
       return { ...state, evaPlans: { ...state.evaPlans, [action.parkingId]: { ...plan, profile: action.profile } } };
     }
+
+    case 'setVehicle':
+      return { ...state, vehicleId: action.vehicleId };
+    case 'setVehicleSpeed':
+      return { ...state, vehicleSpeedKmh: action.speedKmh };
+    case 'setCrew':
+      return { ...state, crew: action.crew };
+    case 'setEnv':
+      return { ...state, env: { ...state.env, ...action.env } };
+    case 'applyQuantumGoals':
+      return invalidatePlan(
+        { ...state, goals: action.goals, quantumSummary: action.summary },
+        `IBM Quantum QAOA (${action.summary.bestBitstring}) updated your mission sequence.`,
+      );
+    case 'loadDemo':
+      return {
+        ...state,
+        phase: 'plan',
+        goals: action.goals,
+        traverse: null,
+        evaPlans: {},
+        activeParkingId: null,
+        tool: 'select',
+        notice: 'Quick Demo loaded (3 Gale Crater science targets). Click "Find Rover Routes" to compute traverse!',
+      };
+    case 'resetMission':
+      return {
+        ...initialMissionState,
+        phase: 'plan',
+        base: state.base,
+        crew: state.crew,
+        notice: 'Mission reset. Select science targets or click Quick Demo.',
+      };
 
     case 'dismissNotice':
       return { ...state, notice: null };

@@ -29,7 +29,7 @@ class Settings:
         data_dir = Path(os.getenv("SENDA_DATA_DIR", str(_BACKEND_ROOT / "data")))
         if not data_dir.is_absolute():
             data_dir = (_BACKEND_ROOT / data_dir).resolve()
-        origins = os.getenv("SENDA_CORS_ORIGINS", "http://localhost:5173")
+        origins = os.getenv("SENDA_CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
         return cls(
             data_dir=data_dir,
             cors_origins=[o.strip() for o in origins.split(",") if o.strip()],

@@ -41,7 +41,17 @@ export async function loadMarsTexture(level = 2): Promise<HTMLCanvasElement> {
     (s): s is PromiseFulfilledResult<HTMLImageElement> =>
       s.status === "fulfilled",
   );
-  if (!first) throw new Error("Mars Trek is not reachable");
+  if (!first) {
+    // Fallback to local 8K Mars texture bundled in /assets/mars_texture_8k.jpg
+    const localImg = await loadImage("/assets/mars_texture_8k.jpg");
+    const fallbackCanvas = document.createElement("canvas");
+    fallbackCanvas.width = localImg.naturalWidth || 2048;
+    fallbackCanvas.height = localImg.naturalHeight || 1024;
+    const fCtx = fallbackCanvas.getContext("2d");
+    if (!fCtx) throw new Error("Canvas 2D is not available");
+    fCtx.drawImage(localImg, 0, 0, fallbackCanvas.width, fallbackCanvas.height);
+    return fallbackCanvas;
+  }
 
   const tile = first.value.naturalWidth;
   const canvas = document.createElement("canvas");

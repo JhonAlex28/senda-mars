@@ -16,7 +16,7 @@ export interface Site {
  * Coordenadas: lugares de aterrizaje publicados por cada misión.
  */
 export const SITES: Site[] = [
-  { id: 'mount-sharp', name: 'Mount Sharp', region: 'Gale Crater', mission: 'Curiosity', lat: -4.79, lon: 137.39, active: true },
+  { id: 'mount-sharp', name: 'Mount Sharp · Gale EZ', region: 'Gale Crater (25/100 km EZ)', mission: 'Curiosity / Human LZ (-4498m)', lat: -4.5931, lon: 137.4201, active: true },
   { id: 'jezero', name: 'Jezero Crater', region: 'Isidis Planitia', mission: 'Perseverance', lat: 18.44, lon: 77.45, active: false },
   { id: 'gusev', name: 'Gusev Crater', region: 'Aeolis', mission: 'Spirit', lat: -14.57, lon: 175.47, active: false },
   { id: 'meridiani', name: 'Meridiani Planum', region: 'Terra Meridiani', mission: 'Opportunity', lat: -1.95, lon: -5.53, active: false },

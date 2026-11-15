@@ -96,3 +96,21 @@ class EvaModel:
 
 def model_for(mode: TravelMode) -> MobilityModel:
     return RoverModel() if mode is TravelMode.ROVER else EvaModel()
+
+
+ROVER_SPECS: dict[str, dict[str, float]] = {
+    "SEV_PRESSURIZED": {"capacity": 42.0, "speed_kmh": 8.0, "mass_kg": 3000.0, "hotel_load_kw": 0.45},
+    "LTV_UNPRESSURIZED": {"capacity": 18.0, "speed_kmh": 12.0, "mass_kg": 1200.0, "hotel_load_kw": 0.15},
+    "HYBRID_ROVER": {"capacity": 28.0, "speed_kmh": 10.0, "mass_kg": 2100.0, "hotel_load_kw": 0.25},
+}
+
+
+def rover_model_for(vehicle_id: str | None = None, speed_kmh: float | None = None) -> RoverModel:
+    spec = ROVER_SPECS.get(vehicle_id or "SEV_PRESSURIZED", ROVER_SPECS["SEV_PRESSURIZED"])
+    spd = max(1.0, float(speed_kmh if speed_kmh is not None else spec["speed_kmh"]))
+    return RoverModel(
+        capacity=spec["capacity"],
+        nominal_speed_m_s=spd / 3.6,
+        mass_kg=spec["mass_kg"],
+        hotel_load_kw=spec["hotel_load_kw"],
+    )

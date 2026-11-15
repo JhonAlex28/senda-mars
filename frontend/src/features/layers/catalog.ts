@@ -14,6 +14,7 @@ export interface LayerDef {
   raster: boolean;
   /** false = todavía sin datos (se muestra como "Soon"). */
   available: boolean;
+  defaultVisible?: boolean;
   defaultOpacity: number;
   legend?: { label: string; swatch: string }[];
 }
@@ -87,32 +88,40 @@ export const LAYERS: LayerDef[] = [
     name: 'Orbital photo',
     icon: 'satellite_alt',
     provenance: 'measured',
-    source: 'MRO HiRISE',
-    resolution: '0.25 m per pixel',
+    source: 'NASA Mars Trek · Viking/CTX Mosaic',
+    resolution: '6–232 m per pixel',
     raster: true,
-    available: false,
-    defaultOpacity: 1,
+    available: true,
+    defaultVisible: false,
+    defaultOpacity: 0.85,
   },
   {
     id: 'minerals',
     name: 'Minerals',
     icon: 'science',
     provenance: 'measured',
-    source: 'MRO CRISM',
+    source: 'MRO CRISM · Clay & Sulfate Strata',
     resolution: '18 m per pixel',
     raster: true,
-    available: false,
-    defaultOpacity: 0.6,
+    available: true,
+    defaultVisible: false,
+    defaultOpacity: 0.55,
+    legend: [
+      { label: 'Smectite', swatch: 'bg-accent' },
+      { label: 'Sulfates', swatch: 'bg-primary' },
+    ],
   },
   {
     id: 'shelter',
     name: 'Radiation shelter',
     icon: 'shield',
     provenance: 'modeled',
-    source: 'Curiosity RAD + terrain',
+    source: 'Curiosity RAD (0.64 mSv/sol) + DEM',
     resolution: 'Relative estimate',
     raster: true,
-    available: false,
-    defaultOpacity: 0.6,
+    available: true,
+    defaultVisible: false,
+    defaultOpacity: 0.55,
+    legend: [{ label: 'High shielding', swatch: 'bg-success' }],
   },
 ];

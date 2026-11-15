@@ -4,8 +4,18 @@ import type { RoutePlan, RouteProfile, Scenario, TravelMode, TraversePlan, Waypo
 
 export const routesApi = {
   /** Rover: base → estacionamientos → base (tres alternativas). */
-  traverse: (base: GeoPoint, targetIds: string[], scenario: Scenario) =>
-    http.post<TraversePlan>('/routes/traverse', { base, target_ids: targetIds, ...scenario }),
+  traverse: (
+    base: GeoPoint,
+    targetIds: string[],
+    scenario: Scenario,
+    vehicle?: { vehicle_id?: string; speed_kmh?: number },
+  ) =>
+    http.post<TraversePlan>('/routes/traverse', {
+      base,
+      target_ids: targetIds,
+      ...scenario,
+      ...vehicle,
+    }),
 
   /** EVA: rover → objetivos → rover (tres alternativas). */
   eva: (rover: GeoPoint, targetIds: string[], scenario: Scenario) =>

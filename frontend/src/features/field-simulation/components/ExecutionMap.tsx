@@ -13,9 +13,10 @@ import {
   type TargetState,
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
+import { ROVER_VEHICLES, type RoverVehicleId } from '@/features/mission/state/vehicles';
 import type { Hazard, Parking } from '@/features/route-planning';
 import type { Target } from '@/features/targets';
-import { TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
+import { Terrain3DView, TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
 import { formatDistance, formatMinutes } from '@/shared/lib/format';
 import { bboxAround } from '@/shared/lib/geo';
 import type { GeoPoint } from '@/shared/types/geo';
@@ -37,12 +38,14 @@ interface ExecutionMapProps {
   parkings: Parking[];
   base: GeoPoint;
   hazards: Hazard[];
+  vehicleId?: RoverVehicleId;
 }
 
 /** Mapa del modo Go: posición simulada, tramo actual y lo que queda por recorrer. */
-export function ExecutionMap({ projection, site, sim, targets, parkings, base, hazards }: ExecutionMapProps) {
+export function ExecutionMap({ projection, site, sim, targets, parkings, base, hazards, vehicleId = 'SEV_PRESSURIZED' }: ExecutionMapProps) {
   const { state, leg, here, dispatch } = sim;
   const [hover, setHover] = useState<GeoPoint | null>(null);
+  const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
   const { layers } = useLayers();
   const targetById = useMemo(() => new Map(targets.map((t) => [t.id, t])), [targets]);
   const name = (id: string) => targetById.get(id)?.name;
@@ -65,7 +68,45 @@ export function ExecutionMap({ projection, site, sim, targets, parkings, base, h
 
   return (
     <main className="relative flex min-h-0 flex-col overflow-hidden rounded-lg border border-outline bg-surface">
+      <div className="absolute right-md top-md z-30 flex items-center gap-xs rounded-md border border-outline bg-surface-container/95 p-0.5 font-label text-label-sm shadow-lg backdrop-blur-sm">
+        <button
+          type="button"
+          onClick={() => setViewMode('2d')}
+          className={`rounded px-sm py-1 transition ${
+            viewMode === '2d' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
+          }`}
+        >
+          2D GIS
+        </button>
+        <button
+          type="button"
+          onClick={() => setViewMode('3d')}
+          className={`rounded px-sm py-1 transition ${
+            viewMode === '3d' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
+          }`}
+        >
+          3D DEM
+        </button>
+      </div>
+
       <div className="relative min-h-0 flex-1">
+        {viewMode === '3d' ? (
+          <Terrain3DView
+            grid={site.grid}
+            base={base}
+            targets={targets}
+            roverRoute={(() => {
+              const pts = state.legs.filter((l) => l.mode === 'rover').flatMap((l) => l.points);
+              return pts.length > 0 ? { points: pts } : null;
+            })()}
+            evaRoutes={state.legs
+              .filter((l) => l.mode === 'eva')
+              .map((l) => ({ points: l.points }))}
+            parkings={parkings}
+            vehicleLabel={ROVER_VEHICLES[vehicleId].shortName}
+            livePosition={{ lon: here.point.lon, lat: here.point.lat, heading: here.heading, mode: leg.mode }}
+          />
+        ) : (
         <MapCanvas
           projection={projection}
           rasters={terrainRasters([site, detail], layers)}
@@ -152,6 +193,7 @@ export function ExecutionMap({ projection, site, sim, targets, parkings, base, h
           <BaseMarker point={base} label="BASE ALPHA" />
           <PositionMarker point={here.point} heading={here.heading} mode={leg.mode} />
         </MapCanvas>
+        )}
       </div>
       <TerrainReadout grid={detail?.grid ?? site.grid} point={hover ?? here.point} />
     </main>

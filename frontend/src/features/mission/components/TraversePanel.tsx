@@ -3,10 +3,11 @@ import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { usePlanning } from '../hooks/usePlanning';
-import { activeParking } from '../state/selectors';
+import { activeParking, selectedTraverse } from '../state/selectors';
 import { useMission } from '../state/MissionContext';
 import { ErrorNote } from './ErrorNote';
 import { ParkingChips } from './ParkingChips';
+import { VehicleSelectorCard } from './VehicleSelectorCard';
 
 /** Fase Plan: pedir el recorrido del rover, comparar las tres rutas y elegir dónde estacionar. */
 export function TraversePanel() {
@@ -14,6 +15,7 @@ export function TraversePanel() {
   const { planTraverse, planEva, loading, error, clearError } = usePlanning();
   const parking = activeParking(state);
   const parkingPlanned = parking ? !!state.evaPlans[parking.id] : false;
+  const activeRoute = selectedTraverse(state);
 
   const openWalk = async () => {
     if (!parking) return;
@@ -23,6 +25,14 @@ export function TraversePanel() {
 
   return (
     <>
+      <VehicleSelectorCard
+        vehicleId={state.vehicleId}
+        speedKmh={state.vehicleSpeedKmh}
+        distanceM={activeRoute?.distance_m}
+        onChangeVehicle={(vehicleId) => dispatch({ type: 'setVehicle', vehicleId })}
+        onChangeSpeed={(speedKmh) => dispatch({ type: 'setVehicleSpeed', speedKmh })}
+      />
+
       <Button
         size="lg"
         icon="route"

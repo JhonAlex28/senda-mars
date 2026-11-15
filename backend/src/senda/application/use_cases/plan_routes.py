@@ -15,7 +15,7 @@ from senda.domain.models.route import (Conditions, Hazard, ParkingSpot, RoutePla
                                        StopKind, TraversePlan, TravelMode, Waypoint)
 from senda.domain.models.target import ScienceTarget
 from senda.domain.models.terrain import TerrainGrid
-from senda.domain.services.mobility import model_for
+from senda.domain.services.mobility import MobilityModel, model_for, rover_model_for
 from senda.domain.services.parking import propose_parkings
 from senda.domain.services.route_planner import hazard_cells, plan_route
 
@@ -54,10 +54,11 @@ class _Planner:
     def plan_all(self, mode: TravelMode, waypoints: list[Waypoint], hazards: list[Hazard],
                  conditions: Conditions, attractors: list[GeoPoint],
                  profiles: list[RouteProfile] | None = None,
-                 grid: TerrainGrid | None = None) -> list[RoutePlan]:
+                 grid: TerrainGrid | None = None,
+                 model: MobilityModel | None = None) -> list[RoutePlan]:
         grid = grid or self.grid_for(mode, [w.location for w in waypoints])
-        model = model_for(mode)
-        return [plan_route(grid, waypoints, model, profile, hazards, conditions, attractors)
+        resolved_model = model or model_for(mode)
+        return [plan_route(grid, waypoints, resolved_model, profile, hazards, conditions, attractors)
                 for profile in profiles or DEFAULT_PROFILES]
 
 
@@ -66,14 +67,16 @@ class PlanTraverse:
         self._planner = _Planner(targets, terrain)
 
     def execute(self, base: GeoPoint, target_ids: list[str], hazards: list[Hazard],
-                conditions: Conditions) -> TraversePlan:
+                conditions: Conditions, vehicle_id: str | None = None,
+                speed_kmh: float | None = None) -> TraversePlan:
         targets = self._planner.resolve_targets(target_ids)
         grid = self._planner.grid_for(TravelMode.ROVER, [base] + [t.location for t in targets])
         parkings = propose_parkings(grid, targets, hazard_cells(grid, hazards))
         home = Waypoint(base, StopKind.BASE, "base")
         waypoints = [home, *(_parking_stop(p) for p in parkings), home]
+        rover_model = rover_model_for(vehicle_id, speed_kmh)
         routes = self._planner.plan_all(TravelMode.ROVER, waypoints, hazards, conditions,
-                                        [t.location for t in targets], grid=grid)
+                                        [t.location for t in targets], grid=grid, model=rover_model)
         return TraversePlan(parkings, routes)
 
 

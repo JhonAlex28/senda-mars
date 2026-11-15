@@ -4,7 +4,8 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from senda.adapters.inbound.http.routers import assistant, environment, health, routes, targets, terrain
+from senda.adapters.inbound.http.routers import (assistant, environment, health, quantum, routes,
+                                                targets, terrain)
 from senda.container import get_container
 
 API_PREFIX = "/api/v1"
@@ -20,7 +21,7 @@ def create_app() -> FastAPI:
     )
     app.include_router(health.router)
     for r in (targets.router, environment.router, terrain.router, routes.router,
-              assistant.router):
+              assistant.router, quantum.router):
         app.include_router(r, prefix=API_PREFIX)
     return app
 
