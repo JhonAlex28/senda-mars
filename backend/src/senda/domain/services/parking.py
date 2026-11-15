@@ -59,31 +59,39 @@ def propose_parkings(grid: TerrainGrid, targets: list[ScienceTarget],
     ]
 
 
+def tour_order(base: GeoPoint, points: list[GeoPoint]) -> list[int]:
+    """Índices de `points` en orden de visita base → … → base: vecino más cercano + 2-opt
+    (distancia en línea recta)."""
+    idx = list(range(len(points)))
+    if len(idx) <= 2:
+        return idx
+    left, tour, here = list(idx), [], base
+    while left:
+        nxt = min(left, key=lambda i: here.distance_to(points[i]))
+        left.remove(nxt)
+        tour.append(nxt)
+        here = points[nxt]
+
+    def length(t: list[int]) -> float:
+        pts = [base, *(points[i] for i in t), base]
+        return sum(a.distance_to(b) for a, b in zip(pts, pts[1:]))
+
+    improved = True
+    while improved:
+        improved = False
+        for i in range(len(tour) - 1):
+            for j in range(i + 1, len(tour)):
+                cand = tour[:i] + tour[i:j + 1][::-1] + tour[j + 1:]
+                if length(cand) < length(tour) - 1e-6:
+                    tour, improved = cand, True
+    return tour
+
+
 def order_tour(base: GeoPoint, parkings: list[ParkingSpot]) -> list[ParkingSpot]:
-    """Orden de visita base → P… → base: vecino más cercano + 2-opt (distancia en línea recta).
+    """Estacionamientos en orden de visita desde la base, renumerados P1…Pn.
 
     El orden de prioridad de los objetivos no es un buen orden de manejo: subir y bajar el
-    Monte Sharp varias veces agota la batería del SEV. Se renumeran P1…Pn en orden de visita."""
-    if len(parkings) <= 2:
-        tour = list(parkings)
-    else:
-        left, tour, here = list(parkings), [], base
-        while left:
-            nxt = min(left, key=lambda p: here.distance_to(p.location))
-            left.remove(nxt)
-            tour.append(nxt)
-            here = nxt.location
-
-        def length(t: list[ParkingSpot]) -> float:
-            pts = [base, *(p.location for p in t), base]
-            return sum(a.distance_to(b) for a, b in zip(pts, pts[1:]))
-
-        improved = True
-        while improved:
-            improved = False
-            for i in range(len(tour) - 1):
-                for j in range(i + 1, len(tour)):
-                    cand = tour[:i] + tour[i:j + 1][::-1] + tour[j + 1:]
-                    if length(cand) < length(tour) - 1e-6:
-                        tour, improved = cand, True
-    return [ParkingSpot(f"P{i}", p.location, p.target_ids) for i, p in enumerate(tour, start=1)]
+    Monte Sharp varias veces agota la batería del SEV."""
+    order = tour_order(base, [p.location for p in parkings])
+    return [ParkingSpot(f"P{i}", parkings[k].location, parkings[k].target_ids)
+            for i, k in enumerate(order, start=1)]

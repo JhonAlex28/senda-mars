@@ -207,3 +207,25 @@ def test_simulation_uses_the_same_crop_as_planning():
     planned = ctx.eva_grid([GeoPoint(pk["lon"], pk["lat"]), s03])
     simulated = ctx.eva_grid([GeoPoint(p["lon"], p["lat"]) for p in route["points"]])
     assert planned.spec == simulated.spec
+
+
+def test_traverse_visits_user_waypoints_in_tour_order():
+    base = {"lon": 137.42009295, "lat": -4.59310427}
+    w = {"lon": 137.40, "lat": -4.70}            # a mitad de camino entre la base y el boxwork
+    res = client.post("/api/v1/routes/traverse",
+                      json={"base": base, "target_ids": ["S03", "T02"], "waypoints": [w]})
+    assert res.status_code == 200, res.text
+    route = res.json()["routes"][0]
+    kinds = [(s["kind"], s["ref_id"]) for s in route["stops"]]
+    assert ("waypoint", "W1") in kinds
+    order = [ref for _, ref in kinds]
+    # S03 (cerca de la base) → W1 → T02 (boxwork), o el recorrido inverso
+    assert order.index("W1") not in (0, len(order) - 1)
+    assert route["return_ok"]
+
+
+def test_traverse_rejects_waypoint_outside_the_area():
+    base = {"lon": 137.42009295, "lat": -4.59310427}
+    res = client.post("/api/v1/routes/traverse",
+                      json={"base": base, "target_ids": ["T02"], "waypoints": [{"lon": 137.0, "lat": -4.0}]})
+    assert res.status_code == 422

@@ -179,6 +179,8 @@ class TraverseIn(ScenarioIn):
     target_ids: list[str] = Field(min_length=1)
     vehicle_id: str | None = None
     speed_kmh: float | None = None
+    waypoints: list[PointIn] = Field(default=[], max_length=10,
+                                     description="Puntos de paso del vehículo marcados por el usuario (W1…Wn)")
 
 
 class EvaIn(ScenarioIn):

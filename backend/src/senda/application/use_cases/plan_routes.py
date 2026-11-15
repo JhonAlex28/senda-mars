@@ -19,6 +19,7 @@ from senda.domain.models.route import (Conditions, Hazard, RoutePlan, RouteProfi
                                        TraversePlan, TravelMode, Waypoint)
 from senda.domain.models.target import ScienceTarget
 from senda.domain.services import eva_planner as eva
+from senda.domain.services.parking import tour_order
 from senda.domain.services.pathfinding import chain_astar
 from senda.domain.services.rover_planner import plan_rover_chain
 
@@ -104,10 +105,12 @@ class PlanTraverse:
 
     def execute(self, base: GeoPoint, target_ids: list[str], hazards: list[Hazard],
                 conditions: Conditions, vehicle_id: str | None = None,
-                speed_kmh: float | None = None) -> TraversePlan:
+                speed_kmh: float | None = None,
+                user_waypoints: list[GeoPoint] | None = None) -> TraversePlan:
         """`vehicle_id`: solo el SEV presurizado está modelado (doc §0.4); cualquier otro id se
         planifica con los parámetros del SEV. `speed_kmh` escala la velocidad nominal del SEV,
-        acotada a su máximo."""
+        acotada a su máximo. `user_waypoints`: puntos por los que el usuario quiere que pase el
+        vehículo (W1…Wn); se intercalan con los estacionamientos en el orden de visita."""
         targets = self._p.resolve_targets(target_ids)
         ctx = self._p.ctx
         conditions = with_cruise_speed(conditions, speed_kmh, ctx.params.rover)
@@ -116,9 +119,15 @@ class PlanTraverse:
         for t in targets:
             if not grid.contains(t.location):
                 raise NoRouteFound(f"target {t.id} is outside the rover grid")
+        for i, p in enumerate(user_waypoints or [], start=1):
+            ctx.regional_cell(p, f"waypoint W{i}")   # dentro del área y transitable
         parkings = ctx.parkings_for(targets, base, tuple(hazards))
+        stops = [Waypoint(pk.location, StopKind.PARKING, pk.id) for pk in parkings]
+        stops += [Waypoint(p, StopKind.WAYPOINT, f"W{i}") for i, p in enumerate(user_waypoints or [], start=1)]
+        if user_waypoints:
+            stops = [stops[k] for k in tour_order(base, [w.location for w in stops])]
         home = Waypoint(base, StopKind.BASE, "base")
-        waypoints = [home, *(Waypoint(pk.location, StopKind.PARKING, pk.id) for pk in parkings), home]
+        waypoints = [home, *stops, home]
         return TraversePlan(parkings, self._p.rover_routes(waypoints, hazards, conditions, None))
 
 
