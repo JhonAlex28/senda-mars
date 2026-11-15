@@ -10,6 +10,7 @@ interface SiteCardProps {
   onExplore: () => void;
 }
 
+/** Tarjeta flotante con datos del sitio y el botón para abrir la misión. */
 export function SiteCard({ site, readiness, goalCount, onExplore }: SiteCardProps) {
   if (!site.active) return <ComingSoonCard site={site} />;
   const check = (key: string) => readiness?.checks.find((c) => c.key === key);
@@ -57,9 +58,8 @@ export function SiteCard({ site, readiness, goalCount, onExplore }: SiteCardProp
   );
 }
 
-
+/** Sitio que todavía no tiene misión preparada: solo dónde está y quién lo estudió. */
 function ComingSoonCard({ site }: { site: Site }) {
-  const feature = site.feature;
   return (
     <article key={site.id} className="flex w-80 animate-fade-up flex-col gap-md rounded-lg border border-outline bg-surface-container/95 p-lg shadow-2xl">
       <header className="flex items-start justify-between gap-sm">
@@ -72,56 +72,12 @@ function ComingSoonCard({ site }: { site: Site }) {
         </div>
         <span className="shrink-0 rounded-full border border-outline px-sm py-xs font-label text-label-sm uppercase text-on-surface-variant">Soon</span>
       </header>
-      {feature ? (
-        <dl className="grid gap-xs rounded-md border border-outline-variant bg-surface-container-high/60 p-sm font-body text-body-sm">
-          <div className="flex justify-between gap-sm">
-            <dt className="text-on-surface-variant">Feature ID</dt>
-            <dd className="font-mono text-on-surface">{feature.catalogId}</dd>
-          </div>
-          <div className="flex justify-between gap-sm">
-            <dt className="text-on-surface-variant">Type · target</dt>
-            <dd className="text-right text-on-surface">{feature.type} · {feature.target}</dd>
-          </div>
-          {feature.controlNetwork && (
-            <div className="flex justify-between gap-sm">
-              <dt className="text-on-surface-variant">Control network</dt>
-              <dd className="text-right text-on-surface">{feature.controlNetwork}</dd>
-            </div>
-          )}
-          <div className="flex justify-between gap-sm">
-            <dt className="text-on-surface-variant">Diameter</dt>
-            <dd className="font-mono text-on-surface">{feature.diameterKm.toFixed(2)} km</dd>
-          </div>
-          <div className="flex justify-between gap-sm">
-            <dt className="text-on-surface-variant">Latitude bounds</dt>
-            <dd className="font-mono text-right text-on-surface">
-              {Math.abs(feature.southmostLat).toFixed(2)}°S–{Math.abs(feature.northmostLat).toFixed(2)}°S
-            </dd>
-          </div>
-          <div className="flex justify-between gap-sm">
-            <dt className="text-on-surface-variant">Longitude bounds</dt>
-            <dd className="font-mono text-right text-on-surface">
-              {feature.westmostLon.toFixed(2)}°E–{feature.eastmostLon.toFixed(2)}°E
-            </dd>
-          </div>
-          {feature.quadrangle && (
-            <div className="flex justify-between gap-sm">
-              <dt className="text-on-surface-variant">Quadrangle</dt>
-              <dd className="font-mono text-on-surface">{feature.quadrangle}</dd>
-            </div>
-          )}
-          <div className="border-t border-outline-variant pt-xs text-label-sm text-on-surface-variant">
-            {feature.coordinateSystem}
-          </div>
-        </dl>
-      ) : (
-        <p className="flex items-center gap-xs font-body text-body-sm text-on-surface-variant">
-          <Icon name="smart_toy" className="text-[18px] text-accent" />
-          <span>
-            Explored by <strong className="text-on-surface">{site.mission}</strong>
-          </span>
-        </p>
-      )}
+      <p className="flex items-center gap-xs font-body text-body-sm text-on-surface-variant">
+        <Icon name="smart_toy" className="text-[18px] text-accent" />
+        <span>
+          Explored by <strong className="text-on-surface">{site.mission}</strong>
+        </span>
+      </p>
       <Button icon="lock" disabled className="w-full">
         Coming soon
       </Button>
