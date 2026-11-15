@@ -244,6 +244,22 @@ frontend/src/features/
 
 Yo derivo la **pendiente direccional** entre celdas desde `dem.npy`, porque subir y bajar no cuestan lo mismo.
 
+**Entrega v1.0 de Mec. A** (rama `feat/terrain-geospatial-data`, detalle en [`terrain-data.md`](terrain-data.md)):
+
+| Grilla | Resolución | Tamaño | Cubre |
+|---|---|---|---|
+| Local | 1 m | 2005 × 2011 | Boxwork |
+| Regional | 10 m | 1424 × 416 | `[137.360, −4.820, 137.430, −4.580]` |
+
+- Ambas vienen del MSL Gale Merged DEM de 1 m, con 100 % de cobertura.
+- Cumplen este contrato sin cambios y se cargan con `kind: "measured"`.
+- La base queda dentro de la regional, a −4 497.8 m, en una celda de clase 0.
+- **Limitaciones de v1.0:**
+  - `risk` es solo pendiente (sin TRI ni arena);
+  - `confidence` es solo 0/1, así que `LOW_CONFIDENCE` no se dispara;
+  - la regional no cubre todavía la EZ de ≥100 km.
+- `adapters/outbound/terrain/synthetic.py` queda solo como respaldo si faltan los `.npy`.
+
 ### 4.3 Estudiante → Mec. B (esquema real de los archivos)
 **`targets_v0.geojson`** — `FeatureCollection` de `Point [lon, lat]`. Campos que uso:
 
@@ -491,6 +507,10 @@ Para pasar de la celda `i` a la vecina `j` (8 vecinos; `d = cell` o `cell·√2`
 - Máscara: `scipy.ndimage.binary_dilation(classes == 2, iterations=1..2)`.
 - Waypoints: A\* por tramos y concatenación sin duplicar la celda de unión.
 - Rendimiento: si pasa de 5 s → planificar a 4 m/celda en local o usar `numba`. La grilla regional a 10 m (~0.6 M celdas) se puede bajar a 20 m (~150 k) si hace falta.
+- **Submuestreo** (`terrain_analysis.downsample`, se activa cuando hay más de `SENDA_MAX_PLANNING_CELLS` = 300 k celdas). Con los datos v1.0, el local pasa de 1 m a 4 m y la regional de 10 m a 20 m.
+  - Se conservan del bloque: DEM = media, confianza = mínima.
+  - La clase se **reclasifica por pendiente sobre el DEM agregado**, con los umbrales de la escala. El riesgo es la media del bloque.
+  - No se usa "la peor clase del bloque": con el DEM de 1 m, la rugosidad métrica de las crestas del boxwork (29 % > 20°) subía el no-go al 65 % y aislaba T04–T07. Con la reclasificación queda en 35 % y los 8 objetivos quedan conectados.
 
 ### 6.4 Métricas y consumibles EVA (P-5, P-6) — `metabolic.py`
 - Se suma `E_ij` **real** (sin pesos), `t_ij`, ascenso y pendiente máx.
@@ -593,9 +613,9 @@ Ramas y PRs según CONTRIBUTING: un PR por tarea, título en Conventional Commit
 ---
 
 ## 11. Preguntas abiertas
-1. **Cobertura del DEM regional:** ¿el MSL Gale Merged DEM de 1 m cubre la franja base (−4.5931) → boxwork (−4.79)? Si no, ¿CTX o HRSC? (Mec. A)
+1. ~~**Cobertura del DEM regional**~~: resuelto en la v1.0 de Mec. A, que cubre la franja base → boxwork a 10 m. **Pendiente:** una grilla gruesa (100–200 m) para la EZ de ≥100 km. (Mec. A)
 2. **Umbrales del SEV:** la página NASA no da pendiente máxima, autonomía ni masa. ¿Hay una fuente primaria (DRA 5.0, documentos del MMSEV o Desert RATS) para reemplazar los supuestos de §4.5?
 3. **Mover `physiology` y `reference_eva`** de `env.json` a `mission_params.json` (PR coordinado con el Estudiante) o dejarlos donde están.
-4. **Elevación de la base:** confirmarla con el DEM (≈ −4 500 m, **a verificar**) → ascenso de ~765 m hasta T01 (−3 734.7 m).
+4. ~~**Elevación de la base**~~: confirmada con el DEM v1.0 en **−4 497.8 m**, unos 763 m por debajo de T01 (−3 734.7 m).
 5. **Ubicación del staging:** T01 (Rustic Canyon) se eligió como base de la EVA antes de que existiera el tramo rover. ¿Hay una celda más cercana a T05/T06 transitable para el SEV? (R-4)
 6. **Rendimiento:** ¿A\* con numpy a 1 000 × 1 000 cumple < 5 s o hace falta submuestrear o usar `numba`?

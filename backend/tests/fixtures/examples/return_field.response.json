@@ -4,12 +4,12 @@
  "png_url": "/api/v1/return-field/image.png?leg=eva&scenario=none",
  "safe_mask_png_url": "/api/v1/return-field/safe-mask.png?leg=eva&scenario=none",
  "bbox_lonlat": [
-  137.37204,
-  -4.812608692135664,
-  137.40598365697454,
-  -4.7788
+  137.37203798970677,
+  -4.812593094850238,
+  137.40591416426187,
+  -4.778784402714575
  ],
  "unit": "L O2",
- "max_value": 38.212,
+ "max_value": 39.127,
  "source_id": "T01"
 }

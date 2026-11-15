@@ -31,3 +31,28 @@ def test_downsample_is_conservative():
     assert d.classes[0, 0] == CLASS_NOGO
     assert np.isclose(d.dem[0, 0], g.dem[:2, :2].mean())
     assert d.risk[0, 0] == g.risk[:2, :2].max()
+
+
+def test_downsample_reclassifies_metric_roughness():
+    """Rugosidad de 1 m (crestas > 20°) no debe volverse muro de no-go al agregar a 4 m."""
+    import numpy as np
+    from dataclasses import replace
+
+    from senda.domain.models.terrain import CLASS_NODATA, CLASS_NOGO
+    from senda.domain.services.terrain_analysis import classify_slope, downsample, nogo_mask
+    from tests.fixtures.synthetic import synthetic_grid
+
+    g = synthetic_grid()
+    cs = g.spec.cell_size_m
+    rr, cc = np.mgrid[0:g.spec.rows, 0:g.spec.cols]
+    bumps = 1.6 * cs * ((cc // 2) % 2)                     # crestas de 2 m, flancos ~39°
+    dem = (g.dem + bumps).astype(np.float32)
+    dem[:4, :4] = np.nan                                   # bloque completo sin datos
+    g = replace(g, dem=dem, classes=classify_slope(dem, cs, 10, 20))
+    assert (g.classes == CLASS_NOGO).mean() > 0.5
+
+    worst = downsample(g, 4)
+    fixed = downsample(g, 4, 10, 20)
+    assert nogo_mask(fixed.classes, 0).mean() < nogo_mask(worst.classes, 0).mean()
+    assert fixed.classes[0, 0] == CLASS_NODATA
+    assert np.isclose(fixed.risk[1, 1], g.risk[4:8, 4:8].mean())

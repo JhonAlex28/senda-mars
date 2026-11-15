@@ -95,10 +95,15 @@ def snap_to_passable(cell: Cell, blocked: np.ndarray, max_radius_cells: int = 25
     return None
 
 
-def downsample(grid, factor: int):
-    """Agrega bloques factor×factor de forma CONSERVADORA para planificar más rápido
-    (doc §6.3): dem = media, clase = la peor (no-go si algún píxel es no-go),
-    riesgo = máximo, confianza = mínima."""
+def downsample(grid, factor: int, caution_deg: float | None = None,
+               nogo_deg: float | None = None):
+    """Agrega bloques factor×factor para planificar más rápido (doc §6.3).
+
+    dem = media y confianza = mínima. Con umbrales (`caution_deg`, `nogo_deg`) la clase se
+    RECLASIFICA por pendiente sobre el DEM agregado y el riesgo es la media del bloque: las
+    clases de Mec. A son solo pendiente, y "la peor del bloque" convierte la rugosidad métrica
+    del DEM de 1 m en muros de no-go que aíslan los objetivos. Sin umbrales: clase = la peor
+    del bloque y riesgo = máximo (modo conservador)."""
     from dataclasses import replace as _replace
 
     from senda.domain.models.grid import GridSpec
@@ -116,11 +121,19 @@ def downsample(grid, factor: int):
     count = finite.sum(axis=2)
     dem = np.where(count > 0, np.where(finite, dem_b, 0.0).sum(axis=2) / np.maximum(count, 1), np.nan)
     cls_b = blocks(grid.classes)
-    valid = np.where(cls_b == CLASS_NODATA, 0, cls_b)
-    classes = valid.max(axis=2).astype(np.uint8)
-    classes[np.all(cls_b == CLASS_NODATA, axis=2)] = CLASS_NODATA
+    all_nodata = np.all(cls_b == CLASS_NODATA, axis=2)
+    reclassify = caution_deg is not None and nogo_deg is not None
+    if reclassify:
+        classes = classify_slope(dem, grid.spec.cell_size_m * f, caution_deg, nogo_deg)
+        risk_b = blocks(grid.risk)
+        risk = risk_b.mean(axis=2)
+    else:
+        valid = np.where(cls_b == CLASS_NODATA, 0, cls_b)
+        classes = valid.max(axis=2).astype(np.uint8)
+        risk = blocks(grid.risk).max(axis=2)
+    classes[all_nodata] = CLASS_NODATA
     spec = GridSpec(origin_x=grid.spec.origin_x, origin_y=grid.spec.origin_y,
                     cell_size_m=grid.spec.cell_size_m * f, rows=rows, cols=cols, radius_m=grid.spec.radius_m)
     return _replace(grid, spec=spec, dem=dem.astype(np.float32), classes=classes,
-                    risk=blocks(grid.risk).max(axis=2).astype(np.float32),
+                    risk=risk.astype(np.float32),
                     confidence=blocks(grid.confidence).min(axis=2).astype(np.float32))

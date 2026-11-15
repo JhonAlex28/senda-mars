@@ -61,11 +61,14 @@ class NpyTerrainProvider:
 
 class CompositeTerrainProvider:
     """Usa el .npy real si existe para esa escala; si no, el sintético.
-    Si la grilla supera `max_cells`, la submuestrea para planificar (< 5 s, doc §6.3)."""
+    Si la grilla supera `max_cells`, la submuestrea para planificar (< 5 s, doc §6.3),
+    reclasificando la pendiente con los umbrales de la escala (`slopes`) si se dan."""
 
     def __init__(self, real: NpyTerrainProvider, fallback, root: Path,
-                 max_cells: int = 300_000) -> None:
+                 max_cells: int = 300_000,
+                 slopes: dict[Scale, tuple[float, float]] | None = None) -> None:
         self._real = real
+        self._slopes = slopes or {}
         self._fallback = fallback
         self._root = root
         self._max_cells = max_cells
@@ -77,7 +80,8 @@ class CompositeTerrainProvider:
             grid = src.get_grid(scale)
             n = grid.spec.rows * grid.spec.cols
             factor = math.ceil(math.sqrt(n / self._max_cells)) if n > self._max_cells else 1
-            self._cache[scale] = downsample(grid, factor)
+            caution, nogo = self._slopes.get(scale, (None, None))
+            self._cache[scale] = downsample(grid, factor, caution, nogo)
         return self._cache[scale]
 
     def site_bounds(self) -> BoundingBox:

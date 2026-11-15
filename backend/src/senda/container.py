@@ -13,6 +13,7 @@ from senda.application.planner_context import PlannerContext
 from senda.application.ports.outbound import (EnvironmentRepository, MissionParamsRepository,
                                               TargetRepository, TerrainProvider)
 from senda.config import Settings
+from senda.domain.models.terrain import Scale
 
 
 @dataclass(frozen=True)
@@ -36,7 +37,8 @@ def build_container(s: Settings) -> Container:
                                          base_lonlat=p.base_lonlat)
     terrain_dir = s.data_dir / "terrain"
     terrain = CompositeTerrainProvider(NpyTerrainProvider(terrain_dir, human, rover), synthetic, terrain_dir,
-                                       s.max_planning_cells)
+                                       s.max_planning_cells,
+                                       slopes={Scale.LOCAL: human, Scale.REGIONAL: rover})
     return Container(
         settings=s,
         target_repo=targets,
