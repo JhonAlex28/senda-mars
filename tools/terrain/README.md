@@ -126,22 +126,64 @@ a las ubicaciones oficiales, después de validarlos.
 - La disponibilidad de terreno no garantiza que A*
   encuentre una trayectoria transitable.
 
+
 ## 8. Estado de validación
 
-La versión regional ampliada fue comprobada con:
+### 8.1. Validación de la grilla regional
 
+La grilla regional ampliada de SENDA fue procesada y validada utilizando datos del DEM MSL Gale Merged DEM de USGS.
+
+**Características verificadas:**
+
+- Resolución espacial: 10 m/celda.
+- Dimensiones: 1442 filas × 724 columnas.
+- Total: 1 044 008 celdas.
 - Cobertura válida del DEM: 100 %.
-- Dimensiones: 1442 × 724.
-- Verificación de dimensiones y tipos de matrices.
-- Coincidencia de dimensiones y bounding box de PNG/JSON.
-- Cobertura de los 15 objetivos y la base.
-- Reproducción idéntica del recorte regional de USGS.
+- Celdas sin datos: 0.
+- Proyección: equirectangular marciana.
 
-El procedimiento completo todavía no se ha probado
-desde una instalación limpia.
+### 8.2. Reproducibilidad del procesamiento
 
-La reproducción completa de la grilla local EVA también
-requiere una comprobación independiente.
+Se ejecutaron los scripts desde el repositorio compartido `senda-mars`, utilizando el entorno `senda-gis` en Windows.
+
+Los resultados reproducidos se compararon con los entregables oficiales del repositorio.
+
+| Archivo | Resultado |
+|---|---|
+| DEM regional GeoTIFF | Elevaciones y georreferenciación idénticas |
+| `grid.json` | Parámetros geoespaciales coincidentes |
+| `dem.npy` | Valores idénticos |
+| `classes_rover.npy` | Valores idénticos |
+| `risk.npy` | Valores idénticos |
+| `confidence.npy` | Valores idénticos |
+| `slope_regional.png` | Píxeles idénticos |
+| `risk_regional.png` | Píxeles idénticos |
+| Metadatos JSON de ambas capas | Contenido idéntico |
+
+Las matrices NumPy no presentaron diferencias respecto a los entregables publicados.
+
+### 8.3. Validación de objetivos científicos
+
+Se verificó la cobertura de los objetivos definidos en `targets_v1.geojson`.
+
+**Resultados:**
+
+- Objetivos científicos: 15.
+- Base de exploración: 1.
+- Puntos evaluados: 16.
+- Puntos con datos válidos: 16.
+- Errores: 0.
+
+Todos los puntos evaluados se encuentran dentro de la grilla regional y disponen de valores válidos de elevación, transitabilidad y riesgo.
+
+### 8.4. Limitaciones pendientes
+
+- La reproducción se verificó en un entorno existente, no mediante una instalación completamente nueva.
+- La grilla local EVA requiere una validación independiente de reproducibilidad.
+- No se ha comprobado la conectividad de todos los objetivos mediante el algoritmo A*.
+- Los umbrales de transitabilidad y el modelo de riesgo siguen siendo provisionales.
+- La matriz de confianza representa disponibilidad de datos, no incertidumbre topográfica estimada.
+
 
 ## 9. Documentación adicional
 
