@@ -20,7 +20,7 @@ export function MissionProvider({ children }: { children: ReactNode }) {
   const targets = useMemo(() => data ?? [], [data]);
   const targetById = useMemo(() => new Map(targets.map((t) => [t.id, t])), [targets]);
 
-  // La posición inicial propuesta es la base del catálogo; el usuario la confirma o la mueve
+  // La base parte de la del catálogo; el usuario puede moverla (Change o herramienta "Move base")
   useEffect(() => {
     const base = targets.find((t) => t.is_base);
     if (base) dispatch({ type: 'initBase', point: { lon: base.lon, lat: base.lat } });

@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { useReadiness } from '@/features/environment';
-import { MarsGlobe, SiteCard } from '@/features/globe';
+import { InteractiveGlobe, SITES, SiteCard } from '@/features/globe';
 import { SendaLogo, useMission } from '@/features/mission';
 import { Icon } from '@/shared/ui/Icon';
 
-/** Pantalla de inicio: el planeta y el sitio de la misión. */
+/** Pantalla de inicio: Marte en 3D con los sitios de exploración. */
 export function GlobePage() {
   const { dispatch, targets } = useMission();
   const { data: readiness } = useReadiness();
-  const open = () => dispatch({ type: 'openMission' });
+  const [selectedId, setSelectedId] = useState(() => SITES.find((s) => s.active)?.id ?? SITES[0].id);
+  const site = SITES.find((s) => s.id === selectedId) ?? SITES[0];
 
   return (
     <div className="starfield flex min-h-full flex-col overflow-x-hidden">
@@ -23,33 +25,45 @@ export function GlobePage() {
       </header>
 
       <main className="relative flex flex-1 items-center justify-center gap-2xl px-xl py-lg max-lg:flex-col">
-        <div className="flex flex-col items-center">
-          <div className="relative flex h-[540px] w-[540px] items-center justify-center">
-            <div className="pointer-events-none absolute inset-[50px] rounded-full shadow-[0_0_90px_18px_rgba(217,83,43,0.22)]" />
-            <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 540 540" fill="none" aria-hidden="true">
-              <ellipse cx="270" cy="270" rx="255" ry="86" transform="rotate(-18 270 270)" stroke="#F0875A" strokeOpacity="0.25" strokeDasharray="4 4" />
-            </svg>
-            <MarsGlobe>
-              <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 440 440" fill="none" aria-hidden="true">
-                <path d="M 120 180 Q 170 150 205 238" stroke="#F0875A" strokeWidth="2" strokeDasharray="5 5" strokeLinecap="round" />
-              </svg>
-              <button type="button" onClick={open} className="group absolute left-[205px] top-[238px] flex -translate-x-1/2 -translate-y-full flex-col items-center focus:outline-none" aria-label="Open the Mount Sharp mission">
-                <span className="mb-xs whitespace-nowrap rounded-md border border-primary bg-surface-container/95 px-sm py-xs font-label text-label-sm uppercase text-on-surface transition-colors group-hover:border-accent">
-                  Mount Sharp <span className="text-accent">• Active</span>
-                </span>
-                <span className="relative flex h-4 w-4">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
-                  <span className="relative h-4 w-4 rounded-full border-2 border-on-surface bg-primary shadow-[0_0_14px_#D9532B]" />
-                </span>
-              </button>
-            </MarsGlobe>
+        <div className="flex flex-col items-center gap-sm">
+          <div className="relative">
+            <InteractiveGlobe sites={SITES} selectedId={selectedId} onSelect={setSelectedId} />
           </div>
-          <p className="mt-sm flex items-center gap-xs font-label text-label-lg uppercase tracking-widest text-accent">
-            <Icon name="touch_app" className="text-[18px]" /> Click on the base to explore
+          <p className="flex items-center gap-xs font-label text-label-sm uppercase tracking-widest text-on-surface-variant">
+            <Icon name="drag_pan" className="text-[16px] text-accent" /> Drag to turn · Scroll to zoom
           </p>
         </div>
 
-        <SiteCard readiness={readiness} goalCount={targets.filter((t) => !t.is_base).length} onExplore={open} />
+        <div className="flex flex-col gap-md">
+          <SiteCard
+            site={site}
+            readiness={readiness}
+            goalCount={targets.filter((t) => !t.is_base).length}
+            onExplore={() => dispatch({ type: 'openMission' })}
+          />
+          <nav aria-label="Sites" className="flex w-80 flex-col gap-xs">
+            {SITES.map((s) => {
+              const on = s.id === selectedId;
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setSelectedId(s.id)}
+                  className={`flex items-center gap-sm rounded-md border px-sm py-xs text-left font-body text-body-sm transition-colors duration-fast ${
+                    on ? 'border-accent bg-surface-container text-on-surface' : 'border-outline-variant bg-surface/60 text-on-surface-variant hover:border-accent hover:text-on-surface'
+                  }`}
+                >
+                  <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${s.active ? 'bg-primary' : 'border border-on-surface-variant'}`} />
+                  <span className="min-w-0 flex-1 truncate">{s.name}</span>
+                  <span className={`shrink-0 font-label text-label-sm uppercase ${s.active ? 'text-accent' : 'text-on-surface-variant'}`}>
+                    {s.active ? 'Open' : 'Soon'}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
       </main>
     </div>
   );

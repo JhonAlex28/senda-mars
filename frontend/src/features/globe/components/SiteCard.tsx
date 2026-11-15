@@ -1,26 +1,31 @@
 import type { Readiness } from '@/features/environment';
 import { Button } from '@/shared/ui/Button';
 import { Icon } from '@/shared/ui/Icon';
+import { formatLatLon, type Site } from '../sites';
 
 interface SiteCardProps {
+  site: Site;
   readiness: Readiness | null;
   goalCount: number;
   onExplore: () => void;
 }
 
 /** Tarjeta flotante con datos del sitio y el botón para abrir la misión. */
-export function SiteCard({ readiness, goalCount, onExplore }: SiteCardProps) {
+export function SiteCard({ site, readiness, goalCount, onExplore }: SiteCardProps) {
+  if (!site.active) return <ComingSoonCard site={site} />;
   const check = (key: string) => readiness?.checks.find((c) => c.key === key);
   const temp = check('temperature');
   const dust = check('dust');
 
   return (
-    <article className="flex w-80 flex-col gap-md rounded-lg border border-outline bg-surface-container/95 p-lg shadow-2xl">
+    <article key={site.id} className="flex w-80 animate-fade-up flex-col gap-md rounded-lg border border-outline bg-surface-container/95 p-lg shadow-2xl">
       <header className="flex items-start justify-between gap-sm border-b border-outline-variant pb-md">
         <div>
-          <h2 className="font-headline text-headline-sm uppercase text-on-surface">Mount Sharp Exploration</h2>
-          <p className="font-body text-body-sm text-on-surface-variant">Mount Sharp · Gale Crater</p>
-          <p className="mt-xs font-mono text-mono-sm tabular-nums text-on-surface-variant">4.79°S 137.39°E</p>
+          <h2 className="font-headline text-headline-sm uppercase text-on-surface">{site.name} Exploration</h2>
+          <p className="font-body text-body-sm text-on-surface-variant">{site.region} · {site.mission}</p>
+          <p className="mt-xs font-mono text-mono-sm tabular-nums text-on-surface-variant" translate="no">
+            {formatLatLon(site)}
+          </p>
         </div>
         <span role="status" className="inline-flex shrink-0 items-center gap-xs rounded-full border border-outline bg-surface-container-high px-sm py-xs font-label text-label-sm uppercase text-accent">
           <span className="h-1.5 w-1.5 rounded-full bg-accent" />
@@ -48,6 +53,33 @@ export function SiteCard({ readiness, goalCount, onExplore }: SiteCardProps) {
 
       <Button icon="arrow_forward" onClick={onExplore} className="w-full">
         Explore base
+      </Button>
+    </article>
+  );
+}
+
+/** Sitio que todavía no tiene misión preparada: solo dónde está y quién lo estudió. */
+function ComingSoonCard({ site }: { site: Site }) {
+  return (
+    <article key={site.id} className="flex w-80 animate-fade-up flex-col gap-md rounded-lg border border-outline bg-surface-container/95 p-lg shadow-2xl">
+      <header className="flex items-start justify-between gap-sm">
+        <div>
+          <h2 className="font-headline text-headline-sm uppercase text-on-surface">{site.name}</h2>
+          <p className="font-body text-body-sm text-on-surface-variant">{site.region}</p>
+          <p translate="no" className="mt-xs font-mono text-mono-sm tabular-nums text-on-surface-variant">
+            {formatLatLon(site)}
+          </p>
+        </div>
+        <span className="shrink-0 rounded-full border border-outline px-sm py-xs font-label text-label-sm uppercase text-on-surface-variant">Soon</span>
+      </header>
+      <p className="flex items-center gap-xs font-body text-body-sm text-on-surface-variant">
+        <Icon name="smart_toy" className="text-[18px] text-accent" />
+        <span>
+          Explored by <strong className="text-on-surface">{site.mission}</strong>
+        </span>
+      </p>
+      <Button icon="lock" disabled className="w-full">
+        Coming soon
       </Button>
     </article>
   );

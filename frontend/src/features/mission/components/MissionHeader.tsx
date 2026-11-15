@@ -22,14 +22,14 @@ export function SendaLogo() {
   );
 }
 
-/** Barra superior con las tres grandes pestañas del flujo: Plan → Walk → Go. */
+/** Barra superior con las tres grandes pestañas del flujo: Rover route → Spacewalks → Simulation. */
 export function MissionHeader() {
   const { state, dispatch } = useMission();
   const inGo = state.phase === 'go';
   const tabs: Tab[] = [
-    { phase: 'plan', label: 'Plan', icon: 'map', enabled: !inGo, hint: 'Choose goals and the rover path' },
-    { phase: 'walk', label: 'Walks', icon: 'directions_walk', enabled: !inGo && !!state.traverse, hint: 'Plan the rover path first' },
-    { phase: 'go', label: 'Trip', icon: 'rocket_launch', enabled: inGo || allEvasPlanned(state), hint: 'Plan every walk first' },
+    { phase: 'plan', label: 'Rover route', icon: 'route', enabled: !inGo, hint: 'Choose goals and the rover route' },
+    { phase: 'walk', label: 'Spacewalks', icon: 'directions_walk', enabled: !inGo && !!state.traverse, hint: 'Plan the rover route first' },
+    { phase: 'go', label: 'Simulation', icon: 'rocket_launch', enabled: inGo || allEvasPlanned(state), hint: 'Plan every spacewalk first' },
   ];
 
   return (

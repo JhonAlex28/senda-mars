@@ -7,7 +7,7 @@ export type Phase = 'globe' | 'plan' | 'walk' | 'go';
 export type MapTool = 'select' | 'base' | 'hazard';
 
 /** Pasos guiados de la planificación (se derivan del estado, no se guardan). */
-export type PlanStep = 'base' | 'goals' | 'traverse' | 'eva' | 'ready';
+export type PlanStep = 'goals' | 'traverse' | 'eva' | 'ready';
 
 export interface EvaPlan {
   routes: RoutePlan[];
@@ -17,7 +17,6 @@ export interface EvaPlan {
 export interface MissionState {
   phase: Phase;
   base: GeoPoint | null;
-  baseConfirmed: boolean;
   goals: string[]; // ids en orden de prioridad
   hazards: Hazard[];
   tool: MapTool;
@@ -35,8 +34,6 @@ export type MissionAction =
   | { type: 'setPhase'; phase: Phase }
   | { type: 'initBase'; point: GeoPoint }
   | { type: 'moveBase'; point: GeoPoint }
-  | { type: 'confirmBase' }
-  | { type: 'editBase' }
   | { type: 'toggleGoal'; id: string }
   | { type: 'moveGoal'; from: number; to: number }
   | { type: 'focusTarget'; id: string | null }

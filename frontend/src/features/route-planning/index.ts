@@ -1,6 +1,6 @@
 export { routesApi } from './api/routesApi';
 export { RouteComparator } from './components/RouteComparator';
-export { PROFILE_META, PROFILE_ORDER, routeFor, safetyTone } from './lib/profiles';
+export { PROFILE_META, PROFILE_ORDER, distinctProfiles, routeFor, safetyTone } from './lib/profiles';
 export type {
   Conditions,
   Hazard,

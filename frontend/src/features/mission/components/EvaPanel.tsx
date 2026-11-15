@@ -25,7 +25,7 @@ export function EvaPanel() {
   return (
     // key: al cambiar de estacionamiento se crean nodos nuevos y el traductor los vuelve a traducir
     <Fragment key={parking.id}>
-      <Card title={`Walk from ${parking.id}`} action={<ParkingChips />} className="gap-xs">
+      <Card title={`Spacewalk from ${parking.id}`} action={<ParkingChips />} className="gap-xs">
         <ul className="flex flex-col gap-xs">
           {parking.target_ids.map((id) => {
             const t = targetById.get(id);
@@ -43,8 +43,8 @@ export function EvaPanel() {
           })}
         </ul>
         {!plan && (
-          <Button variant="secondary" icon="directions_walk" loading={loading === parking.id} onClick={() => planEva(parking.id)}>
-            Plan EVA route
+          <Button icon="directions_walk" loading={loading === parking.id} onClick={() => planEva(parking.id)}>
+            Plan spacewalk
           </Button>
         )}
         {error && <ErrorNote message={error} onClose={clearError} />}
@@ -53,34 +53,20 @@ export function EvaPanel() {
       {plan && walk && (
         <>
           <RouteComparator
-            title="Pick a walking path"
+            title="Walking route"
             routes={plan.routes}
             selected={plan.profile}
             onSelect={(profile) => dispatch({ type: 'selectEvaProfile', parkingId: parking.id, profile })}
           />
-          <Card key={plan.profile} className="items-center gap-xs text-center">
-            <p className="flex flex-wrap justify-center gap-x-md font-body text-body-sm text-on-surface-variant">
-              <span>
-                Walk time: <Live className="font-mono text-mono-sm text-on-surface">{formatMinutes(walk.duration_min)}</Live>
-              </span>
-              <span>
-                Oxygen left: <Live className="font-mono text-mono-sm text-on-surface">{Math.round(walk.resource.remaining_pct)}%</Live>
-              </span>
-            </p>
-            <p className={`font-body text-body-sm ${walk.return_ok ? 'text-accent' : 'text-error'}`}>
-              {walk.return_ok ? 'We can walk back to the rover.' : 'It is too far. There is not enough oxygen to come back safely.'}
-            </p>
-          </Card>
           {nextUnplanned && (
             <Button
-              variant="ghost"
               icon="arrow_forward"
               onClick={async () => {
                 dispatch({ type: 'selectParking', id: nextUnplanned.id });
                 await planEva(nextUnplanned.id);
               }}
             >
-              Plan the next stop: {nextUnplanned.id}
+              Next stop: {nextUnplanned.id}
             </Button>
           )}
         </>

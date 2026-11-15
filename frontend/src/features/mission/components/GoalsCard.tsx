@@ -9,8 +9,7 @@ export function GoalsCard() {
   const goals = state.goals.map((id) => targetById.get(id)).filter((t): t is Target => !!t);
 
   return (
-    <Card title="My goals" action={<Icon name="drag_indicator" className="text-[18px] text-accent" />}>
-      <p className="font-body text-body-sm text-on-surface-variant">Drag the best one first.</p>
+    <Card title="My goals" action={<span title="Drag to set priority"><Icon name="drag_indicator" className="text-[18px] text-accent" /></span>}>
       <GoalList
         goals={goals}
         focusedId={state.focusedTargetId}

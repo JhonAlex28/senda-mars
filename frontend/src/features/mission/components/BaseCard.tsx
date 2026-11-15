@@ -34,7 +34,7 @@ function CoordInput({ label, value, onChange, onCommit }: CoordInputProps) {
   );
 }
 
-/** Paso 1: confirmar la posición inicial (no hay GPS en Marte: se marca o se escribe). */
+/** Base de la misión: ya viene puesta desde el globo; se puede mover tocando el mapa o escribiendo coordenadas. */
 export function BaseCard({ site }: { site: BBox | null }) {
   const { state, dispatch } = useMission();
   const [lat, setLat] = useState('');
@@ -56,40 +56,36 @@ export function BaseCard({ site }: { site: BBox | null }) {
     if (valid && !outside) dispatch({ type: 'moveBase', point: { lon: lonNum, lat: latNum } });
   };
 
-  if (state.baseConfirmed && state.base) {
-    return (
-      <Card>
-        <div className="flex items-center justify-between gap-sm">
-          <div className="flex items-center gap-sm">
-            <Icon name="home_pin" filled className="text-[22px] text-primary" />
-            <div>
-              <p className="font-headline text-title-md">Base Alpha</p>
-              <p translate="no" className="font-mono text-mono-sm text-on-surface-variant">
-                {formatLat(state.base.lat)} · {formatLon(state.base.lon)}
-              </p>
-            </div>
-          </div>
-          <Button variant="ghost" size="sm" icon="edit" onClick={() => dispatch({ type: 'editBase' })}>
-            Change
-          </Button>
-        </div>
-      </Card>
-    );
-  }
+  // Editar la base = herramienta "Move base" activa: tocar el mapa o escribir las coordenadas
+  const editing = state.tool === 'base';
+  const setEditing = (on: boolean) => dispatch({ type: 'setTool', tool: on ? 'base' : 'select' });
+  if (!state.base) return null;
 
   return (
-    <Card title="Where is our base?" tone="accent" className="animate-fade-up">
-      <p className="font-body text-body-sm text-on-surface-variant">
-        We have no GPS on Mars. Tap the map where the base is, or type its coordinates.
-      </p>
-      <div className="grid grid-cols-2 gap-sm">
-        <CoordInput label="Latitude (°N)" value={lat} onChange={setLat} onCommit={apply} />
-        <CoordInput label="Longitude (°E)" value={lon} onChange={setLon} onCommit={apply} />
+    <Card tone={editing ? 'accent' : 'default'} className="gap-sm">
+      <div className="flex items-center justify-between gap-sm">
+        <div className="flex min-w-0 items-center gap-sm">
+          <Icon name="home_pin" filled className="text-[22px] text-primary" />
+          <div className="min-w-0">
+            <p className="font-headline text-title-md">Base Alpha</p>
+            <p translate="no" className="font-mono text-mono-sm text-on-surface-variant">
+              {formatLat(state.base.lat)} · {formatLon(state.base.lon)}
+            </p>
+          </div>
+        </div>
+        <Button variant={editing ? 'primary' : 'ghost'} size="sm" icon={editing ? 'check' : 'edit'} onClick={() => setEditing(!editing)}>
+          {editing ? 'Done' : 'Change'}
+        </Button>
       </div>
-      {outside && <p className="font-body text-body-sm text-error">That place is outside the mission area.</p>}
-      <Button size="lg" icon="check" disabled={!state.base || outside} onClick={() => dispatch({ type: 'confirmBase' })}>
-        Confirm base
-      </Button>
+      {editing && (
+        <div className="flex animate-fade-up flex-col gap-xs">
+          <div className="grid grid-cols-2 gap-sm">
+            <CoordInput label="Latitude (°N)" value={lat} onChange={setLat} onCommit={apply} />
+            <CoordInput label="Longitude (°E)" value={lon} onChange={setLon} onCommit={apply} />
+          </div>
+          {outside && <p className="font-body text-body-sm text-error">Outside the mission area.</p>}
+        </div>
+      )}
     </Card>
   );
 }

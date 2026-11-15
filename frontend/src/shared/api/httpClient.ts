@@ -1,14 +1,17 @@
-import { config } from '@/shared/config/env';
+import { config } from "@/shared/config/env";
 
 export class ApiError extends Error {
-  constructor(public readonly status: number, message: string) {
+  constructor(
+    public readonly status: number,
+    message: string,
+  ) {
     super(message);
   }
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${config.apiBaseUrl}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     ...init,
   });
   if (!res.ok) {
@@ -21,7 +24,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 async function errorDetail(res: Response): Promise<string> {
   try {
     const body = (await res.json()) as { detail?: unknown };
-    if (typeof body.detail === 'string') return body.detail;
+    if (typeof body.detail === "string") return body.detail;
   } catch {
     // cuerpo vacío o no JSON
   }
@@ -32,5 +35,5 @@ async function errorDetail(res: Response): Promise<string> {
 export const http = {
   get: <T>(path: string) => request<T>(path),
   post: <T>(path: string, body: unknown) =>
-    request<T>(path, { method: 'POST', body: JSON.stringify(body) }),
+    request<T>(path, { method: "POST", body: JSON.stringify(body) }),
 };

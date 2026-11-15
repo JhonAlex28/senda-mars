@@ -19,7 +19,6 @@ export function allEvasPlanned(s: MissionState): boolean {
 }
 
 export function planStep(s: MissionState): PlanStep {
-  if (!s.baseConfirmed) return 'base';
   if (s.goals.length === 0) return 'goals';
   if (!s.traverse) return 'traverse';
   return allEvasPlanned(s) ? 'ready' : 'eva';

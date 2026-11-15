@@ -108,11 +108,11 @@ frontend/src/
 ```
 
 ### Flujo de la aplicación
-1. **Globo** → *Explore base*.
-2. **Plan**: confirmar la base → tocar rocas en el mapa y agregarlas a *My goals* (arrastrar para priorizar) → *Plan traverse* → elegir ruta del rover.
-3. **Walk**: en cada estacionamiento (P1, P2…) → *Plan EVA route* → elegir caminata.
-4. Revisar *Can I go today?* y el margen de retorno → *Start trip*.
-5. **Go**: simulación en vivo; en cada objetivo *Begin science task* → *Complete task*; *Contingency*, *Return to rover* y *Return to base* recalculan la ruta.
+1. **Globo**: girar Marte, elegir un sitio → *Explore base* (la base ya queda puesta; se mueve con *Change* o la herramienta *Move base*).
+2. **Rover route**: tocar rocas en el mapa → *Add goal* (arrastrar para priorizar) → *Find rover routes* → elegir ruta.
+3. **Spacewalks**: en cada parada del rover (P1, P2…) → *Plan spacewalk* → elegir ruta a pie.
+4. Revisar clima y recursos (Weather / Rover battery / Suit oxygen) → *Start mission*.
+5. **Simulation**: en cada objetivo *Begin science task* → *Complete task*; *Contingency*, *Return to rover* y *Return to base* recalculan la ruta.
 6. Resumen final: realizado frente a planificado.
 
 **Reglas:** cada feature expone lo público en su `index.ts`. Una feature no importa archivos internos de otra.

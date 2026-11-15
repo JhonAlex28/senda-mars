@@ -32,27 +32,24 @@ export function TraversePanel() {
         onClick={planTraverse}
         title={state.goals.length === 0 ? 'Add at least one goal first' : undefined}
       >
-        {state.traverse ? 'Plan traverse again' : 'Plan traverse'}
+        {state.traverse ? 'Recalculate routes' : 'Find rover routes'}
       </Button>
       {error && <ErrorNote message={error} onClose={clearError} />}
 
       {state.traverse && (
         <>
           <RouteComparator
-            title="Pick a rover path"
+            title="Rover route"
             routes={state.traverse.routes}
             selected={state.traverseProfile}
             onSelect={(profile) => dispatch({ type: 'selectTraverseProfile', profile })}
           />
 
-          <Card title="Where the rover stops" className="gap-xs">
-            <p className="font-body text-body-sm text-on-surface-variant">
-              The rover parks near each group of goals. From there you walk.
-            </p>
+          <Card title="Rover stops" className="gap-xs">
             <div className="flex flex-wrap items-center justify-between gap-xs">
               <ParkingChips />
-              <Button variant="secondary" size="sm" icon="directions_walk" loading={loading === parking?.id} onClick={openWalk}>
-                {parkingPlanned ? 'Open the walk' : 'Plan EVA route'}
+              <Button variant={parkingPlanned ? 'secondary' : 'primary'} size="sm" icon="directions_walk" loading={loading === parking?.id} onClick={openWalk}>
+                {parkingPlanned ? 'Open spacewalk' : 'Plan spacewalk'}
               </Button>
             </div>
             {parking && (

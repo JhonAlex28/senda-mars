@@ -10,7 +10,7 @@ import {
   TargetMarker,
   type Projection,
 } from '@/features/map';
-import { PROFILE_META, PROFILE_ORDER } from '@/features/route-planning';
+import { PROFILE_META, distinctProfiles } from '@/features/route-planning';
 import { TargetCard, type Target } from '@/features/targets';
 import { TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
 import { bboxAround } from '@/shared/lib/geo';
@@ -19,6 +19,7 @@ import { Icon } from '@/shared/ui/Icon';
 import { Phrase } from '@/shared/ui/Text';
 import { activeParking } from '../state/selectors';
 import { useMission } from '../state/MissionContext';
+import { MapToolbar } from './MapToolbar';
 import { PlanRouteLayers } from './PlanRouteLayers';
 import { StepBanner } from './StepBanner';
 
@@ -50,7 +51,10 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const scienceTargets = useMemo(() => targets.filter((t) => !t.is_base), [targets]);
   const focused = state.focusedTargetId ? targetById.get(state.focusedTargetId) : undefined;
   const zoneTargets = new Set(walking ? parking?.target_ids : undefined);
-  const legend = state.traverse ? PROFILE_ORDER.map((p) => ({ label: PROFILE_META[p].label, swatch: PROFILE_META[p].swatch })) : [];
+  // Leyenda de las rutas que se ven: las caminatas del estacionamiento activo en Walk, las del rover en Plan
+  const evaPlan = walking && parking ? state.evaPlans[parking.id] : undefined;
+  const shown = evaPlan ? { routes: evaPlan.routes, profile: evaPlan.profile } : state.traverse && { routes: state.traverse.routes, profile: state.traverseProfile };
+  const legend = shown ? distinctProfiles(shown.routes, shown.profile).map((p) => ({ label: PROFILE_META[p].label, swatch: PROFILE_META[p].swatch })) : [];
 
   const onMapClick = (p: GeoPoint) => {
     if (state.tool === 'base') dispatch({ type: 'moveBase', point: p });
@@ -71,6 +75,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
           overlay={
             <>
               <StepBanner />
+              <MapToolbar />
               <MapLegend items={legend} />
               {focused && (
                 <div className="absolute right-md top-[72px] z-30">
@@ -129,7 +134,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
             />
           ))}
 
-          {state.base && <BaseMarker point={state.base} label="BASE ALPHA" pending={!state.baseConfirmed} />}
+          {state.base && <BaseMarker point={state.base} label="BASE ALPHA" />}
           {state.tool === 'hazard' && hover && <CursorRing point={hover} radius={hazardRadius} />}
         </MapCanvas>
       </div>

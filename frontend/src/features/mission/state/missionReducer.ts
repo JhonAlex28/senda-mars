@@ -3,7 +3,6 @@ import type { MissionAction, MissionState } from './types';
 export const initialMissionState: MissionState = {
   phase: 'globe',
   base: null,
-  baseConfirmed: false,
   goals: [],
   hazards: [],
   tool: 'select',
@@ -24,7 +23,7 @@ function invalidatePlan(state: MissionState, reason: string): MissionState {
     evaPlans: {},
     activeParkingId: null,
     phase: state.phase === 'walk' ? 'plan' : state.phase,
-    notice: `${reason} Plan the traverse again.`,
+    notice: `${reason} Find the rover routes again.`,
   };
 }
 
@@ -48,10 +47,6 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       return state.base ? state : { ...state, base: action.point };
     case 'moveBase':
       return invalidatePlan({ ...state, base: action.point }, 'The base moved.');
-    case 'confirmBase':
-      return { ...state, baseConfirmed: true, tool: 'select' };
-    case 'editBase':
-      return { ...state, baseConfirmed: false, tool: 'base' };
 
     case 'toggleGoal': {
       const has = state.goals.includes(action.id);

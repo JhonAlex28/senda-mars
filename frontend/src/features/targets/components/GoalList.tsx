@@ -21,7 +21,7 @@ export function GoalList({ goals, focusedId, disabled = false, onMove, onRemove,
     return (
       <p className="rounded-md border border-dashed border-outline px-sm py-md text-center font-body text-body-sm text-on-surface-variant">
         <Icon name="touch_app" className="mb-xs block text-[22px] text-accent mx-auto" />
-        Tap a rock on the map to see it, then add it here.
+        Tap a rock on the map
       </p>
     );
   }

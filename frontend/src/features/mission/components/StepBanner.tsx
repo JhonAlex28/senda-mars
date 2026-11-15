@@ -3,12 +3,11 @@ import { planStep } from '../state/selectors';
 import { useMission } from '../state/MissionContext';
 import type { PlanStep } from '../state/types';
 
-const STEPS: { step: PlanStep; label: string; icon: string; text: string }[] = [
-  { step: 'base', label: 'Base', icon: 'home_pin', text: 'Where is our base? Tap the map or type the coordinates, then confirm.' },
-  { step: 'goals', label: 'Goals', icon: 'diamond', text: 'Tap a rock on the map to see what we can learn there. Add the ones you like.' },
-  { step: 'traverse', label: 'Rover', icon: 'route', text: 'Sort your goals (best first) and press PLAN TRAVERSE.' },
-  { step: 'eva', label: 'Walks', icon: 'directions_walk', text: 'Pick a parking spot (P) and press PLAN EVA ROUTE. Do it for every spot.' },
-  { step: 'ready', label: 'Trip', icon: 'rocket_launch', text: 'All set! Check the weather and press START TRIP.' },
+const STEPS: { step: PlanStep; label: string; icon: string }[] = [
+  { step: 'goals', label: 'Goals', icon: 'diamond' },
+  { step: 'traverse', label: 'Rover', icon: 'route' },
+  { step: 'eva', label: 'Spacewalks', icon: 'directions_walk' },
+  { step: 'ready', label: 'Start', icon: 'rocket_launch' },
 ];
 
 /** Guía paso a paso sobre el mapa: dónde estoy y qué hago ahora. */
@@ -35,9 +34,6 @@ export function StepBanner() {
           </li>
         ))}
       </ol>
-      <p key={current} className="animate-fade-up font-body text-body-sm text-on-surface">
-        {STEPS[index].text}
-      </p>
     </div>
   );
 }
