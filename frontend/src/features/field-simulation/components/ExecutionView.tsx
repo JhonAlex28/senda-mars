@@ -1,4 +1,4 @@
-import { useCallback, useMemo, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import type { Projection } from '@/features/map';
 import type { Hazard, Parking } from '@/features/route-planning';
 import type { Target } from '@/features/targets';
@@ -22,6 +22,7 @@ interface ExecutionViewProps {
   hazards: Hazard[];
   parkings: Parking[];
   targets: Target[];
+  onProcedureCompleted: (targetId: string) => void;
   projection: Projection;
   site: TerrainLayer;
   vehicleId?: RoverVehicleId;
@@ -41,6 +42,7 @@ export function ExecutionView({
   hazards,
   parkings,
   targets,
+  onProcedureCompleted,
   projection,
   site,
   vehicleId = 'SEV_PRESSURIZED',
@@ -52,10 +54,17 @@ export function ExecutionView({
   onExit,
 }: ExecutionViewProps) {
   const sim = useSimulation({ legs, base, hazards });
+  const processedCount = useRef(0);
   const targetById = useMemo(() => new Map(targets.map((t) => [t.id, t])), [targets]);
   const targetName = useCallback((id: string) => targetById.get(id)?.name, [targetById]);
   const roverCapacity = sim.state.legs.find((l) => l.mode === 'rover')?.capacity ?? 1;
   const batteryLeft = 100 * (1 - sim.state.battery / roverCapacity);
+
+  useEffect(() => {
+    const completed = sim.state.completed.slice(processedCount.current);
+    processedCount.current = sim.state.completed.length;
+    completed.forEach(onProcedureCompleted);
+  }, [sim.state.completed, onProcedureCompleted]);
 
   return (
     <>

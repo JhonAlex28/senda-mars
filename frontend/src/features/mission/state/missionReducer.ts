@@ -2,6 +2,7 @@ import type { MissionAction, MissionState } from './types';
 
 export const initialMissionState: MissionState = {
   phase: 'globe',
+  missionId: 'mount-sharp',
   base: null,
   goals: [],
   hazards: [],
@@ -48,7 +49,7 @@ function move<T>(list: T[], from: number, to: number): T[] {
 export function missionReducer(state: MissionState, action: MissionAction): MissionState {
   switch (action.type) {
     case 'openMission':
-      return { ...state, phase: 'plan' };
+      return { ...state, missionId: action.missionId, phase: 'plan' };
     case 'backToGlobe':
       return { ...state, phase: 'globe' };
     case 'setPhase':

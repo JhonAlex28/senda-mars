@@ -50,6 +50,7 @@ export interface EnvControls {
 
 export interface MissionState {
   phase: Phase;
+  missionId: string;
   base: GeoPoint | null;
   goals: string[]; // ids en orden de prioridad
   hazards: Hazard[];
@@ -68,7 +69,7 @@ export interface MissionState {
 }
 
 export type MissionAction =
-  | { type: 'openMission' }
+  | { type: 'openMission'; missionId: string }
   | { type: 'backToGlobe' }
   | { type: 'setPhase'; phase: Phase }
   | { type: 'initBase'; point: GeoPoint }
