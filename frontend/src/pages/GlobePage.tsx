@@ -39,7 +39,7 @@ export function GlobePage() {
             site={site}
             readiness={readiness}
             goalCount={targets.filter((t) => !t.is_base).length}
-            onExplore={() => dispatch({ type: 'openMission' })}
+            onExplore={() => dispatch({ type: 'openMission', missionId: site.id })}
           />
           <nav aria-label="Sites" className="flex w-80 flex-col gap-xs">
             {SITES.map((s) => {

@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useCallback, useMemo, type ReactNode } from 'react';
 import { WeatherStrip, useReadiness, type Readiness } from '@/features/environment';
 import { ExecutionView, buildItinerary } from '@/features/field-simulation';
 import { LayersPanel } from '@/features/layers';
@@ -83,7 +83,8 @@ function PlanView({ projection, site, readiness }: ViewProps) {
 }
 
 function GoView({ projection, site, readiness }: ViewProps) {
-  const { state, dispatch, targets } = useMission();
+  const { state, dispatch, targets, addProcedureRecord } = useMission();
+  const onProcedureCompleted = useCallback((targetId: string) => addProcedureRecord(targetId), [addProcedureRecord]);
   // El itinerario se fija al entrar en Go: la simulación trabaja sobre su propia copia
   const legs = useMemo(() => {
     const rover = selectedTraverse(state);
@@ -101,6 +102,7 @@ function GoView({ projection, site, readiness }: ViewProps) {
       hazards={state.hazards}
       parkings={state.traverse.parkings}
       targets={targets}
+      onProcedureCompleted={onProcedureCompleted}
       projection={projection}
       site={site}
       renderFooter={(supplies: ReactNode) => <WeatherStrip readiness={readiness}>{supplies}</WeatherStrip>}

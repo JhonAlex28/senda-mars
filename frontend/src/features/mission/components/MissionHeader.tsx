@@ -2,6 +2,7 @@ import { Icon } from '@/shared/ui/Icon';
 import { allEvasPlanned } from '../state/selectors';
 import { useMission } from '../state/MissionContext';
 import type { Phase } from '../state/types';
+import  imagen  from '../../../img/1bd25090-eadf-43a7-803a-a5fce4b4851e.png'
 
 interface Tab {
   phase: Exclude<Phase, 'globe'>;
@@ -14,10 +15,7 @@ interface Tab {
 export function SendaLogo() {
   return (
     <div className="flex items-center gap-sm">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-accent bg-primary">
-        <span className="font-headline text-title-md font-bold text-on-primary">S</span>
-      </div>
-      <span translate="no" className="font-headline text-headline-sm uppercase tracking-wider text-on-surface">SENDA</span>
+      <img src={imagen} alt="Senda logo" className="h-20 w-20 rounded-full" />
     </div>
   );
 }
