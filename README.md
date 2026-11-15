@@ -120,9 +120,31 @@ uvicorn senda.main:app --reload       # http://localhost:8000/docs
 | `POST /api/v1/routes/eva` | Caminata: rover → objetivos cercanos → rover, 3 alternativas |
 | `POST /api/v1/routes/path` | Ruta por waypoints (contingencias y retornos) |
 | `POST /api/v1/quantum/optimize-route` | *(Opcional)* Optimizador QAOA de secuencia de objetivos (Qiskit Aer / IBM Quantum) |
+| `GET /api/v1/assistant/status` | ¿El copiloto está activado y su modelo responde? |
+| `POST /api/v1/assistant/chat` | Orden en lenguaje natural → plan completo para cargar en pantalla |
 
 Las tres alternativas son **safe** (evita pendientes y peligros), **scientific** (pasa cerca de los objetivos)
 y **fast** (menor tiempo). El terreno es real: DEM del USGS *MSL Gale Merged DEM 1 m* (HiRISE + CTX + MOLA), leído por `adapters/outbound/terrain/npy_dem.py` (ver `docs/terrain-data.md`). `SENDA_TERRAIN=synthetic` vuelve al terreno de demo.
+
+### 🤖 SENDA Copilot (asistente de IA)
+
+Botón flotante **SENDA Copilot** (abajo a la derecha). Le das una orden —*"prepara la salida de mañana,
+tengo 3 horas, hay tormenta de polvo"*— y la ejecuta en SENDA: revisa condiciones, elige objetivos por
+prioridad, planifica rover y caminatas y deja el plan en el mapa. El modelo solo interpreta la orden; todas
+las cifras salen del planificador (caso de uso `PlanOuting`).
+
+Usa un **modelo abierto y gratuito** (Qwen3 1.7B) servido por [Ollama](https://ollama.com) en la máquina
+que corre el backend: no hay APIs de pago ni claves. **Está desactivado por defecto** (también en Render);
+sin él, el botón muestra un aviso y el resto de SENDA funciona igual. Para activarlo en tu PC:
+
+```powershell
+winget install --id Ollama.Ollama -e      # o descarga desde ollama.com
+ollama pull qwen3:1.7b                    # ~1.4 GB, una sola vez
+# backend/.env (no se sube a git):
+#   SENDA_ASSISTANT_ENABLED=true
+#   SENDA_LLM_MODEL=qwen3:1.7b
+python scripts/dev.py
+```
 
 ---
 

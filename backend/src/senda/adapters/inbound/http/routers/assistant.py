@@ -2,9 +2,10 @@ from collections.abc import Callable
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from senda.adapters.inbound.http.dependencies import assistant_settings, chat_uc
+from senda.adapters.inbound.http.dependencies import assistant_model, assistant_settings, chat_uc
 from senda.adapters.inbound.http.schemas import AssistantStatusOut, ChatIn, ChatOut
 from senda.application.assistant.tools import MissionContext
+from senda.application.ports.outbound import AssistantModel
 from senda.application.use_cases.assistant import ChatTurn, ChatWithAssistant
 from senda.config import Settings
 from senda.domain.errors import AssistantUnavailable
@@ -13,9 +14,11 @@ router = APIRouter(prefix="/assistant", tags=["assistant"])
 
 
 @router.get("/status", response_model=AssistantStatusOut)
-def status(s: Settings = Depends(assistant_settings)) -> AssistantStatusOut:
-    """El frontend oculta el panel de chat si el asistente no está configurado."""
+def status(s: Settings = Depends(assistant_settings),
+           model: AssistantModel | None = Depends(assistant_model)) -> AssistantStatusOut:
+    """El frontend explica al usuario por qué el copiloto no está disponible, si es el caso."""
     return AssistantStatusOut(enabled=s.assistant_enabled,
+                              reachable=bool(model and model.is_reachable()),
                               model=s.llm_model if s.assistant_enabled else None)
 
 

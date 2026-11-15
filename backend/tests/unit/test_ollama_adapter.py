@@ -88,3 +88,13 @@ def test_text_that_names_no_tool_stays_text():
     for content in ("hola", "fast"):
         turn = _replying(content).next_turn("sys", [UserMessage("hi")], [EXPLAIN])
         assert turn.text == content and not turn.tool_calls
+
+
+def test_reachable_only_when_the_model_is_downloaded():
+    tags = {"models": [{"name": "qwen3:4b"}]}
+    assert _model(lambda r: httpx.Response(200, json=tags)).is_reachable()
+    assert not _model(lambda r: httpx.Response(200, json={"models": []})).is_reachable()
+
+    def down(request):
+        raise httpx.ConnectError("refused")
+    assert not _model(down).is_reachable()

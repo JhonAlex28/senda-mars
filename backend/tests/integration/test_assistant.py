@@ -181,8 +181,32 @@ def test_chat_without_model_is_503():
     assert res.status_code == 503
 
 
-def test_status_endpoint():
-    assert "enabled" in TestClient(app).get("/api/v1/assistant/status").json()
+class _Pingable:
+    def __init__(self, up):
+        self.up = up
+
+    def is_reachable(self):
+        return self.up
+
+
+def _status(enabled, model):
+    from senda.adapters.inbound.http.dependencies import assistant_model, assistant_settings
+    from senda.config import Settings
+    base = get_container().settings
+    app.dependency_overrides[assistant_settings] = lambda: Settings(
+        base.data_dir, base.cors_origins, assistant_enabled=enabled)
+    app.dependency_overrides[assistant_model] = lambda: model
+    try:
+        return TestClient(app).get("/api/v1/assistant/status").json()
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_status_tells_the_frontend_why_the_copilot_is_unavailable():
+    assert _status(False, None) == {"enabled": False, "reachable": False, "model": None}
+    down = _status(True, _Pingable(False))
+    assert down["enabled"] and not down["reachable"]   # activado, pero Ollama no responde
+    assert _status(True, _Pingable(True))["reachable"]
 
 
 def test_adjust_view_reads_values_by_meaning():

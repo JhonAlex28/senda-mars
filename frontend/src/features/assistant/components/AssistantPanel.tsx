@@ -3,6 +3,7 @@ import { useMission } from '@/features/mission';
 import { Icon } from '@/shared/ui/Icon';
 import { Live } from '@/shared/ui/Text';
 import { useAssistant, type Exchange } from '../hooks/useAssistant';
+import type { Availability } from '../types';
 import { useSpeech } from '../hooks/useSpeech';
 
 const EXAMPLES = [
@@ -28,11 +29,11 @@ export function AssistantPanel() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
-  if (!assistant.enabled) return null;
+  const ready = assistant.availability === 'ready';
 
   return (
     <>
-      <Launcher open={open} busy={assistant.busy} onClick={() => setOpen((v) => !v)} />
+      <Launcher open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />
       <aside
         aria-label="SENDA Copilot"
         aria-hidden={!open}
@@ -40,15 +41,27 @@ export function AssistantPanel() {
           open ? 'translate-x-0' : 'pointer-events-none translate-x-full'
         }`}
       >
-        <Header onClose={() => setOpen(false)} onClear={assistant.history.length ? assistant.clear : undefined} />
-        <Conversation {...assistant} />
-        <Composer busy={assistant.busy} onSend={assistant.send} />
+        <Header availability={assistant.availability} onClose={() => setOpen(false)} onClear={assistant.history.length ? assistant.clear : undefined} />
+        {ready || assistant.history.length > 0 ? (
+          <Conversation {...assistant} />
+        ) : (
+          <Unavailable availability={assistant.availability} model={assistant.model} onRetry={assistant.retry} />
+        )}
+        <Composer busy={assistant.busy} disabled={!ready} onSend={assistant.send} />
       </aside>
     </>
   );
 }
 
-function Launcher({ open, busy, onClick }: { open: boolean; busy: boolean; onClick: () => void }) {
+const STATUS: Record<Availability, { dot: string; text: string }> = {
+  checking: { dot: 'bg-on-surface-variant', text: 'Connecting…' },
+  ready: { dot: 'bg-success', text: 'Plans with the real planner · runs on a local open model' },
+  disabled: { dot: 'bg-warning', text: 'Not available on this server' },
+  offline: { dot: 'bg-error', text: 'Model not responding' },
+  'no-backend': { dot: 'bg-error', text: 'SENDA server not reachable' },
+};
+
+function Launcher({ open, busy, availability, onClick }: { open: boolean; busy: boolean; availability: Availability; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -65,13 +78,15 @@ function Launcher({ open, busy, onClick }: { open: boolean; busy: boolean; onCli
       </span>
       <span className="flex flex-col items-start leading-tight">
         <span className="font-headline text-title-md">SENDA Copilot</span>
-        <span className="font-body text-[11px] opacity-85">{busy ? 'Working on it…' : 'Tell me what to plan'}</span>
+        <span className="font-body text-[11px] opacity-85">
+          {busy ? 'Working on it…' : availability === 'ready' ? 'Tell me what to plan' : availability === 'checking' ? 'Connecting…' : 'Not available here'}
+        </span>
       </span>
     </button>
   );
 }
 
-function Header({ onClose, onClear }: { onClose: () => void; onClear?: () => void }) {
+function Header({ availability, onClose, onClear }: { availability: Availability; onClose: () => void; onClear?: () => void }) {
   return (
     <header className="flex items-center gap-sm border-b border-outline bg-surface-container-high px-md py-sm">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-on-primary">
@@ -80,8 +95,8 @@ function Header({ onClose, onClear }: { onClose: () => void; onClear?: () => voi
       <div className="min-w-0 flex-1">
         <h2 className="font-headline text-title-md text-on-surface">SENDA Copilot</h2>
         <p className="flex items-center gap-xs font-body text-[11px] text-on-surface-variant">
-          <span className="h-1.5 w-1.5 rounded-full bg-success" />
-          Plans with the real planner · runs on a local open model
+          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${STATUS[availability].dot}`} />
+          {STATUS[availability].text}
         </p>
       </div>
       {onClear && (
@@ -148,6 +163,71 @@ function Welcome({ onPick }: { onPick: (text: string) => void }) {
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+/** Aviso cuando el copiloto no puede responder: qué pasa y cómo activarlo, sin jerga de errores. */
+function Unavailable({ availability, model, onRetry }: { availability: Availability; model: string | null; onRetry: () => void }) {
+  if (availability === 'checking' || availability === 'ready') {
+    return (
+      <div className="flex flex-1 items-center justify-center gap-sm font-body text-body-sm text-on-surface-variant">
+        <Icon name="progress_activity" className="animate-spin text-[18px] text-accent" /> Connecting to the copilot…
+      </div>
+    );
+  }
+  const modelName = model ?? 'qwen3:1.7b';
+  const content: Record<'disabled' | 'offline' | 'no-backend', { icon: string; title: string; body: string; steps: string[] }> = {
+    disabled: {
+      icon: 'cloud_off',
+      title: 'The copilot is not available on this server',
+      body:
+        'SENDA Copilot runs on a free open AI model that lives on the computer running the backend, not in the cloud. ' +
+        'Everything else in SENDA works normally: plan with the panels on the right.',
+      steps: [
+        `Install Ollama and download the model: ollama pull ${modelName}`,
+        'In backend/.env set SENDA_ASSISTANT_ENABLED=true',
+        'Restart the backend (python scripts/dev.py)',
+      ],
+    },
+    offline: {
+      icon: 'power_off',
+      title: 'The AI model is not responding',
+      body: `The copilot is turned on, but the local model (${modelName}) is not running or not downloaded yet.`,
+      steps: ['Open Ollama (icon next to the clock)', `Download the model if needed: ollama pull ${modelName}`, 'Press "Try again"'],
+    },
+    'no-backend': {
+      icon: 'dns',
+      title: 'Cannot reach the SENDA server',
+      body: 'The backend is not running or the address is wrong. Start it and try again.',
+      steps: ['Run python scripts/dev.py from the project folder'],
+    },
+  };
+  const c = content[availability];
+  return (
+    <div className="scroll-thin flex min-h-0 flex-1 flex-col gap-md overflow-y-auto px-md py-lg">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-warning/15 text-warning">
+        <Icon name={c.icon} className="text-[26px]" />
+      </span>
+      <div>
+        <p className="font-headline text-headline-sm text-on-surface">{c.title}</p>
+        <p className="mt-xs font-body text-body-md text-on-surface-variant">{c.body}</p>
+      </div>
+      <div className="rounded-lg border border-outline bg-surface p-sm">
+        <p className="mb-xs font-label text-label-sm uppercase text-on-surface-variant">How to turn it on</p>
+        <ol className="flex list-decimal flex-col gap-[4px] pl-md font-body text-body-sm text-on-surface marker:text-accent">
+          {c.steps.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+      </div>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="inline-flex items-center gap-xs self-start rounded-full border border-accent px-md py-xs font-label text-label-lg text-accent transition-colors duration-fast hover:bg-accent/10"
+      >
+        <Icon name="refresh" className="text-[18px]" /> Try again
+      </button>
     </div>
   );
 }
@@ -261,11 +341,11 @@ function Typing() {
   );
 }
 
-function Composer({ busy, onSend }: { busy: boolean; onSend: (text: string) => Promise<void> }) {
+function Composer({ busy, disabled, onSend }: { busy: boolean; disabled: boolean; onSend: (text: string) => Promise<void> }) {
   const [text, setText] = useState('');
   const speech = useSpeech((spoken) => void onSend(spoken));
   const submit = () => {
-    if (!text.trim() || busy) return;
+    if (!text.trim() || busy || disabled) return;
     const order = text;
     setText('');
     void onSend(order);
@@ -285,8 +365,8 @@ function Composer({ busy, onSend }: { busy: boolean; onSend: (text: string) => P
           onChange={(e) => setText(e.target.value)}
           onKeyDown={onKey}
           rows={1}
-          disabled={busy}
-          placeholder="Tell SENDA what to do…"
+          disabled={busy || disabled}
+          placeholder={disabled ? 'Copilot not available right now' : 'Tell SENDA what to do…'}
           aria-label="Message for SENDA Copilot"
           className="max-h-32 min-h-[36px] flex-1 resize-none bg-transparent py-xs font-body text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none disabled:opacity-60"
         />
@@ -294,7 +374,7 @@ function Composer({ busy, onSend }: { busy: boolean; onSend: (text: string) => P
           <button
             type="button"
             onClick={speech.toggle}
-            disabled={busy}
+            disabled={busy || disabled}
             aria-label={speech.listening ? 'Stop listening' : 'Speak'}
             title={speech.listening ? 'Listening…' : 'Speak'}
             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors duration-fast disabled:opacity-40 ${
@@ -307,7 +387,7 @@ function Composer({ busy, onSend }: { busy: boolean; onSend: (text: string) => P
         <button
           type="button"
           onClick={submit}
-          disabled={busy || !text.trim()}
+          disabled={busy || disabled || !text.trim()}
           aria-label="Send"
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary transition-colors duration-fast hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
         >

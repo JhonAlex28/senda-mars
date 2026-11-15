@@ -27,6 +27,17 @@ class OllamaAssistantModel:
         headers = {"Authorization": f"Bearer {token}"} if token else {}
         self._client = client or httpx.Client(base_url=base_url, headers=headers, timeout=180.0)
 
+    def is_reachable(self) -> bool:
+        """El servidor responde y tiene descargado el modelo configurado."""
+        try:
+            res = self._client.get("/api/tags", timeout=2.0)
+        except httpx.HTTPError:
+            return False
+        if res.status_code != 200:
+            return False
+        names = {m.get("name") for m in res.json().get("models", [])}
+        return self._model in names or f"{self._model}:latest" in names
+
     def next_turn(self, system: str, messages: Sequence[Message],
                   tools: Sequence[ToolSpec]) -> AssistantMessage:
         body = {

@@ -34,6 +34,10 @@ class AssistantModel(Protocol):
     def next_turn(self, system: str, messages: Sequence[Message],
                   tools: Sequence[ToolSpec]) -> AssistantMessage: ...
 
+    def is_reachable(self) -> bool:
+        """Comprobación rápida de que el modelo responde (para avisar en la interfaz)."""
+        ...
+
 
 class KnowledgeBase(Protocol):
     """Documentación del sistema que el asistente puede consultar para explicar."""

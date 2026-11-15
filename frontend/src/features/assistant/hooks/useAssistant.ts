@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMission } from '@/features/mission';
 import type { EvaPlan } from '@/features/mission';
+import { ApiError } from '@/shared/api/httpClient';
 import { assistantApi } from '../api/assistantApi';
-import type { ChatMessage, ChatReply, Outing, ViewChange } from '../types';
+import type { Availability, ChatMessage, ChatReply, Outing, ViewChange } from '../types';
 
 const HISTORY_LIMIT = 20;
 
@@ -18,17 +19,25 @@ export interface Exchange {
  */
 export function useAssistant() {
   const { state, dispatch } = useMission();
-  const [enabled, setEnabled] = useState(false);
+  const [availability, setAvailability] = useState<Availability>('checking');
+  const [model, setModel] = useState<string | null>(null);
   const [history, setHistory] = useState<Exchange[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  // disabled: el servidor no tiene el asistente activado (p. ej. el despliegue en la nube);
+  // offline: activado, pero el modelo local (Ollama) no responde; no-backend: sin servidor
+  const checkStatus = () => {
+    setAvailability('checking');
     assistantApi
       .status()
-      .then((s) => setEnabled(s.enabled))
-      .catch(() => setEnabled(false));
-  }, []);
+      .then((s) => {
+        setModel(s.model);
+        setAvailability(!s.enabled ? 'disabled' : s.reachable ? 'ready' : 'offline');
+      })
+      .catch((e) => setAvailability(e instanceof ApiError && e.status === 404 ? 'disabled' : 'no-backend'));
+  };
+  useEffect(checkStatus, []);
 
   const apply = (outing: Outing | null, view: ViewChange | null) => {
     if (outing?.planned && outing.traverse) {
@@ -69,11 +78,26 @@ export function useAssistant() {
       apply(reply.outing, reply.view);
       setHistory((h) => [...h, { order: text, reply }]);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'The assistant did not answer.');
+      if (e instanceof ApiError && e.status === 503) {
+        // El modelo dejó de responder: se muestra el aviso en lugar de un error técnico
+        setAvailability(e.message.includes('not configured') ? 'disabled' : 'offline');
+      } else {
+        setError(e instanceof Error ? e.message : 'The assistant did not answer.');
+      }
     } finally {
       setBusy(false);
     }
   };
 
-  return { enabled, history, busy, error, send, clear: () => setHistory([]), dismissError: () => setError(null) };
+  return {
+    availability,
+    model,
+    retry: checkStatus,
+    history,
+    busy,
+    error,
+    send,
+    clear: () => setHistory([]),
+    dismissError: () => setError(null),
+  };
 }

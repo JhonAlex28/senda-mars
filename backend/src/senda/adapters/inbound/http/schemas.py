@@ -400,5 +400,7 @@ class ChatOut(BaseModel):
 
 
 class AssistantStatusOut(BaseModel):
+    """enabled: activado en este servidor; reachable: el modelo responde ahora mismo."""
     enabled: bool
+    reachable: bool
     model: str | None

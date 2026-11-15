@@ -50,5 +50,9 @@ export interface ChatReply {
 
 export interface AssistantStatus {
   enabled: boolean;
+  reachable: boolean;
   model: string | null;
 }
+
+/** Estado del copiloto para la interfaz (cada uno tiene su propio aviso). */
+export type Availability = 'checking' | 'ready' | 'disabled' | 'offline' | 'no-backend';

@@ -4,6 +4,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from senda.application.assistant.tools import MissionContext, MissionTools
+from senda.application.ports.outbound import AssistantModel
 from senda.application.use_cases.assistant import ChatWithAssistant
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
 from senda.application.use_cases.plan_outing import PlanOuting
@@ -57,6 +58,10 @@ def optimize_quantum_uc() -> OptimizeTargetsQuantum:
 
 def assistant_settings() -> Settings:
     return get_container().settings
+
+
+def assistant_model() -> AssistantModel | None:
+    return get_container().assistant_model
 
 
 def chat_uc() -> Callable[[MissionContext], ChatWithAssistant] | None:
