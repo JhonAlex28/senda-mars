@@ -15,8 +15,11 @@ def grid_info(t: TerrainGrid) -> GridInfoOut:
 
 def assumptions(ctx: PlannerContext, *grids: TerrainGrid) -> dict[str, AssumptionOut]:
     out = {k: AssumptionOut(**v) for k, v in ctx.params.assumptions().items()}
-    for g in grids:
-        out[f"terrain.{g.scale.value}"] = AssumptionOut(
+    for i, g in enumerate(grids):
+        # si la EVA usa un recorte regional, no debe pisar la entrada de la grilla regional
+        dup = any(o.scale == g.scale for o in grids[i + 1:])
+        key = "terrain.eva" if dup else f"terrain.{g.scale.value}"
+        out[key] = AssumptionOut(
             value={"cell_size_m": g.spec.cell_size_m, "shape": list(g.spec.shape)},
             kind="synthetic" if g.kind == "synthetic" else "medido",
             source="; ".join(s.get("name", "") for s in g.sources) or "terrain")

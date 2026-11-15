@@ -3,9 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from typing import Any
-
 from senda.domain.models.route import EvaRoute, RouteProfile, RoverRoute
+from senda.domain.models.terrain import TerrainGrid
 
 
 @dataclass(frozen=True)
@@ -35,4 +34,4 @@ class MissionPlan:
     timeline: list[SolActivity]
     feasible: bool
     warnings: list[Warning] = field(default_factory=list)
-    eva_grid: Any = None              # TerrainGrid de la EVA (local o recorte regional)
+    eva_grid: TerrainGrid | None = None   # grilla de la EVA (local o recorte regional)

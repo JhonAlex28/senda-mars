@@ -29,13 +29,15 @@ from senda.domain.services.return_field import cost_to_source
 from senda.domain.services.rover_planner import RoverContext
 from senda.domain.services.scenarios import effect_of
 from senda.domain.services.simulation import Shelter
-from senda.domain.services.parking import propose_parkings
+from senda.domain.services.parking import order_tour, propose_parkings
 from senda.domain.services.terrain_analysis import (crop, for_walking, nogo_mask, science_raster,
                                                     snap_to_passable)
 
 Cell = tuple[int, int]
 MAX_CACHED = 24   # contextos por tipo (cada uno ocupa ~decenas de MB con grillas grandes)
 EVA_MARGIN_M = 500.0   # margen del recorte regional alrededor de los puntos de la EVA
+RETURN_FIELD_MARGIN_M = 1000.0   # el campo de retorno debe cubrir los objetivos (≤ ~550 m del SEV)
+CROP_TILE_CELLS = 50   # las ventanas se alinean a teselas fijas: planificar y simular usan la misma
 
 
 def grid_key(grid: TerrainGrid) -> tuple:
@@ -79,9 +81,10 @@ class PlannerContext:
         self._lock = threading.RLock()
         self._eva = _LRU()
         self._rover = _LRU()
-        self._shelters: dict[tuple, list[Shelter]] = {}
-        self._science: dict[tuple, np.ndarray] = {}
+        self._shelters: _LRU = _LRU()
+        self._science: _LRU = _LRU()
         self._crops: _LRU = _LRU()
+        self._rover_blocked: set[Cell] | None = None
         self._eva_staging: tuple[GeoPoint, str] | None = None
 
     # ---- datos básicos -----------------------------------------------------
@@ -119,12 +122,30 @@ class PlannerContext:
     def science_targets(self) -> list[ScienceTarget]:
         return [t for t in self.all_targets() if not t.is_base]
 
-    def parkings_for(self, targets: list[ScienceTarget]):
-        """Estacionamientos del SEV que propone el planificador para esos objetivos (R-4)."""
+    def rover_blocked(self, hazards: tuple[Hazard, ...] = ()) -> set[Cell]:
+        """Celdas vedadas al SEV (no-go dilatado ∪ peligros); sin peligros se cachea."""
         grid = self.regional()
-        blocked = {(int(r), int(c)) for r, c in np.argwhere(
-            nogo_mask(grid.classes, self.params.rover.nogo_dilation_cells))}
-        return propose_parkings(grid, targets, blocked)
+        if not hazards and self._rover_blocked is not None:
+            return self._rover_blocked
+        mask = nogo_mask(grid.classes, self.params.rover.nogo_dilation_cells)
+        hz = hazard_mask(grid, hazards)
+        if hz is not None:
+            mask = mask | hz
+        blocked = {(int(r), int(c)) for r, c in np.argwhere(mask)}
+        if not hazards:
+            self._rover_blocked = blocked
+        return blocked
+
+    def parkings_for(self, targets: list[ScienceTarget], base: GeoPoint | None = None,
+                     hazards: tuple[Hazard, ...] = ()):
+        """Estacionamientos del SEV (R-4) en orden de visita desde la base, numerados P1…Pn
+        igual que /routes/traverse. La base (is_base) no es un objetivo."""
+        if base is None:
+            base = GeoPoint(*self.params.base_lonlat)
+        science = [t for t in targets if not t.is_base]
+        if not science:
+            raise InvalidRequest("No science targets selected")
+        return order_tour(base, propose_parkings(self.regional(), science, self.rover_blocked(hazards)))
 
     def default_eva_staging(self) -> tuple[GeoPoint, str]:
         """Staging EVA por defecto: el estacionamiento de los objetivos del boxwork (o del primero)."""
@@ -134,7 +155,7 @@ class PlannerContext:
             if not science:
                 raise InvalidRequest("No science targets in targets file")
             boxwork = [t for t in science if local.contains(t.location)] or science[:1]
-            pk = self.parkings_for(boxwork)[0]
+            pk = next(p for p in self.parkings_for(science) if set(p.target_ids) & {t.id for t in boxwork})
             self._eva_staging = (pk.location, pk.id)
         return self._eva_staging
 
@@ -166,8 +187,9 @@ class PlannerContext:
                         shielding_pct=t.shielding_pct, science_points=t.science_points)
 
     # ---- grilla de la EVA --------------------------------------------------
-    def eva_grid(self, points: list[GeoPoint]) -> TerrainGrid:
-        """Local (1 m) si todos los puntos están en el boxwork; si no, recorte regional (10 m)."""
+    def eva_grid(self, points: list[GeoPoint], margin_m: float = EVA_MARGIN_M) -> TerrainGrid:
+        """Local (1 m) si todos los puntos están en el boxwork; si no, recorte regional (10 m)
+        con `margin_m` alrededor de los puntos, alineado a teselas de CROP_TILE_CELLS."""
         local = self.local()
         if all(local.contains(p) for p in points):
             return local
@@ -176,9 +198,11 @@ class PlannerContext:
             if not native.contains(p):
                 raise OutsideSite(p.lon, p.lat)
         cells = [native.spec.lonlat_to_cell(p.lon, p.lat) for p in points]
-        m = int(np.ceil(EVA_MARGIN_M / native.spec.cell_size_m))
-        r0, r1 = min(c[0] for c in cells) - m, max(c[0] for c in cells) + m + 1
-        c0, c1 = min(c[1] for c in cells) - m, max(c[1] for c in cells) + m + 1
+        m, t = int(np.ceil(margin_m / native.spec.cell_size_m)), CROP_TILE_CELLS
+        r0 = max(0, (min(c[0] for c in cells) - m) // t * t)
+        c0 = max(0, (min(c[1] for c in cells) - m) // t * t)
+        r1 = min(native.spec.rows, -(-(max(c[0] for c in cells) + m + 1) // t) * t)
+        c1 = min(native.spec.cols, -(-(max(c[1] for c in cells) + m + 1) // t) * t)
         e = self.params.eva
 
         def build() -> TerrainGrid:
@@ -190,16 +214,17 @@ class PlannerContext:
     # ---- contextos cacheados ----------------------------------------------
     def science(self, grid: TerrainGrid | None = None) -> np.ndarray:
         grid = grid or self.local()
-        key = grid_key(grid)
-        if key not in self._science:
+        def build() -> np.ndarray:
             pts = []
             for t in self.all_targets():
                 c = grid.spec.lonlat_to_cell(t.location.lon, t.location.lat)
                 if grid.spec.contains(c):
                     pts.append((c, t.score_s))
-            self._science[key] = science_raster(grid.spec.shape, grid.spec.cell_size_m, pts,
-                                                self.params.eva.science_radius_m)
-        return self._science[key]
+            return science_raster(grid.spec.shape, grid.spec.cell_size_m, pts,
+                                  self.params.eva.science_radius_m)
+
+        with self._lock:
+            return self._science.get_or(grid_key(grid), build)
 
     def eva_ctx(self, staging: Cell, speed_factor: float = 1.0, risk_multiplier: float = 1.0,
                 hazards: tuple[Hazard, ...] = (), keep: tuple[Cell, ...] = (),
@@ -232,8 +257,7 @@ class PlannerContext:
     def shelters(self, scenario_ctx: EvaContext, scenario: str) -> list[Shelter]:
         """Refugios alternativos (is_shelter) dentro de la grilla de esa EVA."""
         grid = scenario_ctx.terrain
-        key = (grid_key(grid), scenario_ctx.staging, scenario)
-        if key not in self._shelters:
+        def build() -> list[Shelter]:
             out = []
             for t in self.shelter_targets():
                 if not grid.contains(t.location):
@@ -241,8 +265,10 @@ class PlannerContext:
                 cell = self.waypoint(t, grid).cell
                 out.append(Shelter(id=t.id, cell=cell,
                                    return_o2=cost_to_source(scenario_ctx.energy, cell) / self.params.eva.kj_per_l_o2))
-            self._shelters[key] = out
-        return self._shelters[key]
+            return out
+
+        with self._lock:
+            return self._shelters.get_or((grid_key(grid), scenario_ctx.staging, scenario), build)
 
     def rover_ctx(self, base: Cell, speed_factor: float = 1.0, hazards: tuple[Hazard, ...] = (),
                   keep: tuple[Cell, ...] = ()) -> RoverContext:

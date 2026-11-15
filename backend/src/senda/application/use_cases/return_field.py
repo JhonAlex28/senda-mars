@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from senda.application.planner_context import PlannerContext
+from senda.application.planner_context import RETURN_FIELD_MARGIN_M, PlannerContext
 from senda.domain.errors import InvalidRequest
 from senda.domain.models.geo import BoundingBox, GeoPoint
 from senda.domain.services.scenarios import SCENARIOS, Scenario
@@ -38,7 +38,7 @@ class GetReturnField:
             staging_id = "rover"
             if staging is None:
                 staging, staging_id = self._ctx.default_eva_staging()
-            grid = self._ctx.eva_grid([staging])
+            grid = self._ctx.eva_grid([staging], RETURN_FIELD_MARGIN_M)
             cell = self._ctx.eva_cell(grid, staging, staging_id)
             ectx = self._ctx.eva_context(cell, scenario, grid=grid)
             values = ectx.return_o2

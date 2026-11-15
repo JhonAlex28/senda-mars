@@ -5,6 +5,7 @@ from senda.adapters.inbound.http.dependencies import list_scenarios_uc, return_f
 from senda.adapters.inbound.http.png import field_png, mask_png
 from senda.adapters.inbound.http.schemas import ReturnFieldResponse, ScenarioOut
 from senda.application.use_cases.return_field import GetReturnField, ListScenarios
+from senda.domain.errors import InvalidRequest
 from senda.domain.models.geo import GeoPoint
 
 router = APIRouter(tags=["safety"])
@@ -14,15 +15,18 @@ LAT = Query(None, description="EVA: latitud del SEV estacionado")
 
 
 def _staging(lon: float | None, lat: float | None) -> GeoPoint | None:
-    return GeoPoint(lon, lat) if lon is not None and lat is not None else None
+    if (lon is None) != (lat is None):
+        raise InvalidRequest("lon and lat must be given together")
+    return GeoPoint(lon, lat) if lon is not None else None
 
 
 @router.get("/return-field", response_model=ReturnFieldResponse)
 def return_field(leg: str = Query("eva", pattern="^(eva|rover)$"), scenario: str = "none",
                  lon: float | None = LON, lat: float | None = LAT,
                  uc: GetReturnField = Depends(return_field_uc)) -> ReturnFieldResponse:
-    f = uc.execute(leg, scenario, _staging(lon, lat))
-    q = f"leg={leg}&scenario={f.scenario}" + (f"&lon={lon}&lat={lat}" if _staging(lon, lat) else "")
+    staging = _staging(lon, lat)
+    f = uc.execute(leg, scenario, staging)
+    q = f"leg={leg}&scenario={f.scenario}" + (f"&lon={lon}&lat={lat}" if staging else "")
     b = f.bbox
     return ReturnFieldResponse(leg=leg, scenario=f.scenario,
                                png_url=f"{PREFIX}/return-field/image.png?{q}",

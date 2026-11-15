@@ -176,3 +176,34 @@ def test_eva_outside_boxwork_uses_regional_terrain():
         routes = res.json()
         assert len(routes) == 3 and all(r["return_ok"] for r in routes)
         assert {r["terrain_cell_m"] for r in routes} == {cell_m}
+
+
+def test_parking_ids_match_between_traverse_and_mission():
+    base = {"lon": 137.42009295, "lat": -4.59310427}
+    ids = ["T02", "S03"]
+    trav = client.post("/api/v1/routes/traverse", json={"base": base, "target_ids": ids}).json()
+    mission = client.post("/api/v1/mission/plan", json={"target_ids": ids, "profiles": ["safe"]}).json()
+    by_id = {p["id"]: p for p in trav["parkings"]}
+    staging = mission["staging"]
+    assert staging["target_id"] == "P1"
+    assert staging["lonlat"] == [by_id["P1"]["lon"], by_id["P1"]["lat"]]
+    assert "terrain.regional" in mission["assumptions"]
+
+
+def test_return_field_requires_lon_and_lat_together():
+    assert client.get("/api/v1/return-field?leg=eva&lon=137.41").status_code == 422
+
+
+def test_simulation_uses_the_same_crop_as_planning():
+    from senda.container import get_container
+    from senda.domain.models.geo import GeoPoint
+
+    base = {"lon": 137.42009295, "lat": -4.59310427}
+    pk = client.post("/api/v1/routes/traverse", json={"base": base, "target_ids": ["S03"]}).json()["parkings"][0]
+    route = client.post("/api/v1/routes/eva", json={"rover": {"lon": pk["lon"], "lat": pk["lat"]},
+                                                    "target_ids": ["S03"]}).json()[0]
+    ctx = get_container().planner
+    s03 = ctx.target("S03").location
+    planned = ctx.eva_grid([GeoPoint(pk["lon"], pk["lat"]), s03])
+    simulated = ctx.eva_grid([GeoPoint(p["lon"], p["lat"]) for p in route["points"]])
+    assert planned.spec == simulated.spec

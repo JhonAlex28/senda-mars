@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from senda.application.planner_context import PlannerContext
 from senda.application.use_cases.mission_legs import PlanEvaRoutes, PlanRoverLeg
+from senda.domain.models.geo import GeoPoint
 from senda.domain.models.mission import MissionPlan, Warning
 from senda.domain.models.route import RouteProfile
 from senda.domain.services.mission_timeline import build_timeline
@@ -32,7 +33,7 @@ class PlanMission:
         else:
             # el SEV estaciona donde lo propone R-4; esta misión hace la EVA del primer
             # estacionamiento (los demás se planifican con /routes/traverse + /routes/eva)
-            parkings = self._ctx.parkings_for(targets)
+            parkings = self._ctx.parkings_for(targets, GeoPoint(*base))
             staging_pt, staging_id = parkings[0].location, parkings[0].id
             eva_ids = list(parkings[0].target_ids)
             dropped = [t for pk in parkings[1:] for t in pk.target_ids]

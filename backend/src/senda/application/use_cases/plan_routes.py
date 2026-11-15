@@ -10,9 +10,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-import numpy as np
-
-from senda.application.planner_context import PlannerContext, hazard_mask
+from senda.application.planner_context import PlannerContext
 from senda.application.route_mapper import eva_to_plan, rover_to_plan
 from senda.domain.errors import NoRouteFound
 from senda.domain.models.geo import GeoPoint
@@ -21,10 +19,8 @@ from senda.domain.models.route import (Conditions, Hazard, RoutePlan, RouteProfi
                                        TraversePlan, TravelMode, Waypoint)
 from senda.domain.models.target import ScienceTarget
 from senda.domain.services import eva_planner as eva
-from senda.domain.services.parking import order_tour, propose_parkings
 from senda.domain.services.pathfinding import chain_astar
 from senda.domain.services.rover_planner import plan_rover_chain
-from senda.domain.services.terrain_analysis import nogo_mask
 
 DEFAULT_PROFILES = [RouteProfile.SAFE, RouteProfile.SCIENTIFIC, RouteProfile.FAST]
 ROVER_RISK = {RouteProfile.SAFE: 3.0, RouteProfile.SCIENTIFIC: 1.0, RouteProfile.FAST: 0.0}
@@ -120,12 +116,7 @@ class PlanTraverse:
         for t in targets:
             if not grid.contains(t.location):
                 raise NoRouteFound(f"target {t.id} is outside the rover grid")
-        blocked_mask = nogo_mask(grid.classes, ctx.params.rover.nogo_dilation_cells)
-        hz = hazard_mask(grid, tuple(hazards))
-        if hz is not None:
-            blocked_mask = blocked_mask | hz
-        blocked = {(int(r), int(c)) for r, c in np.argwhere(blocked_mask)}
-        parkings = order_tour(base, propose_parkings(grid, targets, blocked))
+        parkings = ctx.parkings_for(targets, base, tuple(hazards))
         home = Waypoint(base, StopKind.BASE, "base")
         waypoints = [home, *(Waypoint(pk.location, StopKind.PARKING, pk.id) for pk in parkings), home]
         return TraversePlan(parkings, self._p.rover_routes(waypoints, hazards, conditions, None))

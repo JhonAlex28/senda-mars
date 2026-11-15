@@ -71,5 +71,24 @@ def test_crop_keeps_georeferencing_and_for_walking_uses_human_thresholds():
     assert np.array_equal(c.dem, g.dem[5:25, 7:30])
     w = for_walking(c, 10.0, 20.0)
     s = slope_deg(w.dem, w.spec.cell_size_m)
-    assert ((s > 20.0) == (w.classes == 2)).all()
+    assert (w.classes[s > 20.0] == 2).all()                 # todo lo empinado para un humano es no-go
+    assert (w.classes[c.classes == 2] == 2).all()           # y se conserva el no-go original
     assert float(w.risk.max()) <= 1.0
+
+
+def test_for_walking_keeps_non_slope_nogo_and_nodata():
+    import numpy as np
+    from dataclasses import replace
+
+    from senda.domain.models.terrain import CLASS_NODATA, CLASS_NOGO
+    from senda.domain.services.terrain_analysis import for_walking
+    from tests.fixtures.synthetic import synthetic_grid
+
+    g = synthetic_grid()
+    classes = g.classes.copy()
+    classes[10, 10] = CLASS_NOGO               # p. ej. duna: no sale de la pendiente
+    dem = g.dem.copy()
+    dem[30, 30] = np.nan
+    w = for_walking(replace(g, classes=classes, dem=dem), 10.0, 20.0)
+    assert w.classes[10, 10] == CLASS_NOGO
+    assert w.classes[30, 30] == CLASS_NODATA and w.classes[30, 31] == CLASS_NODATA   # borde del NaN

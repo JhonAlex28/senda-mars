@@ -477,6 +477,9 @@ Los DTOs viven en `adapters/inbound/http/schemas.py`. El frontend los espeja en 
 | Algún punto fuera | Recorte de la **regional a 10 m nativos** (puntos + 500 m de margen, sin submuestrear) | Reclasificada con humanos: 10/20°, riesgo = pendiente / 20 | 10 |
 
 - Con 10 m, la EVA pierde el relieve métrico (crestas y escalones de unos pocos metros) que sí ve el DEM de 1 m. Hasta que Mec. A entregue recortes de 1 m para S01–S11, esas EVA son **orientativas**.
+- El recorte se alinea a teselas de 50 celdas (500 m), así que planificar y simular usan la misma ventana. Se conservan los no-go y sin-datos que no salen de la pendiente.
+- **Limitación conocida:** la dilatación de no-go (`eva.nogo_dilation_cells` = 1) está en celdas. En el recorte de 10 m el margen es de 10 m en vez de 4 m: es más conservador, y algún objetivo cerca de un borde no-go puede desplazarse unas celdas.
+- `GET /return-field?leg=eva` usa un margen de 1 km para cubrir los objetivos del estacionamiento.
 - `POST /simulate` acepta `route.path` (`[lon, lat]`) para ubicar la EVA en su grilla.
 - `GET /return-field` acepta `lon` y `lat` del SEV estacionado. Si no se dan, usa el estacionamiento del boxwork.
 - **`/mission/plan`:** sin `staging_target_id`, estaciona en el primer `P` propuesto y planifica la EVA de sus objetivos. Los demás objetivos se listan en el warning `OTHER_PARKINGS`.

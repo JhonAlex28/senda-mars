@@ -157,10 +157,14 @@ def crop(grid, r0: int, r1: int, c0: int, c1: int):
 
 def for_walking(grid, caution_deg: float, nogo_deg: float):
     """Reclasifica una grilla de rover con los umbrales HUMANOS (EVA fuera del 1 m local).
-    Riesgo = clip(pendiente / nogo, 0, 1): la misma fórmula que usa Mec. A en su grilla local."""
+    Riesgo = clip(pendiente / nogo, 0, 1): la misma fórmula que usa Mec. A en su grilla local.
+    Se conservan los no-go y sin-datos de la grilla original (p. ej. dunas o máscaras que no
+    salen de la pendiente) y una pendiente indefinida (borde de NaN) cuenta como sin datos."""
     from dataclasses import replace as _replace
 
     s = slope_deg(grid.dem, grid.spec.cell_size_m)
+    classes = classify_slope(grid.dem, grid.spec.cell_size_m, caution_deg, nogo_deg)
+    classes[grid.classes == CLASS_NOGO] = CLASS_NOGO
+    classes[(grid.classes == CLASS_NODATA) | ~np.isfinite(s)] = CLASS_NODATA
     risk = np.clip(np.nan_to_num(s, nan=nogo_deg) / nogo_deg, 0.0, 1.0).astype(np.float32)
-    return _replace(grid, classes=classify_slope(grid.dem, grid.spec.cell_size_m, caution_deg, nogo_deg),
-                    risk=risk)
+    return _replace(grid, classes=classes, risk=risk)
