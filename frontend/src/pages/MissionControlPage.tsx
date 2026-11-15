@@ -2,6 +2,7 @@ import { useCallback, useMemo, type ReactNode } from 'react';
 import { WeatherStrip, useReadiness, type Readiness } from '@/features/environment';
 import { ExecutionView, buildItinerary } from '@/features/field-simulation';
 import { LayersPanel } from '@/features/layers';
+import { CrewSwitcher, PlanCalendarCard } from '@/features/mission-log';
 import { createProjection, type Projection } from '@/features/map';
 import {
   BaseCard,
@@ -34,7 +35,7 @@ export function MissionControlPage() {
 
   return (
     <div className="flex h-full min-h-[720px] flex-col overflow-hidden">
-      <MissionHeader />
+      <MissionHeader extra={<CrewSwitcher />} />
       {error && (
         <div className="p-md">
           <ErrorNote message={`Cannot reach the SENDA server (${error.message}). Is the backend running on port 8000?`} />
@@ -72,6 +73,7 @@ function PlanView({ projection, site, readiness }: ViewProps) {
         </aside>
         <PlanningMap projection={projection} site={site} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto pr-xs">
+          <PlanCalendarCard />
           <BaseCard site={site.grid.bbox} />
           <GoalsCard />
           {state.phase === 'walk' ? <EvaPanel /> : <TraversePanel />}

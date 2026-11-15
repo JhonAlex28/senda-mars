@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Icon } from '@/shared/ui/Icon';
 import { useMission } from '../state/MissionContext';
 import { CrewSuitModal } from './CrewSuitModal';
@@ -15,7 +15,8 @@ export function SendaLogo() {
 }
 
 /** Top bar with mission title, NASA Labs, Gale EZ & SEV reference, and navigation back to Mars globe. */
-export function MissionHeader() {
+/** extra: controles que añade la página (p. ej. quién planifica), sin acoplar features. */
+export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
   const { state, dispatch, targets } = useMission();
   const [conceptOpen, setConceptOpen] = useState(false);
   const [labsOpen, setLabsOpen] = useState(false);
@@ -97,6 +98,7 @@ export function MissionHeader() {
             <Icon name="satellite_alt" className="text-[16px] text-accent" />
             <span>Gale EZ &amp; SEV</span>
           </button>
+          {extra}
           <button
             type="button"
             onClick={() => dispatch({ type: 'backToGlobe' })}

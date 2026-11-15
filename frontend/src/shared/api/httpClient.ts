@@ -17,6 +17,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) {
     throw new ApiError(res.status, await errorDetail(res));
   }
+  if (res.status === 204) return undefined as T; // sin contenido (p. ej. DELETE)
   return (await res.json()) as T;
 }
 
@@ -36,4 +37,9 @@ export const http = {
   get: <T>(path: string) => request<T>(path),
   post: <T>(path: string, body: unknown) =>
     request<T>(path, { method: "POST", body: JSON.stringify(body) }),
+  put: <T>(path: string, body: unknown) =>
+    request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
+  patch: <T>(path: string, body: unknown) =>
+    request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
+  delete: (path: string) => request<void>(path, { method: "DELETE" }),
 };

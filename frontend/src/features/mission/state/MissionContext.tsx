@@ -1,50 +1,61 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState, type Dispatch, type ReactNode } from 'react';
 import { useTargets, type Target } from '@/features/targets';
+import { missionLogApi, type CrewDto, type ProcedureDto } from '@/shared/api/missionLog';
 import { initialMissionState, missionReducer } from './missionReducer';
-import type { MissionAction, MissionState } from './types';
+import type { CrewConfig, CrewMember, MissionAction, MissionState } from './types';
 
 export interface ProcedureRecord {
   missionId: string;
   targetId: string;
   completedAt: string;
+  crewMember: string | null;
 }
 
-interface ProcedureHistory {
-  records: ProcedureRecord[];
-  error: string | null;
-  shouldPersist: boolean;
-}
+/** Tripulante que planifica en este equipo: preferencia local (no es un dato compartido). */
+const PROFILE_KEY = 'senda-profile';
 
-const HISTORY_KEY = 'senda-procedure-history';
-
-// Conectar aquí la API de historial y reemplazar localStorage por lectura y escritura en la base de datos.
-function isProcedureRecord(value: unknown): value is ProcedureRecord {
-  if (!value || typeof value !== 'object') return false;
-  const record = value as Record<string, unknown>;
-  return (
-    typeof record.missionId === 'string' &&
-    typeof record.targetId === 'string' &&
-    typeof record.completedAt === 'string' &&
-    Number.isFinite(Date.parse(record.completedAt))
-  );
-}
-
-function readProcedureHistory(): ProcedureHistory {
+function readProfile(): string {
   try {
-    const raw = window.localStorage.getItem(HISTORY_KEY);
-    if (!raw) return { records: [], error: null, shouldPersist: true };
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed) || !parsed.every(isProcedureRecord)) {
-      return { records: [], error: 'Saved procedure history has an invalid format.', shouldPersist: false };
-    }
-    return { records: parsed, error: null, shouldPersist: true };
-  } catch (error) {
-    return {
-      records: [],
-      error: `Procedure history could not be loaded: ${error instanceof Error ? error.message : 'storage is unavailable.'}`,
-      shouldPersist: false,
-    };
+    return window.localStorage.getItem(PROFILE_KEY) ?? initialMissionState.profileId;
+  } catch {
+    return initialMissionState.profileId;
   }
+}
+
+function toRecord(p: ProcedureDto): ProcedureRecord {
+  return { missionId: p.site_id, targetId: p.target_id, completedAt: p.completed_at, crewMember: p.crew_member };
+}
+
+/** La interfaz de tripulación usa dos tripulantes; la base de datos admite más. */
+function toCrewConfig(dto: CrewDto, fallback: CrewConfig): CrewConfig {
+  const members = dto.members.slice(0, 2).map(
+    (m, i): CrewMember => ({
+      id: (m.id === 'EVA-2' || i === 1 ? 'EVA-2' : 'EVA-1') as CrewMember['id'],
+      name: m.name,
+      role: m.role,
+      suitId: m.suit_id,
+      restingBpm: m.resting_bpm,
+      massKg: m.mass_kg,
+    }),
+  );
+  return {
+    teamName: dto.team_name,
+    members: [members[0] ?? fallback.members[0], members[1] ?? fallback.members[1]],
+  };
+}
+
+export function toCrewDto(crew: CrewConfig): CrewDto {
+  return {
+    team_name: crew.teamName,
+    members: crew.members.map((m) => ({
+      id: m.id,
+      name: m.name,
+      role: m.role,
+      suit_id: m.suitId,
+      resting_bpm: m.restingBpm,
+      mass_kg: m.massKg,
+    })),
+  };
 }
 
 interface MissionContextValue {
@@ -62,33 +73,45 @@ const MissionContext = createContext<MissionContextValue | null>(null);
 
 /** Estado de la misión + catálogo de objetivos, compartidos por todas las pantallas. */
 export function MissionProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(missionReducer, initialMissionState);
-  const [history, setHistory] = useState(readProcedureHistory);
+  const [state, dispatch] = useReducer(missionReducer, initialMissionState, (s) => ({ ...s, profileId: readProfile() }));
+  const [history, setHistory] = useState<ProcedureRecord[]>([]);
+  const [historyError, setHistoryError] = useState<string | null>(null);
   const { data, error } = useTargets();
   const targets = useMemo(() => data ?? [], [data]);
   const targetById = useMemo(() => new Map(targets.map((t) => [t.id, t])), [targets]);
 
-  const addProcedureRecord = useCallback((targetId: string) => {
-    setHistory((current) => ({
-      ...current,
-      records: [...current.records, { missionId: state.missionId, targetId, completedAt: new Date().toISOString() }],
-      shouldPersist: true,
-    }));
-  }, [state.missionId]);
+  // Registro de la misión desde la base de datos: procedimientos y tripulación
+  useEffect(() => {
+    missionLogApi
+      .procedures()
+      .then((rows) => setHistory(rows.map(toRecord)))
+      .catch((e: unknown) => setHistoryError(`Procedure history could not be loaded: ${e instanceof Error ? e.message : 'server unavailable.'}`));
+    missionLogApi
+      .crew()
+      .then((crew) => dispatch({ type: 'setCrew', crew: toCrewConfig(crew, initialMissionState.crew) }))
+      .catch(() => undefined); // sin servidor se queda la tripulación por defecto
+  }, []);
 
   useEffect(() => {
-    if (!history.shouldPersist) return;
     try {
-      window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history.records));
-      if (history.error) setHistory((current) => ({ ...current, error: null }));
-    } catch (error) {
-      setHistory((current) => ({
-        ...current,
-        error: `Procedure history could not be saved: ${error instanceof Error ? error.message : 'storage is unavailable.'}`,
-        shouldPersist: false,
-      }));
+      window.localStorage.setItem(PROFILE_KEY, state.profileId);
+    } catch {
+      // almacenamiento no disponible: solo se pierde la preferencia
     }
-  }, [history]);
+  }, [state.profileId]);
+
+  const addProcedureRecord = useCallback(
+    (targetId: string) => {
+      missionLogApi
+        .recordProcedure({ site_id: state.missionId, target_id: targetId, crew_member: state.profileId, plan_id: state.activePlan?.id ?? null })
+        .then((row) => {
+          setHistory((current) => [...current, toRecord(row)]);
+          setHistoryError(null);
+        })
+        .catch((e: unknown) => setHistoryError(`Procedure could not be saved: ${e instanceof Error ? e.message : 'server unavailable.'}`));
+    },
+    [state.missionId, state.profileId, state.activePlan],
+  );
 
   // La base parte de la del catálogo; el usuario puede moverla (Change o herramienta "Move base")
   useEffect(() => {
@@ -103,11 +126,11 @@ export function MissionProvider({ children }: { children: ReactNode }) {
       targets,
       targetById,
       targetsError: error,
-      procedureHistory: history.records,
-      procedureHistoryError: history.error,
+      procedureHistory: history,
+      procedureHistoryError: historyError,
       addProcedureRecord,
     }),
-    [state, targets, targetById, error, history, addProcedureRecord],
+    [state, targets, targetById, error, history, historyError, addProcedureRecord],
   );
   return <MissionContext.Provider value={value}>{children}</MissionContext.Provider>;
 }

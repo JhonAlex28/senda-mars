@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useMission } from '../state/MissionContext';
+import { missionLogApi } from '@/shared/api/missionLog';
+import { toCrewDto, useMission } from '../state/MissionContext';
 import type { CrewConfig } from '../state/types';
 import { HelmetStatusCard } from './HelmetStatusCard';
 
@@ -23,6 +24,8 @@ export function CrewSuitModal({ open, onClose }: CrewSuitModalProps) {
 
   const save = () => {
     dispatch({ type: 'setCrew', crew: draft });
+    // Se guarda en la base de datos para todo el equipo; si falla, queda al menos en esta sesión
+    void missionLogApi.saveCrew(toCrewDto(draft)).catch(() => undefined);
     onClose();
   };
 

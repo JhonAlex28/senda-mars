@@ -48,6 +48,25 @@ export interface EnvControls {
   speActive: boolean;
 }
 
+/** Plan guardado que está abierto en pantalla (guardar lo actualiza en lugar de duplicarlo). */
+export interface ActivePlan {
+  id: string;
+  title: string;
+  sol: number;
+}
+
+/** Lo que se guarda de un plan: exactamente lo necesario para volver a dibujarlo. */
+export interface SavedPlanPayload {
+  base: GeoPoint | null;
+  goals: string[];
+  hazards: Hazard[];
+  traverse: TraversePlan | null;
+  traverseProfile: RouteProfile;
+  evaPlans: Record<string, EvaPlan>;
+  vehicleId: RoverVehicleId;
+  vehicleSpeedKmh: number;
+}
+
 export interface MissionState {
   phase: Phase;
   missionId: string;
@@ -65,6 +84,8 @@ export interface MissionState {
   crew: CrewConfig;
   env: EnvControls;
   quantumSummary: QuantumSummary | null;
+  activePlan: ActivePlan | null;
+  profileId: string; // tripulante que planifica en este equipo (EVA-1, EVA-2…)
   notice: string | null;
 }
 
@@ -103,4 +124,7 @@ export type MissionAction =
       traverseProfile: RouteProfile;
       evaPlans: Record<string, EvaPlan>;
     }
-  | { type: 'viewChanged'; profile?: RouteProfile; phase?: Exclude<Phase, 'globe'> };
+  | { type: 'viewChanged'; profile?: RouteProfile; phase?: Exclude<Phase, 'globe'> }
+  | { type: 'planOpened'; plan: SavedPlanPayload; active: ActivePlan }
+  | { type: 'activePlanSet'; active: ActivePlan | null }
+  | { type: 'setProfile'; id: string };

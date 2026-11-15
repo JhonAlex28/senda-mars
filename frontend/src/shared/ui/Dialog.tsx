@@ -4,11 +4,12 @@ import { Icon } from './Icon';
 interface DialogProps {
   title: string;
   icon?: string;
+  size?: 'md' | 'lg';
   onClose: () => void;
   children: ReactNode;
 }
 
-export function Dialog({ title, icon, onClose, children }: DialogProps) {
+export function Dialog({ title, icon, size = 'md', onClose, children }: DialogProps) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -24,7 +25,7 @@ export function Dialog({ title, icon, onClose, children }: DialogProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="w-full max-w-md animate-fade-up rounded-lg border border-outline bg-surface-container p-lg shadow-2xl"
+        className={`w-full ${size === 'lg' ? 'max-w-2xl' : 'max-w-md'} animate-fade-up rounded-lg border border-outline bg-surface-container p-lg shadow-2xl`}
         onClick={(e) => e.stopPropagation()}
       >
         <header className="mb-md flex items-center justify-between gap-sm">

@@ -56,6 +56,11 @@ export interface ViewChange {
   screen: Screen | null;
 }
 
+export interface SaveRequest {
+  sol: number;
+  title: string | null;
+}
+
 export interface ChatReply {
   reply: string;
   refused: boolean;
@@ -64,6 +69,8 @@ export interface ChatReply {
   readiness: Readiness | null;
   outing: Outing | null;
   view: ViewChange | null;
+  save: SaveRequest | null;
+  open_plan_id: string | null;
 }
 
 export interface AssistantStatus {

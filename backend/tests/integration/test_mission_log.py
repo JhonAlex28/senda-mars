@@ -166,3 +166,16 @@ def test_copilot_opens_a_saved_plan(store):
     cal.save(title="B", day="today", site_id="s", created_by=None, summary={}, payload={})
     result, _ = run("open_saved_plan", day="today")
     assert result.is_error and a.id in result.content    # varios: pide cuál, con sus ids
+
+
+def test_planning_for_tomorrow_asks_to_save_it_for_that_day(store):
+    tools, run = _copilot(store)
+    _, body = run("plan_outing", target_ids=["T03"], day="tomorrow")
+    sol = _calendar(store).today() + 1
+    assert body["saved_in_calendar"] == {"day": "tomorrow", "sol": sol}
+    assert tools.log.save.sol == sol
+    tools, run = _copilot(store)
+    run("plan_outing", target_ids=["T03"])           # sin día: no se guarda solo
+    assert tools.log.save is None
+    result, _ = run("plan_outing", day="someday")
+    assert result.is_error

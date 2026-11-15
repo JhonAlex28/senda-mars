@@ -44,6 +44,9 @@ SPECS: tuple[ToolSpec, ...] = (
                                                   "(3 hours = 180)."},
             "profile": {"type": "string", "enum": PROFILES,
                         "description": "Only if the user asks for one."},
+            "day": {"type": "string", "enum": ["today", "tomorrow"],
+                    "description": "Day the outing is for. 'tomorrow' if the user says tomorrow: "
+                                   "the plan is then saved in the calendar for that day."},
             "speed_factor": {"type": "number", "exclusiveMinimum": 0.1, "maximum": 1.5,
                              "description": "0.7 for a dust storm. Default 1."},
             "o2_multiplier": {"type": "number", "minimum": 1, "maximum": 3,
@@ -232,6 +235,9 @@ class MissionTools:
             bases = {t.id for t in self._targets.execute() if t.is_base}
             ids = [i.strip().split()[0].strip(",;:") for i in ids if i.strip()]
             ids = [i for i in ids if i not in bases] or None
+        day = args.get("day")
+        if day not in (None, "", "today", "tomorrow"):
+            raise InvalidToolInput("day must be today or tomorrow")
         budget = _number(args, "time_available_min", None, 30, 720)
         conditions = Conditions(_number(args, "speed_factor", 1.0, 0.1, 1.5),
                                 _number(args, "o2_multiplier", 1.0, 1.0, 3.0))
@@ -241,7 +247,14 @@ class MissionTools:
         self.log.outing = plan
         self.log.readiness = plan.readiness
         self.log.view = None   # el plan nuevo trae su propia vista
-        return _outing_summary(plan, self._names())
+        summary = _outing_summary(plan, self._names())
+        # Planificar para otro día lo guarda en el calendario de ese día (un solo paso para el
+        # modelo; antes tenía que encadenar save_plan y los modelos pequeños lo olvidaban)
+        if day and plan.planned and self._calendar is not None:
+            sol = self._calendar.resolve(day)
+            self.log.save = SaveRequest(sol)
+            summary["saved_in_calendar"] = {"day": day, "sol": sol}
+        return summary
 
     def _adjust_view(self, args: dict[str, Any]) -> dict[str, Any]:
         # Los modelos pequeños confunden los campos (profile="go"): se interpreta cada valor

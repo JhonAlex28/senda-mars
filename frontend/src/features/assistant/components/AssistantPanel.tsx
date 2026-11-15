@@ -253,7 +253,9 @@ function AssistantBubble({ exchange }: { exchange: Exchange }) {
       </span>
       <div className="flex min-w-0 max-w-[88%] flex-col gap-xs rounded-2xl rounded-tl-sm border border-outline bg-surface px-md py-sm">
         {reply.reply ? (
-          <p className="whitespace-pre-line font-body text-body-md text-on-surface">{reply.reply}</p>
+          <p className="whitespace-pre-line font-body text-body-md text-on-surface">
+            <RichText text={reply.reply} />
+          </p>
         ) : (
           <p className="font-body text-body-md text-on-surface-variant">Done.</p>
         )}
@@ -278,6 +280,11 @@ function AssistantBubble({ exchange }: { exchange: Exchange }) {
             Left out: {outing.dropped.map((d) => `${name(d.id)} (${d.reason === 'time' ? 'no time' : 'no safe way back'})`).join(', ')}
           </Result>
         )}
+        {exchange.calendar && (
+          <Result tone={exchange.calendar.ok ? 'success' : 'error'} icon={exchange.calendar.ok ? 'event_available' : 'event_busy'}>
+            {exchange.calendar.text}
+          </Result>
+        )}
         {reply.view && (
           <Result tone="success" icon="visibility">
             Screen updated{reply.view.profile ? ` · ${reply.view.profile} route` : ''}
@@ -295,6 +302,21 @@ function AssistantBubble({ exchange }: { exchange: Exchange }) {
         )}
       </div>
     </div>
+  );
+}
+
+/** El modelo a veces responde con **negritas** de Markdown: se muestran como negrita, sin asteriscos. */
+function RichText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+        part.startsWith('**') && part.endsWith('**') ? (
+          <strong key={i} className="font-semibold">{part.slice(2, -2)}</strong>
+        ) : (
+          <span key={i}>{part.replace(/^#{1,4} /gm, '')}</span>
+        ),
+      )}
+    </>
   );
 }
 

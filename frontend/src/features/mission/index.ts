@@ -8,5 +8,5 @@ export { MissionHeader, SendaLogo } from './components/MissionHeader';
 export { PlanningMap } from './components/PlanningMap';
 export { TraversePanel } from './components/TraversePanel';
 export { MissionProvider, useMission } from './state/MissionContext';
-export { allEvasPlanned, planStep, selectedEva, selectedTraverse } from './state/selectors';
-export type { EvaPlan, MissionState, Phase } from './state/types';
+export { allEvasPlanned, planPayload, planStep, planSummaryOf, selectedEva, selectedTraverse } from './state/selectors';
+export type { ActivePlan, CrewConfig, EvaPlan, MissionState, Phase, SavedPlanPayload } from './state/types';

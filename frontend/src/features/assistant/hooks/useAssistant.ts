@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { selectedEva, selectedTraverse, useMission } from '@/features/mission';
+import { usePlanActions } from '@/features/mission-log';
 import type { EvaPlan, MissionState } from '@/features/mission';
 import type { RoutePlan } from '@/features/route-planning';
 import { ApiError } from '@/shared/api/httpClient';
@@ -8,9 +9,16 @@ import type { Availability, ChatMessage, ChatReply, LegSummary, Outing, PlanSumm
 
 const HISTORY_LIMIT = 20;
 
+/** Resultado de las acciones del calendario que el copiloto pidió (guardar / abrir). */
+export interface CalendarResult {
+  ok: boolean;
+  text: string;
+}
+
 export interface Exchange {
   order: string;
   reply: ChatReply;
+  calendar?: CalendarResult;
 }
 
 /**
@@ -19,7 +27,8 @@ export interface Exchange {
  * con las mismas acciones que usaría la interfaz. Nada se recalcula ni se inventa.
  */
 export function useAssistant() {
-  const { state, dispatch } = useMission();
+  const { state, dispatch, targetById } = useMission();
+  const plans = usePlanActions();
   const [availability, setAvailability] = useState<Availability>('checking');
   const [model, setModel] = useState<string | null>(null);
   const [history, setHistory] = useState<Exchange[]>([]);
@@ -57,6 +66,59 @@ export function useAssistant() {
     if (view) dispatch({ type: 'viewChanged', profile: view.profile ?? undefined, phase: view.screen ?? undefined });
   };
 
+  // Guardar / abrir: el copiloto lo pide y la pantalla lo hace con el plan completo que dibuja
+  const runCalendar = async (reply: ChatReply): Promise<CalendarResult | undefined> => {
+    try {
+      if (reply.open_plan_id) {
+        const plan = await plans.open(reply.open_plan_id);
+        return { ok: true, text: `Opened “${plan.title}” (Sol ${plan.sol})` };
+      }
+      if (reply.save) {
+        const outing = reply.outing?.planned ? reply.outing : null;
+        const goals = outing?.target_ids ?? state.goals;
+        const title = reply.save.title ?? defaultTitle(goals, targetById);
+        // Un plan para otro día no pisa el que está abierto: se guarda como nuevo
+        const asNew = !!outing || !state.activePlan || state.activePlan.sol !== reply.save.sol;
+        const saved = await plans.save({
+          day: reply.save.sol,
+          title,
+          asNew,
+          ...(outing ? { payload: outingPayload(outing), summary: { targets: outing.target_ids, total_duration_min: outing.total_duration_min } } : {}),
+        });
+        return { ok: true, text: `Saved “${saved.title}” for Sol ${saved.sol}` };
+      }
+    } catch (e) {
+      return { ok: false, text: e instanceof Error ? e.message : 'The calendar action failed.' };
+    }
+    return undefined;
+  };
+
+  // Si el copiloto trae un plan nuevo y el de pantalla tiene rutas pero no se guardó, se guarda
+  // para hoy antes de reemplazarlo: así el plan de hoy no se pierde al preparar el de mañana
+  const keepUnsavedPlan = async (reply: ChatReply): Promise<CalendarResult | undefined> => {
+    const replaces = !!reply.outing?.planned || !!reply.open_plan_id;
+    if (!replaces || !state.traverse || state.activePlan) return undefined;
+    try {
+      const saved = await plans.save({ day: 'today', title: defaultTitle(state.goals, targetById), asNew: true });
+      return { ok: true, text: `Kept your previous plan as “${saved.title}” (Sol ${saved.sol})` };
+    } catch {
+      return { ok: false, text: 'Your previous plan could not be kept in the calendar.' };
+    }
+  };
+
+  const outingPayload = (o: Outing) => ({
+    base: state.base,
+    goals: o.target_ids,
+    hazards: o.hazards,
+    traverse: o.traverse,
+    traverseProfile: o.traverse_profile ?? 'safe',
+    evaPlans: Object.fromEntries(
+      Object.entries(o.evas).map(([id, routes]) => [id, { routes, profile: o.eva_profiles[id] ?? 'safe' }]),
+    ),
+    vehicleId: state.vehicleId,
+    vehicleSpeedKmh: state.vehicleSpeedKmh,
+  });
+
   const send = async (order: string) => {
     const text = order.trim();
     if (!text || busy) return;
@@ -78,8 +140,12 @@ export function useAssistant() {
         screen: state.phase,
         plan: planSummary(state),
       });
+      const kept = await keepUnsavedPlan(reply);
       apply(reply.outing, reply.view);
-      setHistory((h) => [...h, { order: text, reply }]);
+      const done = await runCalendar(reply);
+      const calendar: CalendarResult | undefined =
+        kept && done ? { ok: kept.ok && done.ok, text: `${kept.text}. ${done.text}` } : (done ?? kept);
+      setHistory((h) => [...h, { order: text, reply, calendar }]);
     } catch (e) {
       if (e instanceof ApiError && e.status === 503) {
         // El modelo dejó de responder: se muestra el aviso en lugar de un error técnico
@@ -128,4 +194,10 @@ function planSummary(state: MissionState): PlanSummary | null {
     }),
     parkings_without_spacewalk: state.traverse.parkings.filter((p) => !state.evaPlans[p.id]).map((p) => p.id),
   };
+}
+
+function defaultTitle(goals: string[], names: Map<string, { name: string }>): string {
+  if (goals.length === 0) return 'Outing';
+  const first = names.get(goals[0])?.name.split(' (')[0] ?? goals[0];
+  return goals.length === 1 ? `EVA to ${first}` : `${first} + ${goals.length - 1} more`;
 }

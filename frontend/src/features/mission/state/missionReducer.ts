@@ -23,6 +23,8 @@ export const initialMissionState: MissionState = {
   },
   env: { tau: 0.62, lmstHour: 13, speActive: false },
   quantumSummary: null,
+  activePlan: null,
+  profileId: 'EVA-1',
   notice: null,
 };
 
@@ -137,6 +139,7 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
         phase: 'plan',
         base: state.base,
         crew: state.crew,
+        profileId: state.profileId,
         notice: 'Mission reset. Select science targets or click Quick Demo.',
       };
 
@@ -146,6 +149,7 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
     case 'planLoaded':
       return {
         ...state,
+        activePlan: null, // es un plan nuevo: guardarlo crea otro, no pisa el que estaba abierto
         phase: 'walk',
         tool: 'select',
         goals: action.goals,
@@ -157,6 +161,31 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
         focusedTargetId: null,
         notice: null,
       };
+    case 'planOpened': {
+      const p = action.plan;
+      const ready = !!p.traverse && p.traverse.parkings.every((pk) => p.evaPlans[pk.id]);
+      return {
+        ...state,
+        phase: p.traverse ? (ready ? 'walk' : 'plan') : 'plan',
+        tool: 'select',
+        base: p.base ?? state.base,
+        goals: p.goals,
+        hazards: p.hazards,
+        traverse: p.traverse,
+        traverseProfile: p.traverseProfile,
+        evaPlans: p.evaPlans,
+        activeParkingId: p.traverse?.parkings[0]?.id ?? null,
+        vehicleId: p.vehicleId ?? state.vehicleId,
+        vehicleSpeedKmh: p.vehicleSpeedKmh ?? state.vehicleSpeedKmh,
+        focusedTargetId: null,
+        activePlan: action.active,
+        notice: null,
+      };
+    }
+    case 'activePlanSet':
+      return { ...state, activePlan: action.active };
+    case 'setProfile':
+      return { ...state, profileId: action.id };
     case 'viewChanged': {
       let next = state;
       if (action.profile) {

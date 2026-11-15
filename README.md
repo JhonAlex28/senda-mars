@@ -122,9 +122,23 @@ uvicorn senda.main:app --reload       # http://localhost:8000/docs
 | `POST /api/v1/quantum/optimize-route` | *(Opcional)* Optimizador QAOA de secuencia de objetivos (Qiskit Aer / IBM Quantum) |
 | `GET /api/v1/assistant/status` | ¿El copiloto está activado y su modelo responde? |
 | `POST /api/v1/assistant/chat` | Orden en lenguaje natural → plan completo para cargar en pantalla |
+| `GET/POST /api/v1/plans`, `GET/PUT/DELETE /api/v1/plans/{id}` | Calendario de la misión: planes guardados por sol (`?day=today\|tomorrow`) |
+| `GET/PUT /api/v1/crew` · `GET/POST /api/v1/procedures` | Tripulación y procedimientos científicos completados |
 
 Las tres alternativas son **safe** (evita pendientes y peligros), **scientific** (pasa cerca de los objetivos)
 y **fast** (menor tiempo). El terreno es real: DEM del USGS *MSL Gale Merged DEM 1 m* (HiRISE + CTX + MOLA), leído por `adapters/outbound/terrain/npy_dem.py` (ver `docs/terrain-data.md`). `SENDA_TERRAIN=synthetic` vuelve al terreno de demo.
+
+### 🗓️ Calendario de la misión (base de datos)
+
+Los planes se guardan por **sol** ("hoy" = sol actual, "mañana" = el siguiente), con quién los creó.
+Tarjeta **Mission calendar** → *Save plan* / *My plans*; el selector de tripulante está en la cabecera.
+El copiloto también lo usa: *"prepara la salida de mañana"* (la planifica y la guarda para mañana sin
+perder la de hoy), *"¿qué tengo planeado para mañana?"*, *"abre el plan de hoy"*.
+
+- **Local:** SQLite automático en `backend/data/senda.db` (no se sube a git). Nada que instalar.
+- **Nube:** el disco gratis de Render se borra en cada despliegue, así que usa un **Postgres gratis**
+  ([Neon](https://neon.tech) o [Supabase](https://supabase.com)) y pon su connection string en la variable
+  `DATABASE_URL` del servicio en Render. Las tablas se crean solas al arrancar.
 
 ### 🤖 SENDA Copilot (asistente de IA)
 
