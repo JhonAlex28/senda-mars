@@ -416,6 +416,11 @@ class OutingOut(BaseModel):
         )
 
 
+class SaveRequestOut(BaseModel):
+    sol: int
+    title: str | None
+
+
 class ViewOut(BaseModel):
     profile: RouteProfile | None
     screen: Literal["plan", "walk", "go"] | None
@@ -429,6 +434,8 @@ class ChatOut(BaseModel):
     readiness: ReadinessOut | None
     outing: OutingOut | None = Field(description="Plan nuevo para cargar en pantalla")
     view: ViewOut | None = Field(description="Cambio de perfil o de pantalla")
+    save: SaveRequestOut | None = Field(None, description="Guardar el plan en pantalla en ese sol")
+    open_plan_id: str | None = Field(None, description="Cargar este plan guardado")
 
     @classmethod
     def from_domain(cls, r: AssistantReply) -> "ChatOut":
@@ -441,6 +448,8 @@ class ChatOut(BaseModel):
             readiness=ReadinessOut.from_domain(p.readiness) if p.readiness else None,
             outing=OutingOut.from_domain(p.outing) if p.outing else None,
             view=ViewOut(profile=p.view.profile, screen=p.view.screen) if p.view else None,
+            save=SaveRequestOut(sol=p.save.sol, title=p.save.title) if p.save else None,
+            open_plan_id=p.open_plan_id,
         )
 
 

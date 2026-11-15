@@ -92,7 +92,8 @@ def chat_uc() -> Callable[[MissionContext], ChatWithAssistant] | None:
         outing = PlanOuting(assess, targets, PlanTraverse(c.target_repo, c.terrain),
                             PlanEva(c.target_repo, c.terrain))
         tools = MissionTools(assess, GetEnvironment(c.environment_repo), targets, outing,
-                             c.knowledge, context)
+                             c.knowledge, context, MissionCalendar(c.plans, c.environment_repo),
+                             CrewRoster(c.crew))
         return ChatWithAssistant(model, tools)
 
     return build

@@ -12,6 +12,7 @@ from typing import Any, Callable
 from senda.application.assistant.conversation import ToolCall, ToolResult, ToolSpec
 from senda.application.ports.outbound import KnowledgeBase
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
+from senda.application.use_cases.mission_log import CrewRoster, MissionCalendar
 from senda.application.use_cases.plan_outing import OutingPlan, PlanOuting
 from senda.application.use_cases.targets import ListTargets
 from senda.domain.errors import DomainError, TargetNotFound
@@ -72,6 +73,31 @@ SPECS: tuple[ToolSpec, ...] = (
         {"type": "object", "properties": {}},
     ),
     ToolSpec(
+        "list_saved_plans",
+        "Plans saved in the mission calendar for a day: title, sol, status, who made it, targets "
+        "and total time. Use it for questions like 'what is planned for tomorrow?'.",
+        {"type": "object", "properties": {
+            "day": {"type": "string", "enum": ["today", "tomorrow", "all"],
+                    "description": "Default today."}}},
+    ),
+    ToolSpec(
+        "save_plan",
+        "Save the plan on screen in the mission calendar for a day, so it can be reopened later. "
+        "Use it when the user asks to save or keep the plan, or plans for another day.",
+        {"type": "object", "properties": {
+            "day": {"type": "string", "enum": ["today", "tomorrow"]},
+            "title": {"type": "string", "description": "Short name, optional."}},
+         "required": ["day"]},
+    ),
+    ToolSpec(
+        "open_saved_plan",
+        "Load a saved plan back on screen. Give plan_id from list_saved_plans, or day if there "
+        "is a single plan that day.",
+        {"type": "object", "properties": {
+            "plan_id": {"type": "string"},
+            "day": {"type": "string", "enum": ["today", "tomorrow"]}}},
+    ),
+    ToolSpec(
         "get_mission_conditions",
         "Current Martian environment and the EVA readiness verdict (go / caution / no_go) "
         "with each measurement and its instrument. Only for questions about the weather or "
@@ -110,12 +136,20 @@ class ViewChange:
     screen: str | None = None
 
 
+@dataclass(frozen=True)
+class SaveRequest:
+    sol: int
+    title: str | None = None
+
+
 @dataclass
 class PlanLog:
     """Resultados reales de esta conversación, para aplicarlos en la pantalla."""
     readiness: Readiness | None = None
     outing: OutingPlan | None = None
     view: ViewChange | None = None
+    save: SaveRequest | None = None          # el frontend guarda lo que hay en pantalla
+    open_plan_id: str | None = None          # el frontend carga ese plan guardado
     tools_used: list[str] = field(default_factory=list)
 
 
@@ -140,19 +174,28 @@ class MissionTools:
 
     def __init__(self, assess: AssessReadiness, environment: GetEnvironment,
                  targets: ListTargets, outing: PlanOuting, knowledge: KnowledgeBase,
-                 context: MissionContext = MissionContext()) -> None:
+                 context: MissionContext = MissionContext(),
+                 calendar: MissionCalendar | None = None,
+                 crew: CrewRoster | None = None) -> None:
         self._assess = assess
         self._environment = environment
         self._targets = targets
         self._outing = outing
         self._knowledge = knowledge
         self._context = context
-        self.specs: tuple[ToolSpec, ...] = (*SPECS, _explain_spec(knowledge.topics()))
+        self._calendar = calendar
+        self._crew = crew
+        log_tools = {"list_saved_plans", "save_plan", "open_saved_plan"}
+        specs = SPECS if calendar else tuple(s for s in SPECS if s.name not in log_tools)
+        self.specs: tuple[ToolSpec, ...] = (*specs, _explain_spec(knowledge.topics()))
         self.log = PlanLog()
         self._handlers: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
             "plan_outing": self._plan_outing,
             "adjust_view": self._adjust_view,
             "get_current_plan": self._current_plan,
+            "list_saved_plans": self._list_saved,
+            "save_plan": self._save_plan,
+            "open_saved_plan": self._open_saved,
             "get_mission_conditions": self._conditions,
             "list_science_targets": self._list_targets,
             "explain_system": self._explain,
@@ -224,6 +267,62 @@ class MissionTools:
                     "selected_targets": list(self._context.goals),
                     "hint": "No routes yet. Offer to plan the outing with plan_outing."}
         return {"has_plan": True, "screen": self._context.screen, **self._context.plan}
+
+    def _calendar_or_fail(self) -> MissionCalendar:
+        if self._calendar is None:
+            raise InvalidToolInput("The mission calendar is not available")
+        return self._calendar
+
+    def _list_saved(self, args: dict[str, Any]) -> dict[str, Any]:
+        cal = self._calendar_or_fail()
+        day = args.get("day") or "today"
+        if day not in ("today", "tomorrow", "all"):
+            raise InvalidToolInput("day must be today, tomorrow or all")
+        plans = cal.for_day(None if day == "all" else day, everything=day == "all")
+        names = {m.id: m.name for m in self._crew.get().members} if self._crew else {}
+        today = cal.today()
+        return {
+            "day": day, "today_sol": today,
+            "plans": [{"plan_id": p.id, "title": p.title, "sol": p.sol,
+                       "when": "today" if p.sol == today else "tomorrow" if p.sol == today + 1
+                       else f"sol {p.sol}",
+                       "status": p.status, "created_by": names.get(p.created_by or "", p.created_by),
+                       "targets": p.summary.get("targets", []),
+                       "total_duration_min": p.summary.get("total_duration_min")}
+                      for p in plans],
+        }
+
+    def _save_plan(self, args: dict[str, Any]) -> dict[str, Any]:
+        cal = self._calendar_or_fail()
+        day = args.get("day")
+        if day not in ("today", "tomorrow"):
+            raise InvalidToolInput("day must be today or tomorrow")
+        if not (self.log.outing and self.log.outing.planned) and not self._context.has_plan:
+            raise InvalidToolInput("There is no plan on screen to save; call plan_outing first")
+        title = str(args.get("title") or "").strip()[:120] or None
+        sol = cal.resolve(day)
+        self.log.save = SaveRequest(sol, title)
+        return {"saved_for": day, "sol": sol, "title": title,
+                "note": "The screen saves the plan now; it appears in the mission calendar."}
+
+    def _open_saved(self, args: dict[str, Any]) -> dict[str, Any]:
+        cal = self._calendar_or_fail()
+        plan_id = args.get("plan_id")
+        if plan_id:
+            plan = cal.get(str(plan_id))
+        else:
+            day = args.get("day") or "today"
+            plans = cal.for_day(day)
+            if not plans:
+                raise InvalidToolInput(f"No saved plans for {day}")
+            if len(plans) > 1:
+                options = "; ".join(f"{p.id} = {p.title}" for p in plans)
+                raise InvalidToolInput(f"Several plans for {day}, give plan_id: {options}")
+            plan = plans[0]
+        self.log.open_plan_id = plan.id
+        self.log.outing = None     # lo que se abre reemplaza cualquier plan nuevo de esta charla
+        return {"opened": plan.title, "sol": plan.sol, "targets": plan.summary.get("targets", []),
+                "total_duration_min": plan.summary.get("total_duration_min")}
 
     def _conditions(self, _: dict[str, Any]) -> dict[str, Any]:
         readiness = self._assess.execute()

@@ -34,6 +34,8 @@ targets.
 - adjust_view: to switch the route profile (safe, scientific, fast) or the screen (plan, \
 walk, go = start the simulation) of the plan already on screen.
 - get_current_plan: questions about the plan already on screen (route, time, battery, oxygen).
+- list_saved_plans / save_plan / open_saved_plan: the mission calendar. When the user plans for
+tomorrow, call plan_outing and then save_plan with day "tomorrow" so today's plan is not lost.
 - get_mission_conditions: only when the user asks about the weather or conditions and does \
 not ask for a plan.
 - list_science_targets: questions about the targets or places.
