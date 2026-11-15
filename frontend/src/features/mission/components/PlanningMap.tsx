@@ -7,13 +7,14 @@ import {
   MapCanvas,
   MapLegend,
   ParkingMarker,
-  RouteLine,
   TargetMarker,
+  WaypointMarker,
   type Projection,
+  ViewModeSwitch,
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
-import { PROFILE_META, distinctProfiles, routesApi } from '@/features/route-planning';
-import { TargetCard, type Target } from '@/features/targets';
+import { PROFILE_META, distinctProfiles } from '@/features/route-planning';
+import { SCIENCE_TYPES, TargetCard, scienceType, type Target } from '@/features/targets';
 import { Terrain3DView, TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
 import { bboxAround } from '@/shared/lib/geo';
 import type { BBox, GeoPoint } from '@/shared/types/geo';
@@ -29,6 +30,7 @@ import { StepBanner } from './StepBanner';
 const HAZARD_RADIUS_M = { plan: 60, walk: 12 } as const;
 const EVA_DETAIL_CELL_M = 3;
 const EVA_VIEW_MARGIN_M = 90;
+const SCIENCE_LEGEND = Object.values(SCIENCE_TYPES).map((t) => ({ label: t.label, icon: t.icon, color: t.color }));
 
 interface PlanningMapProps {
   projection: Projection;
@@ -40,9 +42,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const { state, dispatch, targets, targetById } = useMission();
   const { layers, shown } = useLayers();
   const [hover, setHover] = useState<GeoPoint | null>(null);
-  const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
-  const [customAStar, setCustomAStar] = useState<{ points: GeoPoint[]; distanceM: number; maxSlope: number } | null>(null);
-  const [scoutError, setScoutError] = useState<string | null>(null);
+  const viewMode = '2d' as '2d' | '3d'; // 3D bloqueado (Soon)
   const walking = state.phase === 'walk';
   const parking = activeParking(state);
   const activeRoverRoute = selectedTraverse(state);
@@ -58,8 +58,10 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   }, [walking, parking, targetById]);
   const { layer: evaTerrain } = useTerrain(EVA_DETAIL_CELL_M, evaBox);
 
+  const rasters = terrainRasters([site, evaTerrain], layers);
   const hazardRadius = HAZARD_RADIUS_M[walking ? 'walk' : 'plan'];
-  const scienceTargets = useMemo(() => targets.filter((t) => !t.is_base), [targets]);
+  // Objetivos visibles: sin la base y según los filtros por tipo de la capa "Science targets"
+  const scienceTargets = targets.filter((t) => !t.is_base && shown(`sci-${scienceType(t)}`));
   const focused = state.focusedTargetId ? targetById.get(state.focusedTargetId) : undefined;
   const zoneTargets = new Set(walking ? parking?.target_ids : undefined);
   // Leyenda de las rutas que se ven: las caminatas del estacionamiento activo en Walk, las del rover en Plan
@@ -68,57 +70,15 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   const legend = legendRoutes ? distinctProfiles(legendRoutes.routes, legendRoutes.profile).map((p) => ({ label: PROFILE_META[p].label, swatch: PROFILE_META[p].swatch })) : [];
 
   const onMapClick = (p: GeoPoint) => {
-    if (state.tool === 'base') dispatch({ type: 'moveBase', point: p });
-    else if (state.tool === 'hazard') dispatch({ type: 'addHazard', hazard: { ...p, radius_m: hazardRadius } });
-    else if (state.tool === 'astar' && state.base) void scout(state.base, p);
+    if (state.tool === 'hazard') dispatch({ type: 'addHazard', hazard: { ...p, radius_m: hazardRadius } });
+    else if (state.tool === 'waypoint' && !walking) dispatch({ type: 'addWaypoint', point: p });
     else dispatch({ type: 'focusTarget', id: null });
-  };
-
-  // Vista previa de un camino seguro desde la base: lo calcula el planificador del backend
-  // (mismo A*, terreno y reglas que las rutas reales), no una copia en el navegador.
-  const scout = async (base: GeoPoint, to: GeoPoint) => {
-    setScoutError(null);
-    try {
-      const [route] = await routesApi.path(
-        'rover',
-        [
-          { ...base, kind: 'base', ref_id: 'base' },
-          { ...to, kind: 'waypoint', ref_id: '' },
-        ],
-        { hazards: state.hazards },
-        ['safe'],
-      );
-      setCustomAStar(route ? { points: route.points, distanceM: route.distance_m, maxSlope: route.max_slope_deg } : null);
-    } catch (e) {
-      setCustomAStar(null);
-      setScoutError(e instanceof Error ? e.message : 'No safe path to that point.');
-    }
   };
 
   return (
     <main className="relative flex min-h-0 flex-col overflow-hidden rounded-lg border border-outline bg-surface">
       <div className="relative min-h-0 flex-1">
-        {/* 2D GIS / 3D DEM View Mode Toggle */}
-        <div className="absolute bottom-12 left-1/2 z-30 flex -translate-x-1/2 items-center rounded-full border border-outline bg-surface-container/95 p-0.5 font-mono text-mono-sm shadow-lg backdrop-blur-sm">
-          <button
-            type="button"
-            onClick={() => setViewMode('2d')}
-            className={`rounded-full px-md py-1 transition-colors ${
-              viewMode === '2d' ? 'bg-primary text-on-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            2D GIS
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('3d')}
-            className={`rounded-full px-md py-1 transition-colors ${
-              viewMode === '3d' ? 'bg-primary text-on-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'
-            }`}
-          >
-            3D DEM
-          </button>
-        </div>
+        <ViewModeSwitch className="absolute bottom-12 left-1/2 -translate-x-1/2" />
 
         {viewMode === '3d' ? (
           <Terrain3DView
@@ -133,7 +93,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
         ) : (
           <MapCanvas
           projection={projection}
-          rasters={terrainRasters([site, evaTerrain], layers)}
+          rasters={rasters}
           focus={evaBox ?? site.grid.bbox}
           cursor={state.tool === 'select' ? 'grab' : 'crosshair'}
           onMapClick={onMapClick}
@@ -142,7 +102,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
             <>
               <StepBanner />
               <MapToolbar />
-              <MapLegend items={shown('routes') ? legend : []} />
+              <MapLegend items={[...(shown('routes') ? legend : []), ...(shown('targets') ? SCIENCE_LEGEND : [])]} />
               {focused && (
                 <div className="absolute right-md top-[72px] z-30">
                   <TargetCard
@@ -155,32 +115,9 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
                 </div>
               )}
               {state.notice && <Notice text={state.notice} onClose={() => dispatch({ type: 'dismissNotice' })} />}
-              {customAStar && (
-                <div className="absolute bottom-md right-md z-30 flex items-center gap-sm rounded-md border border-success/60 bg-surface-container/95 px-md py-xs font-mono text-mono-sm shadow-lg">
-                  <span className="text-success">
-                    Scout path: {Math.round(customAStar.distanceM)} m · Max slope {customAStar.maxSlope.toFixed(1)}°
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setCustomAStar(null)}
-                    className="text-on-surface-variant hover:text-on-surface"
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
-              {scoutError && (
-                <div className="absolute bottom-md right-md z-30 flex items-center gap-sm rounded-md border border-error/60 bg-surface-container/95 px-md py-xs font-mono text-mono-sm shadow-lg">
-                  <span className="text-error">Scout path: {scoutError}</span>
-                  <button type="button" onClick={() => setScoutError(null)} className="text-on-surface-variant hover:text-on-surface">
-                    ✕
-                  </button>
-                </div>
-              )}
             </>
           }
         >
-          {customAStar && <RouteLine points={customAStar.points} color="#7CD992" width={3} dotted />}
           {shown('hazards') &&
             state.hazards.map((h, i) => (
             <HazardCircle
@@ -204,6 +141,9 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
                   point={t}
                   id={t.id}
                   name={t.name}
+                  icon={SCIENCE_TYPES[scienceType(t)].icon}
+                  color={SCIENCE_TYPES[scienceType(t)].color}
+                  showName={shown('targetNames')}
                   state={priority >= 0 ? 'goal' : 'idle'}
                   priority={priority >= 0 ? priority + 1 : undefined}
                   focused={state.focusedTargetId === t.id}
@@ -227,7 +167,17 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
             />
           ))}
 
-          {state.base && <BaseMarker point={state.base} label="BASE ALPHA" />}
+          {!walking &&
+            state.waypoints.map((w) => (
+              <WaypointMarker
+                key={w.id}
+                point={w}
+                label={w.id}
+                onClick={state.tool === 'waypoint' ? () => dispatch({ type: 'removeWaypoint', id: w.id }) : undefined}
+              />
+            ))}
+
+          {state.base && <BaseMarker point={state.base} label="BASE" />}
           {state.tool === 'hazard' && hover && <CursorRing point={hover} radius={hazardRadius} />}
         </MapCanvas>
         )}

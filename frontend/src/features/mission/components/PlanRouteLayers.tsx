@@ -1,6 +1,6 @@
-import { RouteLine } from '@/features/map';
+import { PnrMarker, RouteLine } from '@/features/map';
 import { PROFILE_META, PROFILE_ORDER, routeFor, type RoutePlan, type RouteProfile } from '@/features/route-planning';
-import { selectedEva } from '../state/selectors';
+import { selectedEva, selectedTraverse } from '../state/selectors';
 import { useMission } from '../state/MissionContext';
 
 interface AlternativesProps {
@@ -39,11 +39,19 @@ function RouteAlternatives({ routes, selected, dotted, faded, onSelect }: Altern
   );
 }
 
-/** Rutas del rover y de las caminatas según la fase (Plan o Walk). */
+/** Punto de no retorno de la ruta elegida (motor de seguridad), si lo hay. */
+function Pnr({ route }: { route: RoutePlan | undefined }) {
+  const i = route?.pnr_index;
+  if (!route || i == null || !route.points[i]) return null;
+  return <PnrMarker point={route.points[i]} />;
+}
+
+/** Rutas del vehículo y de las EVA según la fase (Plan o Walk). */
 export function PlanRouteLayers() {
   const { state, dispatch } = useMission();
   if (!state.traverse) return null;
   const walking = state.phase === 'walk';
+  const activeEva = walking && state.activeParkingId ? selectedEva(state, state.activeParkingId) : undefined;
 
   return (
     <>
@@ -70,6 +78,7 @@ export function PlanRouteLayers() {
         const walk = selectedEva(state, p.id);
         return walk && <RouteLine key={p.id} points={walk.points} color="#38BDF8" dotted width={2} opacity={0.8} />;
       })}
+      <Pnr route={walking ? activeEva : selectedTraverse(state)} />
     </>
   );
 }

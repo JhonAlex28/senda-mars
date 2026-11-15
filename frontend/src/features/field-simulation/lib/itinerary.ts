@@ -23,6 +23,8 @@ export interface Leg {
   mode: TravelMode;
   title: string;
   parkingId: string | null;
+  /** Tramo que termina en un punto de paso del usuario (W1…), si es el caso. */
+  waypointId?: string | null;
   profile: RouteProfile;
   points: LegPoint[];
   stops: LegStop[];
@@ -33,18 +35,20 @@ interface LegOptions {
   id: string;
   title: string;
   parkingId: string | null;
+  waypointId?: string | null;
   from?: number;
   to?: number;
 }
 
 /** Recorta [from, to] de una ruta y lo re-referencia para que empiece en 0. */
-export function legFromRoute(route: RoutePlan, { id, title, parkingId, from = 0, to }: LegOptions): Leg {
+export function legFromRoute(route: RoutePlan, { id, title, parkingId, waypointId = null, from = 0, to }: LegOptions): Leg {
   const end = to ?? route.points.length - 1;
   const origin = route.points[from];
   return {
     id,
     title,
     parkingId,
+    waypointId,
     mode: route.mode,
     profile: route.profile,
     capacity: route.resource.capacity,
@@ -67,17 +71,22 @@ export function legFromRoute(route: RoutePlan, { id, title, parkingId, from = 0,
   };
 }
 
-/** Recorrido del rover partido en tramos, con la caminata de cada estacionamiento intercalada. */
+/**
+ * Recorrido del vehículo partido en tramos, con la EVA de cada estacionamiento intercalada.
+ * Los puntos de paso del usuario (kind 'waypoint', W1…) son tramos intermedios de manejo.
+ */
 export function buildItinerary(traverse: RoutePlan, walks: Record<string, RoutePlan | undefined>): Leg[] {
   const legs: Leg[] = [];
   let from = 0;
   for (const stop of traverse.stops) {
     const toParking = stop.kind === 'parking';
+    const toWaypoint = stop.kind === 'waypoint';
     legs.push(
       legFromRoute(traverse, {
         id: `drive-${stop.ref_id}`,
-        title: toParking ? `Drive to stop ${stop.ref_id}` : 'Drive back to base',
+        title: toParking || toWaypoint ? `Drive to ${stop.ref_id}` : 'Drive to base',
         parkingId: toParking ? stop.ref_id : null,
+        waypointId: toWaypoint ? stop.ref_id : null,
         from,
         to: stop.point_index,
       }),
@@ -85,7 +94,7 @@ export function buildItinerary(traverse: RoutePlan, walks: Record<string, RouteP
     from = stop.point_index;
     const walk = toParking ? walks[stop.ref_id] : undefined;
     if (walk) {
-      legs.push(legFromRoute(walk, { id: `walk-${stop.ref_id}`, title: `Spacewalk from ${stop.ref_id}`, parkingId: stop.ref_id }));
+      legs.push(legFromRoute(walk, { id: `walk-${stop.ref_id}`, title: `EVA from ${stop.ref_id}`, parkingId: stop.ref_id }));
     }
   }
   return legs;

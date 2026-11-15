@@ -65,16 +65,16 @@ function PlanView({ projection, site, readiness }: ViewProps) {
 
   return (
     <>
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[260px_1fr_380px]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-md p-md lg:grid-cols-[320px_1fr_320px]">
         <aside className="scroll-thin flex min-h-0 flex-col gap-md overflow-y-auto">
           <LayersPanel />
           <MarsWeatherCard readiness={readiness} />
-          <SuppliesCard pct={route?.resource.remaining_pct ?? null} hint="Rover battery left at the end of the chosen path" />
+          <SuppliesCard pct={route?.resource.remaining_pct ?? null} hint="Battery at the end of the route" />
         </aside>
         <PlanningMap projection={projection} site={site} />
         <aside className="scroll-thin flex min-h-0 flex-col gap-sm overflow-y-auto pr-xs">
           <PlanCalendarCard />
-          <BaseCard site={site.grid.bbox} />
+          <BaseCard />
           <GoalsCard />
           {state.phase === 'walk' ? <EvaPanel /> : <TraversePanel />}
           {ready && <LaunchCard readiness={readiness} />}
@@ -108,12 +108,14 @@ function GoView({ projection, site, readiness }: ViewProps) {
       projection={projection}
       site={site}
       vehicleId={state.vehicleId}
-      vehicleSpeedKmh={state.vehicleSpeedKmh}
       crew={state.crew}
+      crewStatusOpen={state.crewStatusOpen}
+      onCloseCrewStatus={() => dispatch({ type: 'setCrewStatusOpen', open: false })}
       quantumSummary={state.quantumSummary}
       renderFooter={(supplies: ReactNode) => <WeatherStrip readiness={readiness}>{supplies}</WeatherStrip>}
-      onReplan={() => dispatch({ type: 'setPhase', phase: 'plan' })}
-      onExit={() => dispatch({ type: 'backToGlobe' })}
+      // Al cerrar el resumen la interfaz queda limpia para otra misión (base, tripulación e historial se conservan)
+      onReplan={() => dispatch({ type: 'finishMission' })}
+      onExit={() => dispatch({ type: 'finishMission', toGlobe: true })}
     />
   );
 }

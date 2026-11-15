@@ -38,13 +38,13 @@ export function MissionSummary({ state, roverCapacity, targetName, crew, quantum
     overallScore >= 92 ? 'A+' : overallScore >= 85 ? 'A' : overallScore >= 75 ? 'B' : overallScore >= 60 ? 'C' : 'D';
 
   const rows: Row[] = [
-    { icon: 'airport_shuttle', label: 'Rover drive', actual: formatDistance(state.roverDistance), planned: formatDistance(planned.roverDistance), ratio: state.roverDistance / planned.roverDistance },
-    { icon: 'local_parking', label: 'Parking spots visited', actual: `${state.visited.length}`, planned: `${parkings}` },
-    { icon: 'directions_walk', label: 'EVA walks', actual: `${state.walksDone} · ${formatDistance(state.walkDistance)}`, planned: formatDistance(planned.walkDistance) },
-    { icon: 'diamond', label: 'Science goals done', actual: `${state.completed.length}`, planned: `${planned.targets}`, ratio: state.completed.length / Math.max(planned.targets, 1) },
-    { icon: 'schedule', label: 'Simulated time', actual: formatMinutes(state.clock), planned: formatMinutes(planned.minutes), ratio: state.clock / planned.minutes },
-    { icon: 'battery_charging_full', label: 'Rover battery used', actual: `${state.battery.toFixed(1)} kWh (${Math.round((state.battery / roverCapacity) * 100)}%)`, planned: `${planned.battery.toFixed(1)} kWh`, ratio: state.battery / planned.battery },
-    { icon: 'air', label: 'Oxygen used (all EVAs)', actual: `${Math.round(state.oxygen)} L`, planned: `${Math.round(planned.oxygen)} L`, ratio: state.oxygen / Math.max(planned.oxygen, 1) },
+    { icon: 'airport_shuttle', label: 'Drive', actual: formatDistance(state.roverDistance), planned: formatDistance(planned.roverDistance), ratio: state.roverDistance / planned.roverDistance },
+    { icon: 'local_parking', label: 'Stops', actual: `${state.visited.length}`, planned: `${parkings}` },
+    { icon: 'directions_walk', label: 'EVA', actual: `${state.walksDone} · ${formatDistance(state.walkDistance)}`, planned: formatDistance(planned.walkDistance) },
+    { icon: 'diamond', label: 'Goals done', actual: `${state.completed.length}`, planned: `${planned.targets}`, ratio: state.completed.length / Math.max(planned.targets, 1) },
+    { icon: 'schedule', label: 'Time', actual: formatMinutes(state.clock), planned: formatMinutes(planned.minutes), ratio: state.clock / planned.minutes },
+    { icon: 'battery_charging_full', label: 'Battery used', actual: `${state.battery.toFixed(1)} kWh (${Math.round((state.battery / roverCapacity) * 100)}%)`, planned: `${planned.battery.toFixed(1)} kWh`, ratio: state.battery / planned.battery },
+    { icon: 'air', label: 'O₂ used', actual: `${Math.round(state.oxygen)} L`, planned: `${Math.round(planned.oxygen)} L`, ratio: state.oxygen / Math.max(planned.oxygen, 1) },
   ];
 
   return (
@@ -262,13 +262,13 @@ export function MissionSummary({ state, roverCapacity, targetName, crew, quantum
               win.print();
             }}
           >
-            Print / PDF Dossier
+            PDF
           </Button>
           <Button variant="ghost" icon="public" onClick={onExit}>
-            View Mars
+            Mars
           </Button>
-          <Button icon="edit_road" onClick={onReplan}>
-            Plan another trip
+          <Button icon="add_circle" onClick={onReplan}>
+            New mission
           </Button>
         </div>
       </section>

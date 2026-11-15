@@ -140,13 +140,13 @@ function arrivalText(stop: LegStop): string {
     case 'target':
       return `Reached ${stop.refId}.`;
     case 'parking':
-      return `The rover stopped at ${stop.refId}.`;
+      return `Vehicle at ${stop.refId}.`;
     case 'rover':
-      return 'Back at the rover.';
+      return 'Back at the vehicle.';
     case 'base':
       return 'Back at the base.';
     default:
-      return 'Reached a waypoint.';
+      return `Passed ${stop.refId || 'a waypoint'}.`;
   }
 }
 

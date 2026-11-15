@@ -1,7 +1,22 @@
+import { SCIENCE_TYPES, type ScienceType } from '@/features/targets/lib/scienceType';
+
 /** De dónde sale el dato de una capa (requisito RF-1: mostrar la procedencia). */
 export type Provenance = 'measured' | 'modeled' | 'assumed';
 
-export type LayerId = 'relief' | 'slope' | 'targets' | 'routes' | 'hazards' | 'imagery' | 'minerals' | 'shelter';
+export type LayerId =
+  | 'relief'
+  | 'slope'
+  | 'targets'
+  | 'targetNames'
+  | 'sci-water'
+  | 'sci-mineral'
+  | 'sci-drill'
+  | 'sci-geology'
+  | 'routes'
+  | 'hazards'
+  | 'imagery'
+  | 'minerals'
+  | 'shelter';
 
 export interface LayerDef {
   id: LayerId;
@@ -17,6 +32,10 @@ export interface LayerDef {
   defaultVisible?: boolean;
   defaultOpacity: number;
   legend?: { label: string; swatch: string }[];
+  /** Subcapa: se dibuja plegada dentro de su capa padre y depende de ella. */
+  parent?: LayerId;
+  /** Color del icono (tipos de objetivo). */
+  color?: string;
 }
 
 /**
@@ -30,7 +49,7 @@ export const LAYERS: LayerDef[] = [
     icon: 'landscape',
     provenance: 'measured',
     source: 'USGS MSL Gale Merged DEM (HiRISE + CTX + MOLA)',
-    resolution: '10 m per cell · 3 m near rover stops (from 1 m DEM)',
+    resolution: '1 m boxwork · 10 m region',
     raster: true,
     available: true,
     defaultOpacity: 0.92,
@@ -40,14 +59,14 @@ export const LAYERS: LayerDef[] = [
     name: 'Slope',
     icon: 'trending_up',
     provenance: 'modeled',
-    source: 'Computed from the USGS DEM',
+    source: 'From the USGS DEM',
     resolution: 'Same as terrain',
     raster: true,
     available: true,
     defaultOpacity: 1,
     legend: [
       { label: '>10°', swatch: 'bg-warning' },
-      { label: '>18°', swatch: 'bg-error' },
+      { label: '>20°', swatch: 'bg-error' },
     ],
   },
   {
@@ -55,19 +74,48 @@ export const LAYERS: LayerDef[] = [
     name: 'Science targets',
     icon: 'diamond',
     provenance: 'measured',
-    source: 'Curiosity rover campaigns',
+    source: 'Curiosity sites (NASA MMGIS)',
     resolution: 'Points',
     raster: false,
     available: true,
     defaultOpacity: 1,
   },
+  // Subcapas de "Science targets": nombres y un interruptor por tipo científico
+  {
+    id: 'targetNames',
+    name: 'Names',
+    icon: 'label',
+    provenance: 'measured',
+    source: 'Curiosity sites (NASA MMGIS)',
+    resolution: 'Labels',
+    raster: false,
+    available: true,
+    defaultVisible: false,
+    defaultOpacity: 1,
+    parent: 'targets',
+  },
+  ...(Object.entries(SCIENCE_TYPES) as [ScienceType, (typeof SCIENCE_TYPES)[ScienceType]][]).map(
+    ([type, meta]): LayerDef => ({
+      id: `sci-${type}`,
+      name: meta.label,
+      icon: meta.icon,
+      color: meta.color,
+      provenance: 'measured',
+      source: 'Target type (catalog)',
+      resolution: 'Points',
+      raster: false,
+      available: true,
+      defaultOpacity: 1,
+      parent: 'targets',
+    }),
+  ),
   {
     id: 'routes',
     name: 'Routes',
     icon: 'route',
     provenance: 'modeled',
-    source: 'SENDA A* route planner',
-    resolution: 'Follows the terrain grid',
+    source: 'SENDA planner (A*)',
+    resolution: 'Terrain grid',
     raster: false,
     available: true,
     defaultOpacity: 1,
@@ -77,53 +125,44 @@ export const LAYERS: LayerDef[] = [
     name: 'Danger zones',
     icon: 'warning',
     provenance: 'assumed',
-    source: 'Marked by the crew on the map',
+    source: 'Marked by the crew',
     resolution: 'Circles',
     raster: false,
     available: true,
     defaultOpacity: 1,
   },
+  // En preparación: un compañero integra capas ópticas y temáticas con datos oficiales de la NASA
   {
     id: 'imagery',
     name: 'Orbital photo',
     icon: 'satellite_alt',
     provenance: 'measured',
-    source: 'NASA Mars Trek · MRO CTX Gale Mosaic',
-    resolution: '6 m per pixel',
+    source: 'Coming with official NASA imagery',
+    resolution: '—',
     raster: true,
-    available: true,
-    defaultVisible: false,
+    available: false,
     defaultOpacity: 0.85,
   },
   {
     id: 'minerals',
     name: 'Minerals',
     icon: 'science',
-    // Unidades pintadas por franjas de altura del DEM (modelo de estratos), con textura THEMIS real
-    provenance: 'modeled',
-    source: 'Mount Sharp units by elevation band (model) + MO THEMIS-IR Day texture',
-    resolution: 'DEM cells / THEMIS 100 m',
+    provenance: 'measured',
+    source: 'Coming with official NASA data',
+    resolution: '—',
     raster: true,
-    available: true,
-    defaultVisible: false,
+    available: false,
     defaultOpacity: 0.55,
-    legend: [
-      { label: 'Murray / Glen Torridon Clay', swatch: 'bg-accent' },
-      { label: 'Stimson Sandstone', swatch: 'bg-warning' },
-      { label: 'Sulfate Boxwork', swatch: 'bg-route-science' },
-    ],
   },
   {
     id: 'shelter',
     name: 'Radiation shelter',
     icon: 'shield',
     provenance: 'modeled',
-    source: 'Curiosity RAD (0.64–0.67 mSv/sol) + MOLA/HRSC',
-    resolution: 'Relative estimate',
+    source: 'Coming with official NASA data',
+    resolution: '—',
     raster: true,
-    available: true,
-    defaultVisible: false,
+    available: false,
     defaultOpacity: 0.55,
-    legend: [{ label: 'Cliff / Crater Shielding', swatch: 'bg-success' }],
   },
 ];

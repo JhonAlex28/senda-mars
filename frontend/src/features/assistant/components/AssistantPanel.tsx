@@ -15,12 +15,16 @@ const EXAMPLES = [
 ];
 
 /**
- * Copiloto de SENDA: botón flotante que abre un chat lateral. El usuario da una orden y el
- * asistente la ejecuta en el sistema; el plan aparece en el mapa y aquí solo se resume.
+ * Copiloto de SENDA: chat lateral. El usuario da una orden y el asistente la ejecuta en el sistema;
+ * el plan aparece en el mapa y aquí solo se resume. En la misión se abre desde la cabecera
+ * ("Copilot"), así el botón no tapa los paneles; en el globo queda el botón flotante.
  */
-export function AssistantPanel() {
+export function AssistantPanel({ floating = false }: { floating?: boolean }) {
   const assistant = useAssistant();
-  const [open, setOpen] = useState(false);
+  const { state, dispatch } = useMission();
+  const open = state.copilotOpen;
+  const setOpen = (v: boolean | ((prev: boolean) => boolean)) =>
+    dispatch({ type: 'setCopilotOpen', open: typeof v === 'function' ? v(open) : v });
 
   useEffect(() => {
     if (!open) return;
@@ -33,7 +37,7 @@ export function AssistantPanel() {
 
   return (
     <>
-      <Launcher open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />
+      {floating && <Launcher open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />}
       <aside
         aria-label="SENDA Copilot"
         aria-hidden={!open}
@@ -320,7 +324,7 @@ function RichText({ text }: { text: string }) {
   );
 }
 
-const SCREEN_NAME = { plan: 'rover route', walk: 'spacewalks', go: 'simulation started' } as const;
+const SCREEN_NAME = { plan: 'vehicle route', walk: 'EVA', go: 'simulation started' } as const;
 
 function Result({ tone, icon, children }: { tone: 'success' | 'warning' | 'error'; icon: string; children: ReactNode }) {
   const tones = {

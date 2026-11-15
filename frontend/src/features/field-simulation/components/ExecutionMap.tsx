@@ -11,11 +11,12 @@ import {
   TargetMarker,
   type Projection,
   type TargetState,
+  ViewModeSwitch,
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
 import { ROVER_VEHICLES, type RoverVehicleId } from '@/features/mission/state/vehicles';
 import type { Hazard, Parking } from '@/features/route-planning';
-import type { Target } from '@/features/targets';
+import { SCIENCE_TYPES, scienceType, type Target } from '@/features/targets';
 import { Terrain3DView, TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
 import { formatDistance, formatMinutes } from '@/shared/lib/format';
 import { bboxAround } from '@/shared/lib/geo';
@@ -45,8 +46,8 @@ interface ExecutionMapProps {
 export function ExecutionMap({ projection, site, sim, targets, parkings, base, hazards, vehicleId = 'SEV_PRESSURIZED' }: ExecutionMapProps) {
   const { state, leg, here, dispatch } = sim;
   const [hover, setHover] = useState<GeoPoint | null>(null);
-  const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
-  const { layers } = useLayers();
+  const viewMode = '2d' as '2d' | '3d'; // 3D bloqueado (Soon)
+  const { layers, shown } = useLayers();
   const targetById = useMemo(() => new Map(targets.map((t) => [t.id, t])), [targets]);
   const name = (id: string) => targetById.get(id)?.name;
 
@@ -68,26 +69,7 @@ export function ExecutionMap({ projection, site, sim, targets, parkings, base, h
 
   return (
     <main className="relative flex min-h-0 flex-col overflow-hidden rounded-lg border border-outline bg-surface">
-      <div className="absolute right-md top-md z-30 flex items-center gap-xs rounded-md border border-outline bg-surface-container/95 p-0.5 font-label text-label-sm shadow-lg backdrop-blur-sm">
-        <button
-          type="button"
-          onClick={() => setViewMode('2d')}
-          className={`rounded px-sm py-1 transition ${
-            viewMode === '2d' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
-          }`}
-        >
-          2D GIS
-        </button>
-        <button
-          type="button"
-          onClick={() => setViewMode('3d')}
-          className={`rounded px-sm py-1 transition ${
-            viewMode === '3d' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
-          }`}
-        >
-          3D DEM
-        </button>
-      </div>
+        <ViewModeSwitch className="absolute right-md top-[60px]" />
 
       <div className="relative min-h-0 flex-1">
         {viewMode === '3d' ? (
@@ -175,13 +157,16 @@ export function ExecutionMap({ projection, site, sim, targets, parkings, base, h
           )}
 
           <Clustered
-            items={targets.filter((t) => legTargets.has(t.id))}
+            items={targets.filter((t) => legTargets.has(t.id) && shown(`sci-${scienceType(t)}`))}
             highlight={(t) => targetState(t.id) === 'goal'}
             renderItem={(t) => (
               <TargetMarker
                 point={t}
                 id={t.id}
                 name={t.name}
+                icon={SCIENCE_TYPES[scienceType(t)].icon}
+                color={SCIENCE_TYPES[scienceType(t)].color}
+                showName={shown('targetNames')}
                 state={targetState(t.id)}
                 focused={next?.kind === 'target' && next.refId === t.id}
               />
@@ -190,7 +175,7 @@ export function ExecutionMap({ projection, site, sim, targets, parkings, base, h
           {parkings.map((p) => (
             <ParkingMarker key={p.id} point={p} label={p.id} active={leg.parkingId === p.id} planned={state.visited.includes(p.id)} />
           ))}
-          <BaseMarker point={base} label="BASE ALPHA" />
+          <BaseMarker point={base} label="BASE" />
           <PositionMarker point={here.point} heading={here.heading} mode={leg.mode} />
         </MapCanvas>
         )}

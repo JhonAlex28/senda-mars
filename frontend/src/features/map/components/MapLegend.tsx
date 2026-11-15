@@ -2,7 +2,11 @@ import { Icon } from '@/shared/ui/Icon';
 
 interface LegendItem {
   label: string;
-  swatch: string; // clase Tailwind
+  /** Línea de color (clase Tailwind), para rutas. */
+  swatch?: string;
+  /** Icono con color, para tipos de objetivo. */
+  icon?: string;
+  color?: string;
 }
 
 /** Brújula (arriba a la derecha) y leyenda de rutas (abajo, sobre la escala) para no tapar la guía. */
@@ -17,10 +21,16 @@ export function MapLegend({ items }: { items: LegendItem[] }) {
         <Icon name="explore" className="text-[15px] text-on-surface" />
       </div>
       {items.length > 0 && (
-        <div className="pointer-events-none absolute bottom-[52px] left-md z-20 flex items-center gap-md rounded-md border border-outline bg-surface-container/95 px-md py-xs">
+        <div className="pointer-events-none absolute bottom-[52px] left-md z-20 flex flex-wrap items-center gap-x-md gap-y-xs rounded-md border border-outline bg-surface-container/95 px-md py-xs">
           {items.map((item) => (
             <div key={item.label} className="flex items-center gap-xs">
-              <span className={`h-0.5 w-3 ${item.swatch}`} />
+              {item.icon ? (
+                <span className="material-symbols-outlined notranslate text-[16px]" style={{ color: item.color }} translate="no" aria-hidden="true">
+                  {item.icon}
+                </span>
+              ) : (
+                <span className={`h-0.5 w-3 ${item.swatch}`} />
+              )}
               <span className="font-body text-body-sm text-on-surface">{item.label}</span>
             </div>
           ))}

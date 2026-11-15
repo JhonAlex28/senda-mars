@@ -2,17 +2,18 @@ import { RouteComparator } from '@/features/route-planning';
 import { Button } from '@/shared/ui/Button';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
-import { usePlanning } from '../hooks/usePlanning';
+import { goalTargetIds, usePlanning } from '../hooks/usePlanning';
 import { activeParking, selectedTraverse } from '../state/selectors';
 import { useMission } from '../state/MissionContext';
 import { ErrorNote } from './ErrorNote';
 import { ParkingChips } from './ParkingChips';
 import { VehicleSelectorCard } from './VehicleSelectorCard';
 
-/** Fase Plan: pedir el recorrido del rover, comparar las tres rutas y elegir dónde estacionar. */
+/** Fase Plan: pedir la ruta del vehículo, comparar las tres opciones y elegir la parada. */
 export function TraversePanel() {
   const { state, dispatch, targetById } = useMission();
-  const { planTraverse, planEva, loading, error, clearError } = usePlanning();
+  const { planTraverse, optimizeOrder, planEva, loading, error, clearError } = usePlanning();
+  const hasTargets = goalTargetIds(state).length > 0;
   const parking = activeParking(state);
   const parkingPlanned = parking ? !!state.evaPlans[parking.id] : false;
   const activeRoute = selectedTraverse(state);
@@ -25,41 +26,49 @@ export function TraversePanel() {
 
   return (
     <>
-      <VehicleSelectorCard
-        vehicleId={state.vehicleId}
-        speedKmh={state.vehicleSpeedKmh}
-        distanceM={activeRoute?.distance_m}
-        onChangeVehicle={(vehicleId) => dispatch({ type: 'setVehicle', vehicleId })}
-        onChangeSpeed={(speedKmh) => dispatch({ type: 'setVehicleSpeed', speedKmh })}
-      />
+      <VehicleSelectorCard distanceM={activeRoute?.distance_m} driveMin={activeRoute?.duration_min} />
 
-      <Button
-        size="lg"
-        icon="route"
-        className="w-full"
-        disabled={state.goals.length === 0}
-        loading={loading === 'traverse'}
-        onClick={planTraverse}
-        title={state.goals.length === 0 ? 'Add at least one goal first' : undefined}
-      >
-        {state.traverse ? 'Recalculate routes' : 'Find rover routes'}
-      </Button>
+      {/* La ruta sigue el orden de la lista; "Optimize" la reordena con el recorrido eficiente */}
+      <div className="flex gap-xs">
+        <Button
+          size="lg"
+          icon="route"
+          className="flex-1"
+          disabled={!hasTargets || !!loading}
+          loading={loading === 'traverse'}
+          onClick={planTraverse}
+          title={hasTargets ? 'Follows the list order' : 'Add a target first'}
+        >
+          {state.traverse ? 'Replan' : 'Plan route'}
+        </Button>
+        <Button
+          size="lg"
+          variant="secondary"
+          icon="auto_fix_high"
+          disabled={!hasTargets || state.goals.length < 2 || !!loading}
+          loading={loading === 'optimize'}
+          onClick={optimizeOrder}
+          title="Best visit order"
+        >
+          Optimize
+        </Button>
+      </div>
       {error && <ErrorNote message={error} onClose={clearError} />}
 
       {state.traverse && (
         <>
           <RouteComparator
-            title="Rover route"
+            title="Vehicle route"
             routes={state.traverse.routes}
             selected={state.traverseProfile}
             onSelect={(profile) => dispatch({ type: 'selectTraverseProfile', profile })}
           />
 
-          <Card title="Rover stops" className="gap-xs">
+          <Card title="Stops" className="gap-xs">
             <div className="flex flex-wrap items-center justify-between gap-xs">
               <ParkingChips />
               <Button variant={parkingPlanned ? 'secondary' : 'primary'} size="sm" icon="directions_walk" loading={loading === parking?.id} onClick={openWalk}>
-                {parkingPlanned ? 'Open spacewalk' : 'Plan spacewalk'}
+                {parkingPlanned ? 'Open EVA' : 'Plan EVA'}
               </Button>
             </div>
             {parking && (

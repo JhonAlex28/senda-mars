@@ -5,10 +5,15 @@ import type { RoverVehicleId } from './vehicles';
 /** Pantallas principales: globo → Plan (rover) → Walk (EVAs) → Go (simulación). */
 export type Phase = 'globe' | 'plan' | 'walk' | 'go';
 
-export type MapTool = 'select' | 'base' | 'hazard' | 'astar';
+export type MapTool = 'select' | 'hazard' | 'waypoint';
 
 /** Pasos guiados de la planificación (se derivan del estado, no se guardan). */
 export type PlanStep = 'goals' | 'traverse' | 'eva' | 'ready';
+
+/** Punto de paso del vehículo; se ordena en la lista de objetivos como uno más. */
+export interface UserWaypoint extends GeoPoint {
+  id: string;
+}
 
 export interface EvaPlan {
   routes: RoutePlan[];
@@ -42,12 +47,6 @@ export interface QuantumSummary {
   deltaKwh?: number;
 }
 
-export interface EnvControls {
-  tau: number;
-  lmstHour: number;
-  speActive: boolean;
-}
-
 /** Plan guardado que está abierto en pantalla (guardar lo actualiza en lugar de duplicarlo). */
 export interface ActivePlan {
   id: string;
@@ -64,7 +63,8 @@ export interface SavedPlanPayload {
   traverseProfile: RouteProfile;
   evaPlans: Record<string, EvaPlan>;
   vehicleId: RoverVehicleId;
-  vehicleSpeedKmh: number;
+  /** Solo en planes guardados antes de que la velocidad pasara al backend (se ignora). */
+  vehicleSpeedKmh?: number;
 }
 
 export interface MissionState {
@@ -73,6 +73,9 @@ export interface MissionState {
   base: GeoPoint | null;
   goals: string[]; // ids en orden de prioridad
   hazards: Hazard[];
+  /** Puntos de paso del vehículo marcados por el usuario. Su id (W1…) también va en `goals`. */
+  waypoints: UserWaypoint[];
+  nextWaypoint: number; // contador para ids estables W1, W2…
   tool: MapTool;
   focusedTargetId: string | null;
   traverse: TraversePlan | null;
@@ -80,12 +83,14 @@ export interface MissionState {
   activeParkingId: string | null;
   evaPlans: Record<string, EvaPlan>;
   vehicleId: RoverVehicleId;
-  vehicleSpeedKmh: number;
   crew: CrewConfig;
-  env: EnvControls;
   quantumSummary: QuantumSummary | null;
   activePlan: ActivePlan | null;
   profileId: string; // tripulante que planifica en este equipo (EVA-1, EVA-2…)
+  /** Modal "Crew status" (HUD del casco) durante la ejecución. */
+  crewStatusOpen: boolean;
+  /** Chat lateral del copiloto (se abre desde la cabecera; en el globo, desde el botón flotante). */
+  copilotOpen: boolean;
   notice: string | null;
 }
 
@@ -94,23 +99,27 @@ export type MissionAction =
   | { type: 'backToGlobe' }
   | { type: 'setPhase'; phase: Phase }
   | { type: 'initBase'; point: GeoPoint }
-  | { type: 'moveBase'; point: GeoPoint }
   | { type: 'toggleGoal'; id: string }
   | { type: 'moveGoal'; from: number; to: number }
   | { type: 'focusTarget'; id: string | null }
   | { type: 'addHazard'; hazard: Hazard }
   | { type: 'removeHazard'; index: number }
   | { type: 'clearHazards' }
+  | { type: 'addWaypoint'; point: GeoPoint }
+  | { type: 'removeWaypoint'; id: string }
+  /** Orden optimizado por el backend: reescribe la lista y carga ese plan. */
+  | { type: 'optimizedPlanned'; plan: TraversePlan; goals: string[] }
+  /** Fin de la simulación: interfaz limpia (se conservan base, tripulación e historial). */
+  | { type: 'finishMission'; toGlobe?: boolean }
   | { type: 'setTool'; tool: MapTool }
   | { type: 'traversePlanned'; plan: TraversePlan }
   | { type: 'selectTraverseProfile'; profile: RouteProfile }
   | { type: 'selectParking'; id: string }
   | { type: 'evaPlanned'; parkingId: string; routes: RoutePlan[] }
   | { type: 'selectEvaProfile'; parkingId: string; profile: RouteProfile }
-  | { type: 'setVehicle'; vehicleId: RoverVehicleId }
-  | { type: 'setVehicleSpeed'; speedKmh: number }
   | { type: 'setCrew'; crew: CrewConfig }
-  | { type: 'setEnv'; env: Partial<EnvControls> }
+  | { type: 'setCrewStatusOpen'; open: boolean }
+  | { type: 'setCopilotOpen'; open: boolean }
   | { type: 'applyQuantumGoals'; goals: string[]; summary: QuantumSummary }
   | { type: 'loadDemo'; goals: string[] }
   | { type: 'resetMission' }

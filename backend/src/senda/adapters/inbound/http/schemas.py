@@ -5,7 +5,7 @@ from dataclasses import asdict
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from senda.application.assistant.tools import MissionContext
 from senda.application.use_cases.assistant import AssistantReply
@@ -176,11 +176,23 @@ class ScenarioIn(BaseModel):
         return [h.to_hazard() for h in self.hazards]
 
 
+class UserWaypointIn(PointIn):
+    """Punto de paso del vehículo marcado por el usuario (W1…); el id viaja como ref_id."""
+    id: str | None = Field(None, max_length=12)
+
+
 class TraverseIn(ScenarioIn):
     base: PointIn
     target_ids: list[str] = Field(min_length=1)
     vehicle_id: str | None = None
     speed_kmh: float | None = None
+    waypoints: list[UserWaypointIn] = Field(default=[], max_length=10,
+                                            description="Puntos de paso del vehículo marcados por el usuario")
+    order: list[str] | None = Field(None, max_length=40,
+                                    description="Orden de visita (ids de objetivos y waypoints); sin él, recorrido optimizado")
+
+    def domain_waypoints(self) -> list[tuple[str, GeoPoint]]:
+        return [(w.id or f"W{i}", w.to_domain()) for i, w in enumerate(self.waypoints, start=1)]
 
 
 class EvaIn(ScenarioIn):
@@ -773,8 +785,14 @@ class SimStopIn(BaseModel):
 class SimRouteIn(BaseModel):
     """Basta con enviar la EvaRouteOut devuelta por /routes (se usan cells y stops)."""
     profile: RouteProfile = RouteProfile.SAFE
-    cells: list[tuple[int, int]] = Field(min_length=2)
+    cells: list[tuple[int, int]] = Field(default_factory=list)
     path: list[LonLat] | None = Field(None, description="Si viene, ubica la EVA en su grilla (local o regional)")
+
+    @model_validator(mode="after")
+    def _cells_or_path(self) -> "SimRouteIn":
+        if len(self.path or []) < 2 and len(self.cells) < 2:
+            raise ValueError("route needs at least 2 cells or 2 path points")
+        return self
     stops: list[SimStopIn] = Field(default_factory=list)
 
     model_config = {"extra": "ignore"}

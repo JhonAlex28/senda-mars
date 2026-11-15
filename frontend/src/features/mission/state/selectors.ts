@@ -46,7 +46,6 @@ export function planPayload(s: MissionState): SavedPlanPayload {
     traverseProfile: s.traverseProfile,
     evaPlans: s.evaPlans,
     vehicleId: s.vehicleId,
-    vehicleSpeedKmh: s.vehicleSpeedKmh,
   };
 }
 

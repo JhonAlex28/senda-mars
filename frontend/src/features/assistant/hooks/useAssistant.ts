@@ -116,7 +116,6 @@ export function useAssistant() {
       Object.entries(o.evas).map(([id, routes]) => [id, { routes, profile: o.eva_profiles[id] ?? 'safe' }]),
     ),
     vehicleId: state.vehicleId,
-    vehicleSpeedKmh: state.vehicleSpeedKmh,
   });
 
   const send = async (order: string) => {
@@ -134,7 +133,7 @@ export function useAssistant() {
     try {
       const reply = await assistantApi.chat(messages, {
         base: state.base,
-        goals: state.goals,
+        goals: state.goals.filter((g) => !state.waypoints.some((w) => w.id === g)),
         hazards: state.hazards,
         has_plan: !!state.traverse,
         screen: state.phase,

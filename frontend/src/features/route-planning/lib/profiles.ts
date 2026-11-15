@@ -12,21 +12,21 @@ interface ProfileMeta {
 export const PROFILE_META: Record<RouteProfile, ProfileMeta> = {
   safe: {
     label: 'Safest route',
-    hint: 'Stays away from steep and rough ground.',
+    hint: 'Avoids steep ground',
     color: '#22C55E',
     swatch: 'bg-route-safe',
     dashed: false,
   },
   scientific: {
     label: 'Science route',
-    hint: 'Goes past more interesting rocks on the way.',
+    hint: 'Passes more science',
     color: '#A78BFA',
     swatch: 'bg-route-science',
     dashed: true,
   },
   fast: {
     label: 'Quickest route',
-    hint: 'Takes the least time. The ground can be rougher.',
+    hint: 'Least time',
     color: '#3B82F6',
     swatch: 'bg-route-fast',
     dashed: false,
