@@ -18,6 +18,7 @@ Salida: training/data/train.jsonl, training/data/val.jsonl y training/data/stats
 from __future__ import annotations
 
 import argparse
+import tempfile
 import re
 import json
 import random
@@ -37,7 +38,9 @@ from senda.application.assistant.conversation import ToolCall  # noqa: E402
 from senda.application.assistant.language import reply_language  # noqa: E402
 from senda.application.assistant.tools import MissionContext, MissionTools  # noqa: E402
 from senda.application.use_cases.assistant import DONE_MARK, _system_prompt  # noqa: E402
+from senda.adapters.outbound.persistence.sql_store import CrewStore, SqlMissionStore  # noqa: E402
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment  # noqa: E402
+from senda.application.use_cases.mission_log import CrewRoster, MissionCalendar  # noqa: E402
 from senda.application.use_cases.plan_outing import PlanOuting  # noqa: E402
 from senda.application.use_cases.plan_routes import PlanEva, PlanTraverse  # noqa: E402
 from senda.application.use_cases.targets import ListTargets  # noqa: E402
@@ -87,8 +90,26 @@ class Factory:
         self.catalog = {t.id: t for t in self.targets.execute()}
         self.science = sorted((t for t in self.catalog.values() if not t.is_base),
                               key=lambda t: -t.rubric.total)
+        tmp = Path(tempfile.mkdtemp(prefix="senda-gen-"))
+        self.calendar = self._calendar(tmp / "full.db", seed=True)
+        self.empty_calendar = self._calendar(tmp / "empty.db", seed=False)
+        self.crew = CrewRoster(CrewStore(SqlMissionStore(f"sqlite:///{(tmp / 'full.db').as_posix()}")))
+        self.today = self.calendar.today()
 
-    def tools(self, context: MissionContext, assess=None) -> MissionTools:
+    def _calendar(self, path: Path, seed: bool) -> MissionCalendar:
+        store = SqlMissionStore(f"sqlite:///{path.as_posix()}")
+        cal = MissionCalendar(store, self.c.environment_repo)
+        if seed:   # un calendario realista: dos planes hoy, uno mañana, uno pasado mañana
+            for title, day, targets, total, who in (
+                    ("Boxwork drill run", "today", ["T05", "T06"], 128.4, "EVA-1"),
+                    ("Short EVA to Volcán Peña Blanca", "today", ["T03"], 58.3, "EVA-2"),
+                    ("Altadena and the ridge", "tomorrow", ["T02", "T04"], 101.7, "EVA-1"),
+                    ("Monte Grande polygons", self.c.environment_repo.get_current().sol + 2, ["T07"], 74.0, "EVA-2")):
+                cal.save(title=title, day=day, site_id="mount-sharp", created_by=who,
+                         summary={"targets": targets, "total_duration_min": total}, payload={})
+        return cal
+
+    def tools(self, context: MissionContext, assess=None, calendar: MissionCalendar | None = None) -> MissionTools:
         assess = assess or self.real
         key = id(assess)
         if key not in self._outings:
@@ -96,7 +117,7 @@ class Factory:
                 assess, self.targets, PlanTraverse(self.c.target_repo, self.c.terrain),
                 PlanEva(self.c.target_repo, self.c.terrain)))
         return MissionTools(assess, self.env, self.targets, self._outings[key],
-                            self.c.knowledge, context)
+                            self.c.knowledge, context, calendar or self.calendar, self.crew)
 
 
 def tool_specs(tools: MissionTools) -> list[dict[str, Any]]:
@@ -106,9 +127,10 @@ def tool_specs(tools: MissionTools) -> list[dict[str, Any]]:
 
 def conversation(f: Factory, user: str, calls: list[tuple[str, dict]],
                  write: Callable[[list[dict], str], str], context: MissionContext = MissionContext(),
-                 assess=None, history: list[str] | None = None) -> dict[str, Any] | None:
+                 assess=None, history: list[str] | None = None,
+                 calendar: MissionCalendar | None = None) -> dict[str, Any] | None:
     """Arma la conversación ideal ejecutando de verdad cada herramienta."""
-    tools = f.tools(context, assess)
+    tools = f.tools(context, assess, calendar)
     lang = "es" if reply_language(user) == "Spanish" else "en"   # el mismo detector que producción
     messages: list[dict[str, Any]] = [{"role": "system",
                                        "content": _system_prompt(tools.context_note(), user)}]
@@ -212,6 +234,8 @@ def plan_order(rng: random.Random, f: Factory, lang: str) -> tuple[str, dict]:
         args["profile"] = profile
         extras.append(rng.choice(PROFILE_ASK_ES[profile] if es else PROFILE_ASK_EN[profile]))
     day = rng.choice(DAY_ES if es else DAY_EN)
+    if day in ("mañana", "para mañana", "del próximo sol", "tomorrow", "for tomorrow", "for the next sol"):
+        args["day"] = "tomorrow"   # planificar para mañana lo guarda en el calendario de mañana
     if rng.random() < 0.25 and "target_ids" not in args:
         text = rng.choice(QUESTION_ES if es else QUESTION_EN).format(day=day).replace("  ", " ").replace(" ?", "?")
         if extras:
@@ -270,6 +294,8 @@ def write_outing(f: Factory, user: str):
                 out.append("Tuve en cuenta la fuga del traje (oxígeno ×1,5).")
             if flagged:
                 out.append("Precaución: " + "; ".join(flagged) + ".")
+            if d.get("saved_in_calendar"):
+                out.append(f"Lo guardé en el calendario para mañana (sol {d['saved_in_calendar']['sol']}); el plan de hoy sigue ahí.")
             if tomorrow:
                 out.append("Usé el clima de hoy: no hay pronóstico para mañana.")
         else:
@@ -285,6 +311,8 @@ def write_outing(f: Factory, user: str):
                 out.append("I accounted for the suit leak (oxygen ×1.5).")
             if flagged:
                 out.append("Caution: " + "; ".join(flagged) + ".")
+            if d.get("saved_in_calendar"):
+                out.append(f"I saved it in the calendar for tomorrow (sol {d['saved_in_calendar']['sol']}); today's plan is kept.")
             if tomorrow:
                 out.append("I used today's weather: there is no forecast for tomorrow.")
         return " ".join(out)
@@ -457,11 +485,19 @@ VIEW_ES = [("Pon la ruta {p_es}", {"profile": "{p}"}), ("Cambia a la ruta {p_es}
            ("Empieza la simulación", {"screen": "go"}), ("Arranca la misión", {"screen": "go"}),
            ("Vamos, lanza la simulación", {"screen": "go"}), ("Abre las caminatas", {"screen": "walk"}),
            ("Llévame a la pantalla de caminatas", {"screen": "walk"}), ("Vuelve a la ruta del rover", {"screen": "plan"}),
-           ("Pon la {p_es} y empieza", {"profile": "{p}", "screen": "go"})]
+           ("Pon la {p_es} y empieza", {"profile": "{p}", "screen": "go"}),
+           ("Selecciona la ruta {p_es}", {"profile": "{p}"}), ("Quiero ver la ruta {p_es}", {"profile": "{p}"}),
+           ("Cámbiala a la {p_es}", {"profile": "{p}"}), ("Ve a la simulación", {"screen": "go"}),
+           ("Empecemos la misión", {"screen": "go"}), ("Dale inicio a la simulación", {"screen": "go"}),
+           ("Pasa a las caminatas", {"screen": "walk"}), ("Enséñame las caminatas", {"screen": "walk"}),
+           ("Regresa a la pantalla del rover", {"screen": "plan"})]
 VIEW_EN = [("Use the {p_en} route", {"profile": "{p}"}), ("Switch to the {p_en} route", {"profile": "{p}"}),
            ("Start the mission", {"screen": "go"}), ("Launch the simulation", {"screen": "go"}),
            ("Open the spacewalks", {"screen": "walk"}), ("Go back to the rover route", {"screen": "plan"}),
-           ("Take the {p_en} route and start", {"profile": "{p}", "screen": "go"})]
+           ("Take the {p_en} route and start", {"profile": "{p}", "screen": "go"}),
+           ("Select the {p_en} route", {"profile": "{p}"}), ("Show me the {p_en} route", {"profile": "{p}"}),
+           ("Go to the simulation", {"screen": "go"}), ("Let's start the mission", {"screen": "go"}),
+           ("Show the spacewalks", {"screen": "walk"}), ("Back to the rover screen", {"screen": "plan"})]
 SCREEN_ES = {"go": "inicié la simulación", "walk": "abrí la pantalla de caminatas", "plan": "volví a la ruta del rover"}
 SCREEN_EN = {"go": "started the simulation", "walk": "opened the spacewalks screen", "plan": "went back to the rover route"}
 
@@ -478,6 +514,82 @@ def write_view(payloads: list[dict], lang: str) -> str:
     if d["screen"]:
         parts.append((SCREEN_ES if es else SCREEN_EN)[d["screen"]])
     return ("Listo: " + " y ".join(parts) + "." if es else "Done: " + " and ".join(parts) + ".")
+
+
+# ---------- calendario ----------
+
+LIST_ES = {"today": ["¿Qué tengo planeado para hoy?", "¿Qué planes hay hoy?", "¿Hay algún plan guardado para hoy?"],
+           "tomorrow": ["¿Qué hay planeado para mañana?", "¿Tenemos plan para mañana?", "¿Qué haremos mañana?"],
+           "all": ["Muéstrame todos los planes guardados", "¿Qué planes tenemos en el calendario?", "Lista mis planes"]}
+LIST_EN = {"today": ["What's planned for today?", "Any plans saved for today?"],
+           "tomorrow": ["What's planned for tomorrow?", "Do we have a plan for tomorrow?"],
+           "all": ["Show me all saved plans", "What's in the mission calendar?"]}
+SAVE_ES = {"today": [("Guarda este plan para hoy", False), ("Guárdalo para hoy como {title}", True), ("Deja este plan guardado para hoy", False),
+                     ("Anota este plan en el calendario de hoy", False), ("Guárdame esto para hoy", False), ("Registra el plan de hoy", False),
+                     ("Ponlo en el calendario de hoy como {title}", True)],
+           "tomorrow": [("Guarda este plan para mañana", False), ("Guárdalo para mañana", False), ("Guárdalo para mañana con el nombre {title}", True),
+                        ("Deja este plan para mañana", False), ("Agéndalo para mañana", False), ("Pásalo al calendario de mañana", False),
+                        ("Resérvalo para mañana", False), ("Apúntalo para mañana como {title}", True), ("Esto es para mañana, guárdalo", False)]}
+SAVE_EN = {"today": [("Save this plan for today", False), ("Save it for today as {title}", True), ("Put this in today's calendar", False),
+                     ("Store this plan for today", False)],
+           "tomorrow": [("Save this plan for tomorrow", False), ("Keep this plan for tomorrow", False), ("Save it for tomorrow as {title}", True),
+                        ("Schedule this for tomorrow", False), ("Put this plan on tomorrow", False), ("This one is for tomorrow, save it", False)]}
+OPEN_ES = {"today": ["Abre el plan de hoy", "Carga el plan de hoy", "Quiero ver el plan de hoy", "Pon en el mapa el plan de hoy",
+                     "Recupera el plan que guardé para hoy", "Trae el plan de hoy"],
+           "tomorrow": ["Abre el plan de mañana", "Carga el plan de mañana", "Muéstrame el plan de mañana en el mapa",
+                        "Recupera el plan de mañana", "Trae el plan guardado para mañana", "Quiero revisar el plan de mañana"]}
+OPEN_EN = {"today": ["Open today's plan", "Load today's plan", "Bring up the plan saved for today", "Show today's plan on the map"],
+           "tomorrow": ["Open tomorrow's plan", "Load tomorrow's plan", "Bring up tomorrow's saved plan", "Let me review tomorrow's plan"]}
+WHEN_ES = {"today": "hoy", "tomorrow": "mañana"}
+
+
+def write_saved_list(f: "Factory"):
+    def write(payloads: list[dict], lang: str) -> str:
+        d, es = payloads[-1]["data"], lang == "es"
+        when = d["day"]
+        if not d["plans"]:
+            if when == "all":
+                return ("Todavía no hay planes guardados. Si me dices cuánto tiempo tienes, preparo uno."
+                        if es else "There are no saved plans yet. Tell me how much time you have and I will prepare one.")
+            return (f"No hay planes guardados para {WHEN_ES[when]}. ¿Quieres que prepare uno?" if es
+                    else f"There are no plans saved for {when}. Shall I prepare one?")
+        lines = []
+        for p in d["plans"]:
+            where = {"today": "hoy", "tomorrow": "mañana"}.get(p["when"], p["when"]) if es else p["when"]
+            mins = f"{p['total_duration_min']:g} min" if p.get("total_duration_min") else ""
+            lines.append(f"- {p['title']} ({where}, sol {p['sol']}): {', '.join(p['targets'])}"
+                         + (f", {mins}" if mins else "") + (f", por {p['created_by']}" if es else f", by {p['created_by']}"))
+        head = (f"Planes guardados ({len(d['plans'])}):" if es else f"Saved plans ({len(d['plans'])}):")
+        tail = ("¿Abro alguno?" if es else "Shall I open one?")
+        return head + "\n" + "\n".join(lines) + "\n" + tail
+    return write
+
+
+def write_save(payloads: list[dict], lang: str) -> str:
+    p, es = payloads[-1], lang == "es"
+    if p["error"]:
+        return ("No hay ningún plan en pantalla para guardar. ¿Preparo uno primero?" if es
+                else "There is no plan on screen to save. Shall I prepare one first?")
+    d = p["data"]
+    name = f" como «{d['title']}»" if (es and d.get("title")) else (f" as “{d['title']}”" if d.get("title") else "")
+    return (f"Listo: guardé el plan{name} para {WHEN_ES[d['saved_for']]} (sol {d['sol']}). Lo verás en My plans." if es
+            else f"Done: I saved the plan{name} for {d['saved_for']} (sol {d['sol']}). You will find it in My plans.")
+
+
+def write_open(payloads: list[dict], lang: str) -> str:
+    p, es = payloads[-1], lang == "es"
+    if p["error"]:
+        text = p["text"]
+        if "Several plans" in text:
+            names = [x.split(" = ", 1)[1] for x in text.split(": ", 1)[1].split("; ")]
+            return ((f"Hay {len(names)} planes ese día: " + " y ".join(names) + ". ¿Cuál abro?") if es
+                    else (f"There are {len(names)} plans that day: " + " and ".join(names) + ". Which one should I open?"))
+        return ("No hay planes guardados para ese día. ¿Quieres que prepare uno?" if es
+                else "There are no plans saved for that day. Shall I prepare one?")
+    d = p["data"]
+    mins = f", {d['total_duration_min']:g} min" if d.get("total_duration_min") else ""
+    return (f"Abrí «{d['opened']}» (sol {d['sol']}{mins}). Ya está en el mapa." if es
+            else f"I opened “{d['opened']}” (sol {d['sol']}{mins}). It is on the map now.")
 
 
 # ---------- armado del conjunto ----------
@@ -566,7 +678,7 @@ def build(seed: int, scale: float) -> list[dict[str, Any]]:
         add("current_plan_empty", conversation(f, user, [("get_current_plan", {})], write_current(kind)), user)
 
     # 6) Cambiar la vista (con plan en pantalla) y sin plan (error explicado)
-    for _ in range(n(170)):
+    for _ in range(n(320)):
         es = rng.random() < 0.65
         template, args = rng.choice(VIEW_ES if es else VIEW_EN)
         p = rng.choice(["safe", "scientific", "fast"])
@@ -592,9 +704,34 @@ def build(seed: int, scale: float) -> list[dict[str, Any]]:
     # 8) Temas ajenos: sin herramientas, rechazo amable
     for _ in range(n(90)):
         es = rng.random() < 0.6
-        user = rng.choice(OFF_TOPIC["es" if es else "en"])
-        answer = rng.choice(OFF_TOPIC["a_es" if es else "a_en"])
+        user = with_prefix(rng, rng.choice(OFF_TOPIC["es" if es else "en"]), es)
+        answer = rng.choice(OFF_TOPIC["a_es" if reply_language(user) == "Spanish" else "a_en"])
         add("off_topic", conversation(f, user, [], lambda payloads, lang, a=answer: a), user)
+
+    # 10) Calendario: ver, guardar y abrir planes
+    for _ in range(n(120)):
+        es = rng.random() < 0.65
+        day = rng.choice(["today", "tomorrow", "all"])
+        user = with_prefix(rng, rng.choice(LIST_ES[day] if es else LIST_EN[day]), es)
+        empty = rng.random() < 0.25
+        add("calendar_list", conversation(f, user, [("list_saved_plans", {"day": day})], write_saved_list(f),
+                                          calendar=f.empty_calendar if empty else None), user)
+    for _ in range(n(110)):
+        es = rng.random() < 0.65
+        day = rng.choice(["today", "tomorrow"])
+        template, wants_title = rng.choice(SAVE_ES[day] if es else SAVE_EN[day])
+        title = rng.choice(["Boxwork", "Plan B", "Ridge walk", "Ruta corta"]) if wants_title else None
+        user = with_prefix(rng, template.format(title=title or ""), es)
+        args = {"day": day, **({"title": title} if title else {})}
+        has_plan = rng.random() < 0.88
+        add("calendar_save" if has_plan else "calendar_save_no_plan",
+            conversation(f, user, [("save_plan", args)], write_save,
+                         context=MissionContext(has_plan=has_plan, screen="walk")), user)
+    for _ in range(n(70)):
+        es = rng.random() < 0.65
+        day = rng.choice(["today", "tomorrow"])
+        user = with_prefix(rng, rng.choice(OPEN_ES[day] if es else OPEN_EN[day]), es)
+        add("calendar_open", conversation(f, user, [("open_saved_plan", {"day": day})], write_open), user)
 
     # 9) Conversaciones de varios turnos: planificar y luego ajustar o preguntar
     for _ in range(n(140)):

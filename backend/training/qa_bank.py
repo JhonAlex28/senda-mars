@@ -80,6 +80,30 @@ QA: list[dict] = [
              "Something changed? simulates a problem (blocked path, dust storm or suit leak) and SENDA finds a new route. "
              "Return to rover and Return to base end it early."},
     {"topic": "using_senda",
+     "es": ["¿Qué botón inicia la simulación?", "¿Cómo se empieza la simulación?", "¿Cómo lanzo la misión yo mismo?"],
+     "en": ["Which button starts the simulation?", "How can I begin the simulation myself?"],
+     "a_es": "Cuando todas las caminatas están planificadas aparece la tarjeta final con el clima, la batería y el oxígeno: "
+             "pulsa Start mission. También puedes pulsar el paso Start en la barra de arriba del mapa. Si quieres, dime "
+             "\"inicia la simulación\" y lo hago yo.",
+     "a_en": "Once every spacewalk is planned, the final card shows the weather, battery and oxygen: press Start mission. "
+             "You can also press the Start step on the bar at the top of the map. Or tell me \"start the simulation\" and I will do it."},
+    {"topic": "using_senda",
+     "es": ["¿Cómo cambio de ruta?", "¿Dónde elijo la ruta científica?", "¿Cómo comparo las rutas?"],
+     "en": ["How do I switch routes?", "Where do I pick the science route?"],
+     "a_es": "Después de Find rover routes aparece una tarjeta que compara las tres rutas (Safest, Science y Quickest) con su tiempo, "
+             "seguridad y batería: toca la que quieras y el mapa la dibuja. En cada caminata hay una tarjeta igual. "
+             "También puedes decirme \"cambia a la ruta científica\".",
+     "a_en": "After Find rover routes, a card compares the three routes (Safest, Science and Quickest) with time, safety and battery: "
+             "tap the one you want and the map draws it. Each spacewalk has the same card. You can also tell me \"switch to the science route\"."},
+    {"topic": "using_senda",
+     "es": ["¿Cómo guardo un plan para mañana?", "¿Dónde veo los planes guardados?", "¿Cómo abro un plan que guardé?"],
+     "en": ["How do I save a plan for tomorrow?", "Where are my saved plans?"],
+     "a_es": "En la tarjeta Mission calendar pulsa Save plan, ponle un nombre y elige Today o Tomorrow. My plans muestra los planes "
+             "de hoy, de mañana o todos; desde ahí puedes abrirlos, marcarlos como hechos o borrarlos. "
+             "También puedes decirme \"guarda este plan para mañana\".",
+     "a_en": "In the Mission calendar card press Save plan, name it and choose Today or Tomorrow. My plans lists today's, "
+             "tomorrow's or all plans; from there you can open them, mark them done or delete them. You can also tell me \"save this plan for tomorrow\"."},
+    {"topic": "using_senda",
      "es": ["¿Dónde veo los procedimientos que ya hice?", "¿Se guarda un historial de las misiones?"],
      "en": ["Where can I see the procedures already done?", "Is there a mission history?"],
      "a_es": "Sí: al terminar las tareas científicas en la simulación se guardan en Procedure history, dentro de la tarjeta My goals, "
@@ -221,10 +245,13 @@ QA: list[dict] = [
 OFF_TOPIC = {
     "es": ["¿Qué hora es en Tokio?", "Cuéntame un chiste", "¿Cómo hago una pizza?", "Traduce 'hola' al francés",
            "¿Quién es el presidente de Perú?", "Hazme la tarea de matemáticas", "¿Qué opinas del último partido?",
-           "Escríbeme una canción de amor", "¿Cuánto cuesta un iPhone?", "Dame consejos para dormir mejor"],
+           "Escríbeme una canción de amor", "¿Cuánto cuesta un iPhone?", "Dame consejos para dormir mejor",
+           "¿Quién ganó la Champions?", "¿Cuál es el mejor equipo de fútbol?", "¿Va a llover en Lima mañana?",
+           "Explícame la fotosíntesis", "Ayúdame con mi código de Python", "¿Qué series me recomiendas?"],
     "en": ["What time is it in Tokyo?", "Tell me a joke", "How do I make a pizza?", "Who won the last election?",
            "Write a love song", "Help me with my math homework", "What's the best phone to buy?",
-           "Give me tips to sleep better"],
+           "Give me tips to sleep better", "Who won the World Cup?", "Will it rain in London tomorrow?",
+           "Explain photosynthesis", "Fix my JavaScript code", "Recommend me a book"],
     "a_es": ["Solo puedo ayudarte con SENDA y esta misión en Marte. ¿Quieres que prepare una salida o que te explique algo del sistema?",
              "Eso queda fuera de lo que hago: soy el copiloto de SENDA. Puedo planificar rutas, darte el clima de la misión o explicarte la interfaz.",
              "No puedo ayudarte con eso. Mi trabajo es la misión en el cráter Gale: rutas, caminatas, clima y cómo usar SENDA."],

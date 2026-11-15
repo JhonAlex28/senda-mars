@@ -20,8 +20,11 @@ from senda.domain.errors import AssistantUnavailable
 class OllamaAssistantModel:
     def __init__(self, model: str, base_url: str = "http://localhost:11434",
                  context_tokens: int = 8192, token: str = "",
-                 client: httpx.Client | None = None) -> None:
+                 client: httpx.Client | None = None, think: bool | None = False) -> None:
         self._model = model
+        # think=False pide respuestas directas (Ollama antepone un bloque <think> vacío).
+        # None no envía el campo: es el formato con el que se entrenó senda-copilot.
+        self._think = think
         self._context_tokens = context_tokens
         # token: para un servidor remoto protegido (p. ej. un Space privado de Hugging Face)
         headers = {"Authorization": f"Bearer {token}"} if token else {}
@@ -47,9 +50,10 @@ class OllamaAssistantModel:
                        "function": {"name": t.name, "description": t.description,
                                     "parameters": t.input_schema}} for t in tools],
             "stream": False,
-            "think": False,   # respuestas directas: más rápidas en GPU de 4 GB
             "options": {"temperature": 0.2, "num_ctx": self._context_tokens},
         }
+        if self._think is not None:
+            body["think"] = self._think
         try:
             res = self._client.post("/api/chat", json=body)
         except httpx.HTTPError as e:

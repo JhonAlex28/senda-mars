@@ -61,3 +61,20 @@ explicaciones con el tema correcto 0 %.
 Antes de entrenar, el conjunto se audita con el mismo verificador del examen: 0 respuestas con
 cifras que no salgan del planificador y 0 respuestas en un idioma distinto al del usuario.
 Los informes quedan en `eval/results/` para comparar antes y después.
+
+## Historial de rondas
+
+| Ronda | Datos | Casos perfectos | Herramienta correcta | Entiende la orden | Nota |
+|---|---|---|---|---|---|
+| Base `qwen3:1.7b` | — | 57 % | 69 % | 44 % | punto de partida |
+| 1 (`think: false`) | 1662 conv. | 48 % | 48 % | 39 % | casi no llamaba herramientas (formato) |
+| 1 (`SENDA_LLM_THINK=auto`) | 1662 conv. | **69 %** | 71 % | 56 % | plan en pantalla 100 %, explicaciones 75 %; cambiar la vista 20 % |
+| 2 | 2009 conv. + calendario | *pendiente* | | | formato idéntico al de Ollama |
+
+**Lección de la ronda 1:** el modelo aprendió bien, pero se entrenó con un formato distinto al que usa
+Ollama. Con `think: false`, Ollama pone un bloque vacío `<think></think>` antes de **cada** respuesta y
+agrega ` /no_think` a la orden; en los datos ese bloque solo iba antes de la respuesta final, así que el
+modelo aprendió "bloque vacío → responder con texto" y dejó de llamar herramientas. La ronda 2 entrena
+cada turno del asistente con el prompt exacto de Ollama (verificado con la plantilla oficial de Qwen3).
+
+Para usar el modelo de la ronda 1: `SENDA_LLM_MODEL=senda-copilot` y `SENDA_LLM_THINK=auto` en `backend/.env`.

@@ -1,25 +1,29 @@
 {
  "seed": 7,
- "total": 1662,
- "train": 1529,
- "val": 133,
+ "total": 2009,
+ "train": 1848,
+ "val": 161,
  "by_kind": {
   "plan": 636,
   "conditions": 128,
-  "current_plan": 177,
-  "multi_view": 80,
-  "explain": 252,
-  "off_topic": 46,
+  "multi_view": 68,
+  "explain": 309,
+  "view_no_plan": 41,
   "target_detail": 37,
   "plan_bad_weather": 90,
-  "view_no_plan": 17,
-  "multi_current": 59,
-  "view": 86,
+  "calendar_list": 60,
+  "current_plan": 177,
+  "view": 139,
   "current_plan_empty": 16,
+  "off_topic": 76,
+  "calendar_open": 46,
+  "calendar_save_no_plan": 13,
+  "calendar_save": 64,
+  "multi_current": 71,
   "targets": 38
  },
  "by_lang": {
-  "Spanish": 1078,
-  "English": 584
+  "Spanish": 1293,
+  "English": 716
  }
 }

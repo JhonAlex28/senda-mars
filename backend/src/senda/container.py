@@ -46,7 +46,7 @@ def _assistant_model(s: Settings) -> AssistantModel | None:
     if not s.assistant_enabled:
         return None
     return OllamaAssistantModel(s.llm_model, s.ollama_url, s.llm_context_tokens,
-                                s.ollama_token)
+                                s.ollama_token, think=s.llm_think)
 
 
 @lru_cache

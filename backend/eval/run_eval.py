@@ -21,6 +21,7 @@ import argparse
 import json
 import re
 import sys
+import tempfile
 import time
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -37,7 +38,9 @@ from senda.application.assistant.conversation import ToolCall, ToolResult  # noq
 from senda.application.assistant.language import reply_language  # noqa: E402
 from senda.application.assistant.tools import MissionTools  # noqa: E402
 from senda.application.use_cases.assistant import ChatTurn, ChatWithAssistant  # noqa: E402
+from senda.adapters.outbound.persistence.sql_store import CrewStore, SqlMissionStore  # noqa: E402
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment  # noqa: E402
+from senda.application.use_cases.mission_log import CrewRoster, MissionCalendar  # noqa: E402
 from senda.application.use_cases.plan_outing import PlanOuting  # noqa: E402
 from senda.application.use_cases.plan_routes import PlanEva, PlanTraverse  # noqa: E402
 from senda.application.use_cases.targets import ListTargets  # noqa: E402
@@ -65,14 +68,33 @@ class RecordingTools(MissionTools):
         return result
 
 
+_CALENDAR: tuple[MissionCalendar, CrewRoster] | None = None
+
+
+def exam_calendar() -> tuple[MissionCalendar, CrewRoster]:
+    """Calendario de examen (base de datos temporal): un plan hoy y otro mañana."""
+    global _CALENDAR
+    if _CALENDAR is None:
+        db = Path(tempfile.mkdtemp(prefix="senda-eval-")) / "exam.db"
+        store = SqlMissionStore(f"sqlite:///{db.as_posix()}")
+        cal = MissionCalendar(store, get_container().environment_repo)
+        for title, day, targets in (("Boxwork drill run", "today", ["T05", "T06"]),
+                                    ("Altadena and the ridge", "tomorrow", ["T02", "T04"])):
+            cal.save(title=title, day=day, site_id="mount-sharp", created_by="EVA-1",
+                     summary={"targets": targets, "total_duration_min": 100.0}, payload={})
+        _CALENDAR = (cal, CrewRoster(CrewStore(store)))
+    return _CALENDAR
+
+
 def build_tools(mission: dict[str, Any]) -> RecordingTools:
     c = get_container()
+    calendar, crew = exam_calendar()
     assess, targets = AssessReadiness(c.environment_repo), ListTargets(c.target_repo)
     outing = PlanOuting(assess, targets, PlanTraverse(c.target_repo, c.terrain),
                         PlanEva(c.target_repo, c.terrain))
     context = MissionIn(**mission).to_context()
     return RecordingTools(assess, GetEnvironment(c.environment_repo), targets, outing,
-                          c.knowledge, context)
+                          c.knowledge, context, calendar, crew)
 
 
 # ---------- calificación ----------
@@ -106,7 +128,7 @@ def check_args(expect: dict[str, Any], rec: Recorded) -> bool | None:
             if key == "target_ids":
                 got_ids = {str(x).split()[0] for x in (got or [])}
                 ok &= set(value) <= got_ids
-            elif key in ("profile", "topic"):
+            elif key in ("profile", "topic", "day"):
                 ok &= str(got).lower() == value
             elif key == "screen":
                 ok &= value in {str(a.get("screen")).lower(), str(a.get("profile")).lower()}
@@ -150,10 +172,11 @@ def check_grounded(reply: str, rec: Recorded, message: str) -> bool | None:
 
 # ---------- ejecución ----------
 
-def run(model_name: str, only: set[str] | None, url: str) -> dict[str, Any]:
+def run(model_name: str, only: set[str] | None, url: str, think: bool | None = False) -> dict[str, Any]:
     spec = json.loads((ROOT / "cases.json").read_text(encoding="utf-8"))
     settings = get_container().settings
-    model = OllamaAssistantModel(model_name, url, settings.llm_context_tokens, settings.ollama_token)
+    model = OllamaAssistantModel(model_name, url, settings.llm_context_tokens, settings.ollama_token,
+                                 think=think)
     if not model.is_reachable():
         sys.exit(f"Ollama no responde en {url} o el modelo '{model_name}' no está descargado.")
 
@@ -213,8 +236,11 @@ def main() -> None:
     ap.add_argument("--model", default=settings.llm_model)
     ap.add_argument("--url", default=settings.ollama_url)
     ap.add_argument("--only", help="categorías separadas por coma")
+    ap.add_argument("--think", choices=["false", "true", "auto"], default="false",
+                    help="auto = no enviar el campo think a Ollama")
     args = ap.parse_args()
-    report = run(args.model, set(args.only.split(",")) if args.only else None, args.url)
+    think = None if args.think == "auto" else args.think == "true"
+    report = run(args.model, set(args.only.split(",")) if args.only else None, args.url, think)
 
     s = report["summary"]
     print(f"\n== {args.model}: {s['cases']} casos · todo correcto en {s['all_checks_pass_pct']}% · "
@@ -225,7 +251,8 @@ def main() -> None:
 
     out = ROOT / "results"
     out.mkdir(exist_ok=True)
-    name = f"{args.model.replace(':', '-').replace('/', '-')}-{datetime.now():%Y%m%d-%H%M}.json"
+    tag = "" if args.think == "false" else f"-think-{args.think}"
+    name = f"{args.model.replace(':', '-').replace('/', '-')}{tag}-{datetime.now():%Y%m%d-%H%M}.json"
     (out / name).write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"\nDetalle: eval/results/{name}")
 
