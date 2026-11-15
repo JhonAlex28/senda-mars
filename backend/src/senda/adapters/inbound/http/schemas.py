@@ -2,10 +2,13 @@
 from __future__ import annotations
 
 from dataclasses import asdict
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from senda.application.assistant.tools import MissionContext
+from senda.application.use_cases.assistant import AssistantReply
+from senda.application.use_cases.plan_outing import OutingPlan
 from senda.domain.models.environment import EnvironmentSnapshot
 from senda.domain.models.geo import BoundingBox, GeoPoint
 from senda.domain.models.route import (Conditions, Hazard, ParkingSpot, RoutePlan, RouteProfile,
@@ -279,3 +282,107 @@ class TraverseOut(BaseModel):
     def from_domain(cls, t: TraversePlan) -> "TraverseOut":
         return cls(parkings=[ParkingOut.from_domain(p) for p in t.parkings],
                    routes=[RouteOut.from_domain(r) for r in t.routes])
+
+
+# ---------- Asistente ----------
+
+
+class MissionIn(BaseModel):
+    """Lo que el usuario tiene en pantalla: el asistente parte de ahí."""
+    base: PointIn | None = None
+    goals: list[str] = Field(default=[], max_length=20)
+    hazards: list[HazardIn] = Field(default=[], max_length=20)
+    has_plan: bool = False
+
+    def to_context(self) -> MissionContext:
+        return MissionContext(self.base.to_domain() if self.base else None, tuple(self.goals),
+                              tuple(h.to_hazard() for h in self.hazards), self.has_plan)
+
+
+class ChatMessageIn(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str = Field(min_length=1, max_length=4000)
+
+
+class ChatIn(BaseModel):
+    """Historial completo de la conversación (el servidor no guarda estado)."""
+    messages: list[ChatMessageIn] = Field(min_length=1, max_length=40)
+    mission: MissionIn = MissionIn()
+
+
+class HazardOut(BaseModel):
+    lon: float
+    lat: float
+    radius_m: float
+
+
+class DroppedOut(BaseModel):
+    id: str
+    reason: str
+
+
+class OutingOut(BaseModel):
+    """Plan completo que el frontend carga en pantalla sin recalcular nada."""
+    planned: bool
+    target_ids: list[str]
+    dropped: list[DroppedOut]
+    hazards: list[HazardOut]
+    speed_factor: float
+    o2_multiplier: float
+    budget_min: float | None
+    total_duration_min: float
+    traverse: TraverseOut | None
+    traverse_profile: RouteProfile | None
+    evas: dict[str, list[RouteOut]] = Field(description="Por id de estacionamiento")
+    eva_profiles: dict[str, RouteProfile]
+
+    @classmethod
+    def from_domain(cls, o: OutingPlan) -> "OutingOut":
+        return cls(
+            planned=o.planned,
+            target_ids=o.target_ids,
+            dropped=[DroppedOut(id=d.id, reason=d.reason) for d in o.dropped],
+            hazards=[HazardOut(lon=h.center.lon, lat=h.center.lat, radius_m=h.radius_m)
+                     for h in o.hazards],
+            speed_factor=o.conditions.speed_factor,
+            o2_multiplier=o.conditions.o2_multiplier,
+            budget_min=o.budget_min,
+            total_duration_min=o.total_min,
+            traverse=TraverseOut.from_domain(o.traverse) if o.traverse else None,
+            traverse_profile=o.traverse_profile,
+            evas={pid: [RouteOut.from_domain(r) for r in routes] for pid, routes in o.evas.items()},
+            eva_profiles=o.eva_profiles,
+        )
+
+
+class ViewOut(BaseModel):
+    profile: RouteProfile | None
+    screen: Literal["plan", "walk", "go"] | None
+
+
+class ChatOut(BaseModel):
+    reply: str
+    refused: bool
+    truncated: bool
+    tools_used: list[str] = Field(description="Herramientas usadas, en orden")
+    readiness: ReadinessOut | None
+    outing: OutingOut | None = Field(description="Plan nuevo para cargar en pantalla")
+    view: ViewOut | None = Field(description="Cambio de perfil o de pantalla")
+
+    @classmethod
+    def from_domain(cls, r: AssistantReply) -> "ChatOut":
+        p = r.plans
+        return cls(
+            reply=r.text,
+            refused=r.refused,
+            truncated=r.truncated,
+            tools_used=p.tools_used,
+            readiness=ReadinessOut.from_domain(p.readiness) if p.readiness else None,
+            outing=OutingOut.from_domain(p.outing) if p.outing else None,
+            view=ViewOut(profile=p.view.profile, screen=p.view.screen) if p.view else None,
+        )
+
+
+class AssistantStatusOut(BaseModel):
+    enabled: bool
+    model: str | None

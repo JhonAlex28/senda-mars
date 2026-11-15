@@ -2,8 +2,10 @@
 Los adaptadores en senda.adapters.outbound los implementan."""
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Protocol
 
+from senda.application.assistant.conversation import AssistantMessage, Message, ToolSpec
 from senda.domain.models.environment import EnvironmentSnapshot
 from senda.domain.models.geo import BoundingBox
 from senda.domain.models.target import ScienceTarget
@@ -22,3 +24,19 @@ class EnvironmentRepository(Protocol):
 class TerrainProvider(Protocol):
     def site_bounds(self) -> BoundingBox: ...
     def get_grid(self, bbox: BoundingBox, cell_size_m: float) -> TerrainGrid: ...
+
+
+class AssistantModel(Protocol):
+    """Un LLM capaz de usar herramientas. Devuelve el siguiente turno del asistente:
+    texto y, si quiere más datos, las herramientas que necesita ejecutar.
+    Lanza AssistantUnavailable si el proveedor no responde."""
+
+    def next_turn(self, system: str, messages: Sequence[Message],
+                  tools: Sequence[ToolSpec]) -> AssistantMessage: ...
+
+
+class KnowledgeBase(Protocol):
+    """Documentación del sistema que el asistente puede consultar para explicar."""
+
+    def topics(self) -> dict[str, str]: ...          # tema → título
+    def get(self, topic: str) -> str | None: ...

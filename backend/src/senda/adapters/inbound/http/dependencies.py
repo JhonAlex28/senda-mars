@@ -1,10 +1,16 @@
 """Inyección de dependencias de FastAPI hacia los casos de uso."""
 from __future__ import annotations
 
+from collections.abc import Callable
+
+from senda.application.assistant.tools import MissionContext, MissionTools
+from senda.application.use_cases.assistant import ChatWithAssistant
 from senda.application.use_cases.environment import AssessReadiness, GetEnvironment
+from senda.application.use_cases.plan_outing import PlanOuting
 from senda.application.use_cases.plan_routes import PlanEva, PlanPath, PlanTraverse
 from senda.application.use_cases.targets import GetTarget, ListTargets
 from senda.application.use_cases.terrain import GetTerrain
+from senda.config import Settings
 from senda.container import get_container
 
 
@@ -41,3 +47,27 @@ def plan_eva_uc() -> PlanEva:
 def plan_path_uc() -> PlanPath:
     c = get_container()
     return PlanPath(c.target_repo, c.terrain)
+
+
+def assistant_settings() -> Settings:
+    return get_container().settings
+
+
+def chat_uc() -> Callable[[MissionContext], ChatWithAssistant] | None:
+    """Fábrica por petición: el registro de planes es propio de cada conversación y
+    las herramientas parten de lo que el usuario tiene en pantalla."""
+    c = get_container()
+    model = c.assistant_model
+    if model is None:
+        return None
+
+    def build(context: MissionContext) -> ChatWithAssistant:
+        assess = AssessReadiness(c.environment_repo)
+        targets = ListTargets(c.target_repo)
+        outing = PlanOuting(assess, targets, PlanTraverse(c.target_repo, c.terrain),
+                            PlanEva(c.target_repo, c.terrain))
+        tools = MissionTools(assess, GetEnvironment(c.environment_repo), targets, outing,
+                             c.knowledge, context)
+        return ChatWithAssistant(model, tools)
+
+    return build
