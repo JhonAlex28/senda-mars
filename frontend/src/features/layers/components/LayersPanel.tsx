@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { Switch } from '@/shared/ui/Switch';
@@ -41,6 +42,7 @@ function LayerRow({ layer, sub = false, parentOn = true }: { layer: LayerDef; su
   const on = enabled && view.visible;
   const prov = PROVENANCE[layer.provenance];
   const children = LAYERS.filter((l) => l.parent === layer.id);
+  const [open, setOpen] = useState(false); // subcapas plegadas por defecto
 
   return (
     <div className={`flex flex-col gap-xs rounded-md px-xs py-xs ${on && !sub ? 'bg-surface' : ''} ${enabled ? '' : 'opacity-50'}`}>
@@ -68,6 +70,17 @@ function LayerRow({ layer, sub = false, parentOn = true }: { layer: LayerDef; su
           <span className={`truncate font-body text-body-sm ${on ? 'text-on-surface' : 'text-on-surface-variant'}`}>{layer.name}</span>
           {!sub && <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${prov.dot}`} aria-label={prov.label} />}
         </span>
+        {children.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-label={`${layer.name} options`}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded text-on-surface-variant hover:text-on-surface"
+          >
+            <Icon name="expand_more" className={`text-[20px] transition-transform ${open ? 'rotate-180' : ''}`} />
+          </button>
+        )}
         {layer.available ? (
           <Switch checked={view.visible} onChange={() => toggle(layer.id)} label={layer.name} disabled={!parentOn} />
         ) : (
@@ -101,19 +114,12 @@ function LayerRow({ layer, sub = false, parentOn = true }: { layer: LayerDef; su
         </div>
       )}
 
-      {children.length > 0 && (
-        // Plegado por defecto: las subcapas solo se abren si se necesitan
-        <details className="group/sub pl-[26px]">
-          <summary className="flex min-h-[32px] cursor-pointer list-none items-center gap-xs font-label text-label-sm uppercase text-on-surface-variant">
-            <Icon name="chevron_right" className="text-[16px] transition-transform group-open/sub:rotate-90" />
-            Filter
-          </summary>
-          <div className="flex flex-col">
-            {children.map((c) => (
-              <LayerRow key={c.id} layer={c} sub parentOn={on} />
-            ))}
-          </div>
-        </details>
+      {children.length > 0 && open && (
+        <div className="flex flex-col pl-[26px]">
+          {children.map((c) => (
+            <LayerRow key={c.id} layer={c} sub parentOn={on} />
+          ))}
+        </div>
       )}
     </div>
   );

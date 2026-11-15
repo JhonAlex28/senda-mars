@@ -6,7 +6,6 @@ export type Provenance = 'measured' | 'modeled' | 'assumed';
 export type LayerId =
   | 'relief'
   | 'slope'
-  | 'safeReturn'
   | 'targets'
   | 'targetNames'
   | 'sci-water'
@@ -69,19 +68,6 @@ export const LAYERS: LayerDef[] = [
       { label: '>10°', swatch: 'bg-warning' },
       { label: '>20°', swatch: 'bg-error' },
     ],
-  },
-  {
-    id: 'safeReturn',
-    name: 'Safe return',
-    icon: 'u_turn_left',
-    provenance: 'modeled',
-    source: 'SENDA return field (O₂ / battery reserve)',
-    resolution: 'EVA: active stop · Drive: to base',
-    raster: true,
-    available: true,
-    defaultVisible: false,
-    defaultOpacity: 0.7,
-    legend: [{ label: 'Can return', swatch: 'bg-success' }],
   },
   {
     id: 'targets',

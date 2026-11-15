@@ -227,3 +227,6 @@ Por eso la UI **no muestra** el punto de no retorno, la reserva ni los motivos d
   - las contingencias salen de `GET /scenarios`: Path blocked, Dust storm, Suit leak, **Crew injury** y **Solar particle event**;
   - en EVA se evalúan con `POST /simulate` (que ahora acepta `path` sin `cells`). Si el motor da `rtb` o desvío, se vuelve al vehículo con la alerta del motor;
   - durante cada EVA se muestran en vivo la **reserva de retorno** y las alertas nominales (PNR, ventana EVA…).
+- **Ajuste:**
+  - las subcapas se abren con un chevron junto al nombre de la capa, sin la palabra "Filter";
+  - se **quitó la capa "Safe return"** (`/return-field`): la seguridad del retorno ya se ve en la ruta (punto de no retorno, reserva y chips) y en las alertas del modo Go. El endpoint sigue disponible en el backend.

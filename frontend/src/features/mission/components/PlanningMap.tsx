@@ -14,7 +14,6 @@ import {
 } from '@/features/map';
 import { terrainRasters, useLayers } from '@/features/layers';
 import { PROFILE_META, distinctProfiles } from '@/features/route-planning';
-import { useSafeReturn } from '@/features/safety';
 import { SCIENCE_TYPES, TargetCard, scienceType, type Target } from '@/features/targets';
 import { Terrain3DView, TerrainReadout, useTerrain, type TerrainLayer } from '@/features/terrain';
 import { bboxAround } from '@/shared/lib/geo';
@@ -59,12 +58,7 @@ export function PlanningMap({ projection, site }: PlanningMapProps) {
   }, [walking, parking, targetById]);
   const { layer: evaTerrain } = useTerrain(EVA_DETAIL_CELL_M, evaBox);
 
-  // Zona de retorno seguro (motor de Mec. B): hacia el vehículo estacionado en Walk, hacia la base en Plan
-  const safe = useSafeReturn(walking ? 'eva' : 'rover', walking ? parking ?? null : state.base, shown('safeReturn') && !!state.base);
-  const rasters = [
-    ...terrainRasters([site, evaTerrain], layers),
-    ...(safe && shown('safeReturn') ? [{ key: 'safe-return', image: safe.image, bbox: safe.bbox, opacity: layers.safeReturn.opacity }] : []),
-  ];
+  const rasters = terrainRasters([site, evaTerrain], layers);
   const hazardRadius = HAZARD_RADIUS_M[walking ? 'walk' : 'plan'];
   // Objetivos visibles: sin la base y según los filtros por tipo de la capa "Science targets"
   const scienceTargets = targets.filter((t) => !t.is_base && shown(`sci-${scienceType(t)}`));
