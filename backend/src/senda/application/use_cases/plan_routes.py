@@ -12,10 +12,10 @@ from dataclasses import replace
 
 from senda.application.planner_context import PlannerContext
 from senda.application.route_mapper import eva_to_plan, rover_to_plan
-from senda.domain.errors import NoRouteFound
+from senda.domain.errors import InvalidRequest, NoRouteFound
 from senda.domain.models.geo import GeoPoint
 from senda.domain.models.params import RoverParams
-from senda.domain.models.route import (Conditions, Hazard, RoutePlan, RouteProfile, StopKind,
+from senda.domain.models.route import (Conditions, Hazard, ParkingSpot, RoutePlan, RouteProfile, StopKind,
                                        TraversePlan, TravelMode, Waypoint)
 from senda.domain.models.target import ScienceTarget
 from senda.domain.services import eva_planner as eva
@@ -106,11 +106,17 @@ class PlanTraverse:
     def execute(self, base: GeoPoint, target_ids: list[str], hazards: list[Hazard],
                 conditions: Conditions, vehicle_id: str | None = None,
                 speed_kmh: float | None = None,
-                user_waypoints: list[GeoPoint] | None = None) -> TraversePlan:
+                user_waypoints: list[tuple[str, GeoPoint]] | None = None,
+                order: list[str] | None = None) -> TraversePlan:
         """`vehicle_id`: solo el SEV presurizado está modelado (doc §0.4); cualquier otro id se
         planifica con los parámetros del SEV. `speed_kmh` escala la velocidad nominal del SEV,
-        acotada a su máximo. `user_waypoints`: puntos por los que el usuario quiere que pase el
-        vehículo (W1…Wn); se intercalan con los estacionamientos en el orden de visita."""
+        acotada a su máximo. `user_waypoints`: (id, punto) por los que debe pasar el vehículo.
+
+        Orden de visita:
+          * sin `order` → recorrido optimizado (vecino más cercano + 2-opt) de paradas y waypoints;
+          * con `order` (ids de objetivos y waypoints, como la lista del usuario) → se visita cada
+            estacionamiento en la primera aparición de uno de sus objetivos, y cada waypoint en su
+            posición; los estacionamientos se renumeran P1…Pn en ese orden."""
         targets = self._p.resolve_targets(target_ids)
         ctx = self._p.ctx
         conditions = with_cruise_speed(conditions, speed_kmh, ctx.params.rover)
@@ -119,13 +125,17 @@ class PlanTraverse:
         for t in targets:
             if not grid.contains(t.location):
                 raise NoRouteFound(f"target {t.id} is outside the rover grid")
-        for i, p in enumerate(user_waypoints or [], start=1):
-            ctx.regional_cell(p, f"waypoint W{i}")   # dentro del área y transitable
+        user_waypoints = list(user_waypoints or [])
+        for wid, p in user_waypoints:
+            ctx.regional_cell(p, f"waypoint {wid}")   # dentro del área y transitable
         parkings = ctx.parkings_for(targets, base, tuple(hazards))
-        stops = [Waypoint(pk.location, StopKind.PARKING, pk.id) for pk in parkings]
-        stops += [Waypoint(p, StopKind.WAYPOINT, f"W{i}") for i, p in enumerate(user_waypoints or [], start=1)]
-        if user_waypoints:
-            stops = [stops[k] for k in tour_order(base, [w.location for w in stops])]
+        wps = [Waypoint(p, StopKind.WAYPOINT, wid) for wid, p in user_waypoints]
+        if order:
+            parkings, stops = _ordered_stops(parkings, wps, order)
+        else:
+            stops = [Waypoint(pk.location, StopKind.PARKING, pk.id) for pk in parkings] + wps
+            if wps:
+                stops = [stops[k] for k in tour_order(base, [w.location for w in stops])]
         home = Waypoint(base, StopKind.BASE, "base")
         waypoints = [home, *stops, home]
         return TraversePlan(parkings, self._p.rover_routes(waypoints, hazards, conditions, None))
@@ -153,6 +163,31 @@ class PlanPath:
         if mode is TravelMode.EVA:
             return self._p.eva_routes(stops, hazards, conditions, profiles)
         return self._p.rover_routes(stops, hazards, conditions, profiles)
+
+
+def _ordered_stops(parkings: list[ParkingSpot], wps: list[Waypoint],
+                   order: list[str]) -> tuple[list[ParkingSpot], list[Waypoint]]:
+    """Paradas en el orden de la lista del usuario (ver PlanTraverse.execute)."""
+    by_target = {t: pk for pk in parkings for t in pk.target_ids}
+    by_wp = {w.ref_id: w for w in wps}
+    seq: list[ParkingSpot | Waypoint] = []
+    for ref in order:
+        item = by_wp.get(ref) or by_target.get(ref)
+        if item is None:
+            raise InvalidRequest(f"order has an unknown id: {ref}")
+        if item not in seq:
+            seq.append(item)
+    seq += [x for x in [*parkings, *wps] if x not in seq]   # lo que no se nombró, al final
+    renamed: list[ParkingSpot] = []
+    stops: list[Waypoint] = []
+    for item in seq:
+        if isinstance(item, ParkingSpot):
+            pk = ParkingSpot(f"P{len(renamed) + 1}", item.location, item.target_ids)
+            renamed.append(pk)
+            stops.append(Waypoint(pk.location, StopKind.PARKING, pk.id))
+        else:
+            stops.append(item)
+    return renamed, stops
 
 
 def target_stop(t: ScienceTarget) -> Waypoint:

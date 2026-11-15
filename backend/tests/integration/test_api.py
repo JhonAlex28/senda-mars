@@ -229,3 +229,36 @@ def test_traverse_rejects_waypoint_outside_the_area():
     res = client.post("/api/v1/routes/traverse",
                       json={"base": base, "target_ids": ["T02"], "waypoints": [{"lon": 137.0, "lat": -4.0}]})
     assert res.status_code == 422
+
+
+def test_traverse_follows_the_user_order_when_given():
+    base = {"lon": 137.42009295, "lat": -4.59310427}
+    w = {"id": "W7", "lon": 137.40, "lat": -4.70}
+    body = {"base": base, "target_ids": ["S03", "T02"], "waypoints": [w], "order": ["T02", "W7", "S03"]}
+    res = client.post("/api/v1/routes/traverse", json=body)
+    assert res.status_code == 200, res.text
+    j = res.json()
+    stops = [(s["kind"], s["ref_id"]) for s in j["routes"][0]["stops"]]
+    assert stops == [("parking", "P1"), ("waypoint", "W7"), ("parking", "P2"), ("base", "base")]
+    assert {p["id"]: p["target_ids"] for p in j["parkings"]} == {"P1": ["T02"], "P2": ["S03"]}
+
+
+def test_traverse_rejects_unknown_ids_in_order():
+    base = {"lon": 137.42009295, "lat": -4.59310427}
+    res = client.post("/api/v1/routes/traverse", json={"base": base, "target_ids": ["T02"], "order": ["T02", "W9"]})
+    assert res.status_code == 422
+
+
+def test_simulate_accepts_a_path_without_cells():
+    base = {"lon": 137.42009295, "lat": -4.59310427}
+    pk = client.post("/api/v1/routes/traverse", json={"base": base, "target_ids": ["T02"]}).json()["parkings"][0]
+    eva = client.post("/api/v1/routes/eva", json={"rover": {"lon": pk["lon"], "lat": pk["lat"]},
+                                                  "target_ids": ["T02"]}).json()[0]
+    path = [[p["lon"], p["lat"]] for p in eva["points"]]
+    stops = [{"target_id": s["ref_id"], "path_index": s["point_index"]} for s in eva["stops"] if s["kind"] == "target"]
+    res = client.post("/api/v1/simulate", json={"route": {"path": path, "stops": stops}, "scenario": "sep_event",
+                                                "scenario_at_index": len(path) // 3})
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert any(r["alert"] and r["alert"]["code"] == "SEP_EVENT" for r in body["timeline"])
+    assert client.post("/api/v1/simulate", json={"route": {"path": path[:1]}}).status_code == 422
