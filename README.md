@@ -1,206 +1,158 @@
 <div align="center">
 
-# 🚀 SENDA v2 — Safe Paths to Martian Science
+# 🚀 SENDA — Safe Paths to Martian Science
 
-**Planificación de travesías del Pressurized Rover (SEV) y caminatas EVA en Mount Sharp, Cráter Gale**
+**Pressurized Rover (SEV) Traverse & xEMU EVA Mission Planning System for Mount Sharp, Gale Crater**
 
-[![NASA Gale EZ](https://img.shields.io/badge/NASA-Gale_Crater_EZ-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://science.nasa.gov/mission/msl-curiosity/)
+[![NASA Gale EZ](https://img.shields.io/badge/Target-Gale_Crater_EZ_(137.42°E,_-4.59°S)-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://science.nasa.gov/mission/msl-curiosity/)
+[![Mars Trek WMTS](https://img.shields.io/badge/GIS-NASA_Mars_Trek_WMTS-E03C31?style=for-the-badge)](https://trek.nasa.gov/mars/)
 [![React + TypeScript](https://img.shields.io/badge/Frontend-React_18_%2B_TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](frontend/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI_%2B_Python_3.11%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](backend/)
 [![Three.js 3D](https://img.shields.io/badge/3D_DEM-Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white)](frontend/src/features/terrain/components/Terrain3DView.tsx)
-[![IBM Quantum Optional](https://img.shields.io/badge/Optional-IBM_Quantum_%2B_Qiskit-6929C4?style=for-the-badge&logo=qiskit&logoColor=white)](backend/src/senda/adapters/outbound/quantum/qiskit_qaoa.py)
+[![IBM Quantum Optional](https://img.shields.io/badge/Optional-IBM_Quantum_QAOA-6929C4?style=for-the-badge&logo=qiskit&logoColor=white)](backend/src/senda/adapters/quantum_qiskit.py)
 
-Monorepo con **backend** y **frontend** independientes (el frontend NASA funciona **100% standalone** o conectado al backend).
+**Standalone-capable NASA Mission Control web application** with an independent hexagonal **FastAPI** backend and **React + Three.js** frontend.
 
 </div>
 
 ---
 
-> 👥 **¿Eres del equipo?** Empieza por la **[Guía para el equipo (CONTRIBUTING.md)](CONTRIBUTING.md)**: requisitos, instalación, cómo crear ramas y Pull Requests, y reparto de tareas.
->
-> 🔗 **Repositorio:** https://github.com/JhonAlex28/senda-mars
+## 🧭 Mission Overview
+
+**SENDA** (*Safe Paths to Martian Science*) is an end-to-end surface mission planner and field operations simulator designed around **NASA's Gale Crater Exploration Zone** (`137.42009295°E, -4.59310427°S, -4497.77 m MOLA`, `25 km` / `100 km` EZ). It enables flight controllers and surface crews to:
+
+1. **Select & Prioritize Science Targets** across Mount Sharp's stratigraphic units using a 15-point NASA habitability/novelty/human-only rubric.
+2. **Plan Pressurized Rover (SEV) Traverses & xEMU Spacewalks (EVAs)** with 8-neighbor **A\*** terrain-aware pathfinding, comparing **Safe**, **Scientific**, and **Fast** Pareto-optimal alternatives.
+3. **Evaluate Environmental Readiness (`GO / NO-GO`)** against live **MSL Curiosity REMS & RAD** conditions (dust opacity $\tau$, diurnal temperature, atmospheric pressure, and Solar Particle Event radiation flares).
+4. **Execute Live Field Simulations** with dynamic contingencies (*Dust Storm*, *SPE / Blocked Path*, *Suit Leak*), real-time O₂/battery margins, **1,000-run Monte Carlo** risk analysis, and **exportable Mission Dossiers** (`JSON`, `CSV`, `GeoJSON`, `PDF`).
+
+---
+
+## 🛰️ Verified NASA Datasets & Planetary Science Integration
+
+SENDA grounds its 2D GIS layers, 3D terrain, and environmental telemetry in official NASA/USGS planetary data:
+
+| Domain | Dataset / Instrument | Resolution / Range | Usage in SENDA |
+|---|---|---|---|
+| **Orbital Imagery** | **NASA Mars Trek WMTS** (`Gale_CTX_BlockAdj_dd`, fallback `Mars_Viking_MDIM21_ClrMosaic_global_232m`) | `6 m/px` (zoom 11) | Georeferenced MRO CTX orbital basemap over Gale Crater |
+| **Thermal / Mineralogy** | **MO THEMIS-IR Day** (`THEMIS_DayIR_ControlledMosaics_100m_v2_oct2018`) + **Mount Sharp Strata** | `100 m/px` (zoom 9) | Thermal-inertia overlay + *Murray*, *Glen Torridon*, *Stimson*, & *Sulfate Boxwork* units |
+| **Topography & Relief** | **MGS MOLA + Mars Express HRSC** (`Mars_MOLA_blend200ppx_HRSC_ClrShade_clon0dd_200mpp_lzw`) & **MSL Gale Merged DEM** (`main`) | `200 m/px` / `1 m` DEM | Elevation, slope hazard (`>10°` / `>18°`), and horizon radiation shielding |
+| **Surface Weather (REMS)** | **MSL Curiosity REMS** | `-90 °C` to `+6 °C` · `680–1150 Pa` | Diurnal thermal curve, dust opacity ($\tau$), and SEV range modeling |
+| **Radiation (RAD)** | **MSL Curiosity RAD** | `0.64–0.67 mSv/sol` GCR (`1.85 mSv/sol` SPE) | Daily crew dose tracking, cliff-wall shelter pockets, and SPE cabin abort triggers |
+
+---
+
+## ✨ Key Capabilities
+
+- **2D GIS + Interactive 3D DEM (`Three.js`):** 8 toggleable geospatial layers (*Terrain*, *Slope*, *Science targets*, *Routes*, *Danger zones*, *Orbital photo*, *Minerals*, *Radiation shelter*) plus interactive 3D terrain visualization with `ORBIT`, `CHASE`, `POV`, `DRONE`, and `FLYOVER` camera modes.
+- **Crew & Suit Health HUD:** Configurable crew roster, callsigns, and suit telemetry (`xEMU-01` / `xEMU-02`) with live `HelmetStatusCard` biometrics and `MSR-Ti` sample cache logging.
+- **NASA Labs Suite:**
+  - **1,000-Run Monte Carlo Simulator:** Evaluates mission success probability under dust storm ($\tau$) and radiation (`SPE`) uncertainty.
+  - **RIMFAX GPR & SHERLOC Raman Views:** Subsurface stratigraphy and mineral/organic spectroscopy inspection per target.
+- **Instant Demo & Export:** One-click **`▶ Quick Demo`** and **`Reset`** controls, unified mission score (`0–100`, Grade `A+–D`), and export to **JSON**, **CSV**, **GeoJSON**, and **Print / PDF Mission Dossier**.
+- **SENDA Copilot & Mission Calendar (`main` branch):** Natural-language mission planner powered by local **Ollama (`qwen3:1.7b`)** with automatic fallback, plus SQLite/Postgres sol-by-sol plan persistence.
+- **Optional IBM Quantum QAOA Co-Processor:** Browser-native Statevector QAOA simulator plus optional backend bridge to **Qiskit AerSimulator** and **IBM Quantum Runtime** (`ibm_brisbane`, `ibm_torino`, `ibm_fez`) with $T_1/T_2$ noise modeling. Core NASA planning remains **100% standalone** without Qiskit.
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+flowchart LR
+    UI["Frontend: React 18 + TypeScript + Three.js\n(2D GIS SVG, 3D DEM, Offline Fallback)"]
+    TREK["NASA Mars Trek WMTS\n(CTX 6m · THEMIS 100m · MOLA/HRSC)"]
+    API["Backend: FastAPI\n(/api/v1/*)"]
+    DOM["Hexagonal Core\n(A* Pathfinding · Pandolf/O2 Physics)"]
+    OPT["Optional Co-Processors\n(Qiskit QAOA · Ollama Copilot · SQLite/Postgres)"]
+
+    UI <-->|"REST / Vite Proxy"| API
+    UI -->|"CORS WMTS Tiles"| TREK
+    API --> DOM
+    API -.-> OPT
+```
+
+### Repository Layout
 
 ```text
-senda-v2/
-├── backend/    API Python · FastAPI · arquitectura hexagonal (+ puente opcional Qiskit)
-├── frontend/   React · TypeScript · Vite · Three.js · organizado por features
-└── scripts/    setup.py y dev.py (instalar y arrancar todo)
+senda-mars/
+├── backend/
+│   ├── data/                     # Science targets GeoJSON, environment, terrain & knowledge base
+│   ├── src/senda/
+│   │   ├── domain/               # Pure Python models, A* pathfinding, Pandolf & O2 physics
+│   │   ├── application/          # Use cases & outbound ports (Protocol interfaces)
+│   │   ├── adapters/             # FastAPI routers, JSON/DEM/SQL/LLM/Qiskit adapters
+│   │   ├── config.py             # Environment settings
+│   │   ├── container.py          # Composition root
+│   │   └── main.py               # FastAPI entrypoint
+│   └── tests/                    # Unit & FastAPI TestClient integration tests
+├── frontend/
+│   └── src/
+│       ├── app/                  # Root shell & NASA JPL Mission Control theme
+│       ├── pages/                # GlobePage & MissionControlPage
+│       ├── features/             # mission, layers, route-planning, field-simulation, map, terrain, targets, environment, globe
+│       └── shared/               # httpClient (with offline fallback), geo/astar libs, UI primitives
+└── scripts/                      # setup.py and dev.py
 ```
 
 ---
 
-## ✨ Novedades principales (Rama `mathias`)
+## ⚡ Quick Start
 
-| Módulo | Qué incluye |
-|---|---|
-| 🗺️ **Gale Crater EZ & SEV** | Coordenadas oficiales NASA (`137.42009295°E, -4.59310427°S, -4497.77 m MOLA`), Exploration Zone `25 / 100 km`, vehículo **Pressurized Rover (SEV)** y modal técnico `Gale EZ & SEV`. |
-| 🏔️ **Mapa 2D GIS + 3D DEM** | Pathfinding **A\*** sobre grilla de 8 vecinos, capas Viking/CTX, Minerales y Refugio, más vista 3D con cámaras `ORBIT`, `CHASE`, `POV`, `DRONE` y `FLYOVER`. |
-| 🧑‍🚀 **Crew & Suit Health HUD** | Configuración de equipo, nombres de astronautas y trajes (`xEMU-01` / `xEMU-02`), más telemetría biométrica en vivo (`HelmetStatusCard`) y registro de muestras `MSR-Ti`. |
-| 🌦️ **REMS / RAD Live** | Panel interactivo con opacidad de polvo ($\tau$), hora solar (`LMST`) y alertas de tormenta solar (`SPE`) conectados al checklist `GO / NO-GO` y al Monte Carlo de 1,000 corridas. |
-| 📊 **Evaluación & Exportación** | Rúbrica científica NASA (`/15`), badge Pareto Optimal, Score unificado (`0–100` + Grado `A+–D`) y descarga en **JSON**, **CSV**, **GeoJSON** y **Print / PDF Dossier**. |
-| ⚛️ **IBM Quantum QAOA (Opcional)** | Co-procesador opcional en `NASA Labs → ⚛ IBM Quantum QAOA` y `My goals`: simulador Statevector en el navegador + puente opcional a Qiskit / IBM Quantum Runtime (`AerSimulator`, `ibm_brisbane`, `ibm_torino`, `ibm_fez`) con modelo de ruido $T_1/T_2$. La respuesta indica qué se ejecutó (`ibm-qpu`, `qiskit-aer` o `classical-fallback`) y sus limitaciones: los ángulos del circuito son fijos y las combinaciones se puntúan de forma clásica. |
-
----
-
-## ⚡ Inicio rápido
-
-Requisitos: **Python 3.11+** y **Node.js 20+**.
+**Prerequisites:** Python 3.11+ and Node.js 20+.
 
 ```bash
 git clone https://github.com/JhonAlex28/senda-mars.git
 cd senda-mars
-python scripts/setup.py   # una sola vez (~1 min): crea backend/.venv e instala todo
-python scripts/dev.py     # arranca backend + frontend. Ctrl+C detiene ambos
+python scripts/setup.py   # One-time setup: creates backend/.venv and installs dependencies
+python scripts/dev.py     # Starts FastAPI (port 8000) + Vite (port 5173)
 ```
 
-- **Frontend:** http://localhost:5173
-- **API y documentación:** http://localhost:8000/docs
+- **Web App:** `http://localhost:5173`
+- **Swagger API Docs:** `http://localhost:8000/docs`
 
-> Si un puerto está ocupado, `dev.py` lo avisa. Para ver qué lo ocupa en Windows: `Get-NetTCPConnection -LocalPort 8000 -State Listen`.
-> Para demos rápidas en la interfaz, usa los botones **`▶ Quick Demo`** y **`Reset`** en la barra superior.
+> **Standalone Mode:** The frontend includes a full client-side A\* & physics fallback (`shared/api/localFallback.ts`), so every planning, 3D, NASA Labs, and export workflow runs even without a live backend.
 
----
+<details>
+<summary><strong>Manual Backend, Frontend & Optional Add-on Commands</strong></summary>
 
-## 🧱 Backend — arquitectura hexagonal (puertos y adaptadores)
-
-```text
-backend/
-├── data/                         targets_v1.geojson, env.json, mission_params.json, terrain/, knowledge/
-├── src/senda/
-│   ├── domain/                   ← núcleo: Python puro, sin FastAPI ni I/O
-│   │   ├── models/               entidades y value objects (GeoPoint, ScienceTarget, RoutePlan…)
-│   │   ├── services/             lógica pura: pathfinding (A*), physics (Pandolf, O2)
-│   │   └── errors.py
-│   ├── application/              ← orquesta el dominio
-│   │   ├── ports/outbound.py     interfaces que la app necesita (TargetRepository, TerrainProvider…)
-│   │   └── use_cases/            ListTargets, GetEnvironment, PlanRoutes…
-│   ├── adapters/                 ← mundo exterior
-│   │   ├── inbound/http/         FastAPI: routers, schemas (DTOs), dependencies
-│   │   └── outbound/             implementaciones de los puertos (JSON, terreno, DEM, LLM, Qiskit…)
-│   ├── config.py                 variables de entorno
-│   ├── container.py              composition root: elige qué adaptador usar
-│   └── main.py                   crea la app FastAPI
-└── tests/
-    ├── unit/                     dominio y casos de uso (con repositorios falsos)
-    └── integration/              API completa con TestClient
-```
-
-**Regla de dependencias:** `adapters → application → domain`. El dominio no importa nada de afuera.
-Cambiar JSON por una base de datos, o terreno sintético por un DEM real, solo toca `adapters/` y `container.py`.
-
-### Cómo agregar una funcionalidad
-1. Modelo o lógica pura en `domain/`.
-2. Si necesita datos externos, un puerto (`Protocol`) en `application/ports/`.
-3. El caso de uso en `application/use_cases/`.
-4. El adaptador que implementa el puerto en `adapters/outbound/` y su registro en `container.py`.
-5. El router y el DTO en `adapters/inbound/http/`.
-6. Tests: unitario con un fake y de integración con `TestClient`.
-
-### Ejecutar
+### Backend
 ```powershell
 cd backend
 python -m venv .venv
 .venv\Scripts\activate
 pip install -e ".[dev]"
-# Opcional para habilitar Qiskit + IBM Quantum Runtime:
-# pip install -e ".[quantum]"
-# El token de IBM va en backend/.env (IBM_QUANTUM_TOKEN=...), nunca en el frontend ni en git
+# Optional Qiskit + IBM Quantum Runtime:
+# pip install -e ".[quantum]"   # Put IBM_QUANTUM_TOKEN=... in backend/.env (never commit tokens)
 pytest
-uvicorn senda.main:app --reload       # http://localhost:8000/docs
+uvicorn senda.main:app --reload
 ```
 
-| Endpoint | Qué hace |
-|---|---|
-| `GET /health` | Estado del servicio |
-| `GET /api/v1/targets`, `GET /api/v1/targets/{id}` | Objetivos científicos (con su tarea planificada) |
-| `GET /api/v1/environment` | Condiciones ambientales del sol |
-| `GET /api/v1/environment/readiness` | ¿Se puede salir hoy? GO / CAUTION / NO-GO con cada medición y su fuente |
-| `GET /api/v1/terrain?cell_size_m=&min_lon=…` | Grilla de elevación y pendiente (todo el sitio o una ventana) |
-| `POST /api/v1/routes/traverse` | Rover: base → estacionamientos propuestos → base, 3 alternativas |
-| `POST /api/v1/routes/eva` | Caminata: rover → objetivos cercanos → rover, 3 alternativas |
-| `POST /api/v1/routes/path` | Ruta por waypoints (contingencias y retornos) |
-| `POST /api/v1/quantum/optimize-route` | *(Opcional)* Optimizador QAOA de secuencia de objetivos (Qiskit Aer / IBM Quantum) |
-| `GET /api/v1/assistant/status` | ¿El copiloto está activado y su modelo responde? |
-| `POST /api/v1/assistant/chat` | Orden en lenguaje natural → plan completo para cargar en pantalla |
-| `GET/POST /api/v1/plans`, `GET/PUT/DELETE /api/v1/plans/{id}` | Calendario de la misión: planes guardados por sol (`?day=today\|tomorrow`) |
-| `GET/PUT /api/v1/crew` · `GET/POST /api/v1/procedures` | Tripulación y procedimientos científicos completados |
-
-Las tres alternativas son **safe** (evita pendientes y peligros), **scientific** (pasa cerca de los objetivos)
-y **fast** (menor tiempo). El terreno es real: DEM del USGS *MSL Gale Merged DEM 1 m* (HiRISE + CTX + MOLA), leído por `adapters/outbound/terrain/npy_dem.py` (ver `docs/terrain-data.md`). `SENDA_TERRAIN=synthetic` vuelve al terreno de demo.
-
-### 🗓️ Calendario de la misión (base de datos)
-
-Los planes se guardan por **sol** ("hoy" = sol actual, "mañana" = el siguiente), con quién los creó.
-Tarjeta **Mission calendar** → *Save plan* / *My plans*; el selector de tripulante está en la cabecera.
-El copiloto también lo usa: *"prepara la salida de mañana"* (la planifica y la guarda para mañana sin
-perder la de hoy), *"¿qué tengo planeado para mañana?"*, *"abre el plan de hoy"*.
-
-- **Local:** SQLite automático en `backend/data/senda.db` (no se sube a git). Nada que instalar.
-- **Nube:** el disco gratis de Render se borra en cada despliegue, así que usa un **Postgres gratis**
-  ([Neon](https://neon.tech) o [Supabase](https://supabase.com)) y pon su connection string en la variable
-  `DATABASE_URL` del servicio en Render. Las tablas se crean solas al arrancar.
-
-### 🤖 SENDA Copilot (asistente de IA)
-
-Botón flotante **SENDA Copilot** (abajo a la derecha). Le das una orden —*"prepara la salida de mañana,
-tengo 3 horas, hay tormenta de polvo"*— y la ejecuta en SENDA: revisa condiciones, elige objetivos por
-prioridad, planifica rover y caminatas y deja el plan en el mapa. El modelo solo interpreta la orden; todas
-las cifras salen del planificador (caso de uso `PlanOuting`).
-
-Usa un **modelo abierto y gratuito** (Qwen3 1.7B) servido por [Ollama](https://ollama.com) en la máquina
-que corre el backend: no hay APIs de pago ni claves. **Está desactivado por defecto** (también en Render);
-sin él, el botón muestra un aviso y el resto de SENDA funciona igual. Para activarlo en tu PC:
-
-```powershell
-winget install --id Ollama.Ollama -e      # o descarga desde ollama.com
-ollama pull qwen3:1.7b                    # ~1.4 GB, una sola vez
-# backend/.env (no se sube a git):
-#   SENDA_ASSISTANT_ENABLED=true
-#   SENDA_LLM_MODEL=qwen3:1.7b
-python scripts/dev.py
-```
-
----
-
-## 🎨 Frontend — organizado por features
-
-```text
-frontend/src/
-├── app/            App raíz, estilos globales (Tailwind con paleta NASA JPL Mission Control)
-├── pages/          GlobePage y MissionControlPage: componen features, sin lógica de negocio
-├── features/       una carpeta por funcionalidad
-│   ├── mission/          estado del plan (reducer + selectores), pasos guiados, Crew/Suit, NASA Labs, REMS/RAD
-│   ├── route-planning/   API de rutas, comparador Pareto, solver QAOA opcional en TypeScript
-│   ├── field-simulation/ modo Go: itinerario, reloj, emergencias en vivo, MSR cache, resumen & exportación
-│   ├── map/              mapa SVG: proyección, zoom/arrastre, marcadores, agrupación
-│   ├── terrain/          descarga y sombreado del terreno, vista 3D DEM (Three.js)
-│   ├── targets/          catálogo de objetivos, ficha y lista "My goals"
-│   ├── environment/      clima: "Can I go today?" y franja inferior
-│   └── globe/            pantalla de inicio con el planeta 3D y anillos orbitales
-└── shared/         código común: api/httpClient, hooks, ui, lib (geo, format), types
-```
-
-### Flujo de la aplicación
-1. **Globo**: girar Marte, elegir un sitio → *Explore base* (la base ya queda puesta; se mueve con *Change* o la herramienta *Move base*).
-2. **Rover route**: tocar rocas en el mapa → *Add goal* (arrastrar para priorizar, o usar *Quick Demo*) → *Find rover routes* → elegir ruta.
-3. **Spacewalks**: en cada parada del rover (`P1`, `P2`…) → *Plan spacewalk* → elegir ruta a pie.
-4. Revisar clima (`REMS / RAD Live`), tripulación (`Crew & Suits`) y checklist `GO / NO-GO` → *Start mission*.
-5. **Simulation**: en cada objetivo *Begin science task* → *Complete task*; *Contingency* (`Dust`, `SPE / Block`, `Suit Leak`), *Return to rover* y *Return to base* recalculan la ruta.
-6. **Resumen final**: puntaje NASA (`/100`), muestras `MSR-Ti` y exportación en **JSON / CSV / GeoJSON / Print PDF Dossier**.
-
-**Reglas:** cada feature expone lo público en su `index.ts`. Una feature no importa archivos internos de otra.
-`shared/` no importa nada de `features/`. Todas las llamadas HTTP pasan por `shared/api/httpClient.ts`.
-
-### Ejecutar
+### Frontend
 ```powershell
 cd frontend
 npm.cmd install
-npm.cmd run dev        # http://localhost:5173  (proxy /api -> localhost:8000)
+npm.cmd run dev        # http://localhost:5173 (proxies /api -> localhost:8000)
 npm.cmd run typecheck  # tsc -b
-npm.cmd run build
+npm.cmd run build      # Production bundle
 ```
+
+### Key API Endpoints
+| Endpoint | Description |
+|---|---|
+| `GET /health` | Service health check |
+| `GET /api/v1/targets` | Gale Crater science targets & sampling protocols |
+| `GET /api/v1/environment/readiness` | `GO / CAUTION / NO-GO` environmental assessment |
+| `GET /api/v1/terrain?cell_size_m=` | Elevation & slope grid for the site or EVA window |
+| `POST /api/v1/routes/traverse` | Pressurized Rover traverse (3 Pareto alternatives) |
+| `POST /api/v1/routes/eva` | xEMU EVA walking routes from active parking site |
+| `POST /api/v1/routes/path` | Dynamic waypoint contingency / return-to-base path |
+| `POST /api/v1/quantum/optimize-route` | *(Optional)* QAOA target sequence optimizer |
+
+</details>
 
 ---
 
-## 💡 Recomendación
-Trabajar fuera de OneDrive (o excluir `node_modules` y `.venv` de la sincronización).
+## 👥 Team & Collaboration
+
+- See **[CONTRIBUTING.md](CONTRIBUTING.md)** for branching conventions, Pull Request workflow, and module ownership.
+- **Repository:** https://github.com/JhonAlex28/senda-mars
