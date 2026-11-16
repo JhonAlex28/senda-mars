@@ -64,3 +64,8 @@ export function suggestTitle(goals: string[], names: Map<string, { name: string 
   const first = names.get(goals[0])?.name.split(' (')[0] ?? goals[0];
   return goals.length === 1 ? `EVA to ${first}` : `${first} + ${goals.length - 1} more`;
 }
+
+/** El nombre lo puso la app (no el usuario): al cambiar los objetivos conviene recalcularlo. */
+export function isSuggestedTitle(title: string): boolean {
+  return title === 'New outing' || /^EVA to .+/.test(title) || / \+ \d+ more$/.test(title);
+}

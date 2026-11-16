@@ -3,6 +3,7 @@ import { LayersProvider } from '@/features/layers';
 import { MissionProvider, useMission } from '@/features/mission';
 import { GlobePage } from '@/pages/GlobePage';
 import { MissionControlPage } from '@/pages/MissionControlPage';
+import { Toaster } from '@/shared/ui/Toast';
 
 function Screens() {
   const { state } = useMission();
@@ -20,6 +21,7 @@ export function App() {
     <MissionProvider>
       <LayersProvider>
         <Screens />
+        <Toaster />
       </LayersProvider>
     </MissionProvider>
   );

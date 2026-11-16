@@ -36,6 +36,30 @@ export function planReserve(s: MissionState): { batteryPct: number; minO2Pct: nu
   };
 }
 
+/**
+ * Huella barata del plan en pantalla: cambia si cambian objetivos, peligros, base, vehículo o
+ * las rutas elegidas. Sirve para saber si el plan abierto tiene cambios sin guardar.
+ */
+export function planSignature(s: MissionState): string {
+  const evas = Object.entries(s.evaPlans)
+    .map(([id, p]) => [id, p.profile, p.routes.length] as const)
+    .sort(([a], [b]) => a.localeCompare(b));
+  return JSON.stringify([
+    s.base,
+    s.goals,
+    s.hazards,
+    s.vehicleId,
+    s.traverseProfile,
+    s.traverse ? [s.traverse.parkings.map((p) => p.id), s.traverse.routes.length] : null,
+    evas,
+  ]);
+}
+
+/** El plan abierto se modificó desde que se guardó o se abrió. */
+export function hasUnsavedChanges(s: MissionState): boolean {
+  return !!s.activePlan && s.activePlan.signature !== planSignature(s);
+}
+
 /** El plan en pantalla, listo para guardarlo en el calendario. */
 export function planPayload(s: MissionState): SavedPlanPayload {
   return {

@@ -1,27 +1,33 @@
 import { useState } from 'react';
-import { useMission } from '@/features/mission';
-import { ErrorNote } from '@/features/mission';
+import { ErrorNote, useMission } from '@/features/mission';
 import { Button } from '@/shared/ui/Button';
 import { Dialog } from '@/shared/ui/Dialog';
-import { suggestTitle, usePlanActions } from '../hooks/usePlanActions';
+import { toast } from '@/shared/ui/Toast';
+import { dayLabel, suggestTitle, usePlanActions } from '../hooks/usePlanActions';
 
-/** Guardar el plan en pantalla para hoy o mañana (o actualizar el que está abierto). */
-export function SavePlanDialog({ today, onClose }: { today: number | null; onClose: () => void }) {
+/** Guardar el plan en pantalla para hoy o mañana. asNew: copia aparte del plan abierto (el abierto no cambia). */
+export function SavePlanDialog({ today, asNew = false, onClose }: { today: number | null; asNew?: boolean; onClose: () => void }) {
   const { state, targetById } = useMission();
   const { save } = usePlanActions();
   const active = state.activePlan;
-  const [title, setTitle] = useState(active?.title ?? suggestTitle(state.goals, targetById));
+  const [title, setTitle] = useState(
+    asNew && active ? `${active.title} (copy)` : (active?.title ?? suggestTitle(state.goals, targetById)),
+  );
   const initialDay = active && today !== null && active.sol === today + 1 ? 'tomorrow' : 'today';
   const [day, setDay] = useState<'today' | 'tomorrow'>(initialDay);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const submit = async (asNew: boolean) => {
+  const submit = async () => {
     setBusy(true);
     setError(null);
     try {
-      await save({ day, title: title.trim(), asNew });
+      const saved = await save({ day, title: title.trim(), asNew });
       onClose();
+      toast({
+        title: asNew ? 'Saved as a new plan' : 'Plan saved',
+        description: `“${saved.title}” · ${dayLabel(saved.sol, today)}. You’ll find it in My plans.`,
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : 'The plan could not be saved.');
     } finally {
@@ -35,7 +41,7 @@ export function SavePlanDialog({ today, onClose }: { today: number | null; onClo
   ];
 
   return (
-    <Dialog title={active ? 'Save plan' : 'Save plan for a day'} onClose={onClose}>
+    <Dialog title={asNew ? 'Save as a new plan' : 'Save plan for a day'} onClose={onClose}>
       <div className="flex flex-col gap-md">
         <label className="flex flex-col gap-xs">
           <span className="font-label text-label-sm uppercase text-on-surface-variant">Name</span>
@@ -72,13 +78,11 @@ export function SavePlanDialog({ today, onClose }: { today: number | null; onClo
         </p>
         {error && <ErrorNote message={error} onClose={() => setError(null)} />}
         <div className="flex flex-wrap justify-end gap-xs">
-          {active && (
-            <Button variant="ghost" size="sm" icon="add" loading={busy} disabled={!title.trim()} onClick={() => void submit(true)}>
-              Save as new
-            </Button>
-          )}
-          <Button size="sm" icon="save" loading={busy} disabled={!title.trim()} onClick={() => void submit(false)}>
-            {active ? 'Update plan' : 'Save'}
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button size="sm" icon={asNew ? 'add' : 'save'} loading={busy} disabled={!title.trim()} onClick={() => void submit()}>
+            {asNew ? 'Save as new' : 'Save plan'}
           </Button>
         </div>
       </div>

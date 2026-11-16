@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ErrorNote, useMission } from '@/features/mission';
 import { missionLogApi, type SavedPlan } from '@/shared/api/missionLog';
 import { Button } from '@/shared/ui/Button';
+import { toast } from '@/shared/ui/Toast';
 import { Dialog } from '@/shared/ui/Dialog';
 import { Icon } from '@/shared/ui/Icon';
 import { Live } from '@/shared/ui/Text';
@@ -101,7 +102,13 @@ export function PlansDialog({ today, onClose }: { today: number | null; onClose:
                   )}
                 </div>
                 <div className="mt-xs flex flex-wrap gap-xs">
-                  <Button size="sm" icon="open_in_new" onClick={() => void run(async () => { await open(p.id); onClose(); })}>
+                  <Button size="sm" icon="open_in_new" onClick={() =>
+                      void run(async () => {
+                        await open(p.id);
+                        onClose();
+                        toast({ tone: 'info', icon: 'folder_open', title: 'Plan opened', description: `“${p.title}” · ${dayLabel(p.sol, today)} is now on the map.` });
+                      })
+                    }>
                     Open
                   </Button>
                   <Button
@@ -123,6 +130,7 @@ export function PlansDialog({ today, onClose }: { today: number | null; onClose:
                           if (isOpen) dispatch({ type: 'activePlanSet', active: null });
                           setConfirmDelete(null);
                           load();
+                          toast({ tone: 'warning', icon: 'delete', title: 'Plan deleted', description: `“${p.title}” was removed from the calendar.` });
                         })
                       }
                     >
