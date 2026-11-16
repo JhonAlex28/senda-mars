@@ -53,6 +53,12 @@ export const LAYERS: LayerDef[] = [
     raster: true,
     available: true,
     defaultOpacity: 0.92,
+    legend: [
+      { label: '-4700 m', swatch: 'bg-[#46261f]' },
+      { label: '-4300 m', swatch: 'bg-[#965743]' },
+      { label: '-3900 m', swatch: 'bg-[#d69e72]' },
+      { label: '-3000 m', swatch: 'bg-[#f2ddbb]' },
+    ],
   },
   {
     id: 'slope',
@@ -65,8 +71,8 @@ export const LAYERS: LayerDef[] = [
     available: true,
     defaultOpacity: 1,
     legend: [
-      { label: '>10°', swatch: 'bg-warning' },
-      { label: '>20°', swatch: 'bg-error' },
+      { label: '>15°', swatch: 'bg-warning' },
+      { label: '>25°', swatch: 'bg-error' },
     ],
   },
   {
@@ -137,11 +143,12 @@ export const LAYERS: LayerDef[] = [
     name: 'Orbital photo',
     icon: 'satellite_alt',
     provenance: 'measured',
-    source: 'Coming with official NASA imagery',
-    resolution: '—',
+    source: 'USGS MSL Gale HiRISE LRGB mosaic',
+    resolution: '10 m/pixel (regional visualization)',
     raster: true,
-    available: false,
-    defaultOpacity: 0.85,
+    available: true,
+    defaultVisible: true,
+    defaultOpacity: 1,
   },
   {
     id: 'minerals',
