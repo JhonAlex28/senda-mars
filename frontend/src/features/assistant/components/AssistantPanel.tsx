@@ -39,7 +39,13 @@ export function AssistantPanel({ floating = false }: { floating?: boolean }) {
   return (
     <>
       {floating && <Launcher open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />}
-      <CopilotMascot open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />
+      <CopilotMascot
+        open={open}
+        busy={assistant.busy}
+        availability={assistant.availability}
+        plannedCount={assistant.history.filter((x) => x.reply.outing?.planned).length}
+        onClick={() => setOpen((v) => !v)}
+      />
       <aside
         aria-label="SENDA Copilot"
         aria-hidden={!open}
