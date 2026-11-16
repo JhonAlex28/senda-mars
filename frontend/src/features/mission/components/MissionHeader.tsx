@@ -58,7 +58,7 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
   return (
     <header className="border-b border-outline-variant bg-surface-container">
       {/* Una fila compacta: izquierda (logo, Return) · centro (título, clima) · derecha (acciones, usuario) */}
-      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-sm px-md py-xs lg:px-xl">
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-sm px-md py-sm lg:px-xl lg:py-[12px]">
         <div className="flex items-center gap-sm">
           <SendaLogo compact />
           <button
