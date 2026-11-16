@@ -33,3 +33,6 @@ Thumbs.db
 
 # Local processing backups
 /tools/terrain/backups/
+
+# Animaciones originales del agente (pesadas): solo se suben las versiones web de frontend/public/assets/mascot
+design/mascot/*.webp

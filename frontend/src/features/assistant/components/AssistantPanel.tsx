@@ -5,6 +5,7 @@ import { Live } from '@/shared/ui/Text';
 import { useAssistant, type Exchange } from '../hooks/useAssistant';
 import type { Availability } from '../types';
 import { useSpeech } from '../hooks/useSpeech';
+import { CopilotMascot } from './CopilotMascot';
 
 const EXAMPLES = [
   { icon: 'event', text: 'Prepara la salida de mañana, tengo 3 horas' },
@@ -38,6 +39,7 @@ export function AssistantPanel({ floating = false }: { floating?: boolean }) {
   return (
     <>
       {floating && <Launcher open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />}
+      <CopilotMascot open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />
       <aside
         aria-label="SENDA Copilot"
         aria-hidden={!open}
