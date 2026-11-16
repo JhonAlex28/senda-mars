@@ -4,6 +4,7 @@
 
 **Pressurized Rover (SEV) Traverse & xEMU EVA Mission Planning System for Mount Sharp, Gale Crater**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-senda1.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://senda1.netlify.app/)
 [![NASA Gale EZ](https://img.shields.io/badge/Target-Gale_Crater_EZ-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://science.nasa.gov/mission/msl-curiosity/)
 [![Mars Trek WMTS](https://img.shields.io/badge/GIS-NASA_Mars_Trek_WMTS-E03C31?style=for-the-badge)](https://trek.nasa.gov/mars/)
 [![React + TypeScript](https://img.shields.io/badge/Frontend-React_18_%2B_TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](frontend/)
@@ -98,7 +99,9 @@ senda-mars/
 
 ## ⚡ Quick Start
 
-**Prerequisites:** Python 3.11+ and Node.js 20+.
+- **🌐 Live Demo (Standalone Web App):** https://senda1.netlify.app/
+
+**Local Prerequisites:** Python 3.11+ and Node.js 20+.
 
 ```bash
 git clone https://github.com/JhonAlex28/senda-mars.git
