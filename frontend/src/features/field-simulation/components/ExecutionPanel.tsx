@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { formatDistance, formatMinutes } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
+import { PlanningProgress } from '@/shared/ui/PlanningProgress';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { Meter, toneForRemaining } from '@/shared/ui/Meter';
@@ -84,6 +85,12 @@ export function ExecutionPanel({ sim, targetName }: ExecutionPanelProps) {
         </p>
       </Card>
 
+      {busy && (
+        <PlanningProgress
+          key={busy}
+          label={busy === 'base' ? 'Route to base…' : busy === 'rover' ? 'Route to vehicle…' : 'Replanning…'}
+        />
+      )}
       {sim.engineAlert && <SafetyAlert alert={sim.engineAlert} onClose={sim.clearEngineAlert} />}
 
       <Card title="Supplies" className="gap-xs">

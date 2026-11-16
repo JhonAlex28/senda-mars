@@ -4,6 +4,7 @@ import { SCIENCE_TYPES, scienceType } from '@/features/targets';
 import { Live } from '@/shared/ui/Text';
 import { formatMinutes } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/Button';
+import { PlanningProgress } from '@/shared/ui/PlanningProgress';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { usePlanning } from '../hooks/usePlanning';
@@ -15,7 +16,7 @@ import { ParkingChips } from './ParkingChips';
 /** Fase Walk: desde cada estacionamiento, planificar la caminata a los objetivos cercanos. */
 export function EvaPanel() {
   const { state, dispatch, targetById } = useMission();
-  const { planEva, loading, error, clearError } = usePlanning();
+  const { planEva, loading, loadingLabel, error, clearError } = usePlanning();
   const parking = activeParking(state);
   if (!state.traverse || !parking) return null;
 
@@ -48,6 +49,7 @@ export function EvaPanel() {
             Plan EVA
           </Button>
         )}
+        {loadingLabel && <PlanningProgress key={loading} label={loadingLabel} />}
         {error && <ErrorNote message={error} onClose={clearError} />}
       </Card>
 
