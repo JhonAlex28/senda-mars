@@ -26,7 +26,7 @@ export function CrewSwitcher() {
         aria-haspopup="listbox"
         aria-expanded={open}
         title="Who is planning"
-        className="inline-flex items-center gap-xs rounded-full border border-outline bg-surface py-[3px] pl-[3px] pr-sm font-label text-label-lg text-on-surface transition-colors duration-fast hover:border-accent"
+        className="inline-flex h-11 items-center gap-xs rounded-lg border border-outline bg-surface pl-[5px] pr-sm font-headline text-title-md uppercase text-on-surface transition-colors duration-fast hover:border-accent hover:text-accent"
       >
         <Avatar name={me.name} />
         <span className="max-w-[120px] truncate">{me.name}</span>

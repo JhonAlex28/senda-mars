@@ -21,22 +21,25 @@ interface HeaderButtonProps {
   tone?: 'default' | 'accent' | 'success';
 }
 
-function HeaderButton({ icon, label, onClick, tone = 'default' }: HeaderButtonProps) {
-  const toneCls = {
-    default: 'border-outline text-on-surface hover:border-accent hover:text-accent',
-    accent: 'border-accent text-accent hover:bg-primary hover:text-on-primary',
-    success: 'border-success/50 bg-success/15 text-success hover:bg-success/25',
-  }[tone];
+/**
+ * Botón de cabecera con el mismo sistema que `shared/ui/Button` (rounded-lg, Space Grotesk en
+ * mayúsculas, variantes ghost / secondary / success), a 44 px de alto para la tableta.
+ * Por debajo de 2xl muestra solo el icono; el nombre queda en title y aria-label.
+ */
+const HEADER_BTN =
+  'inline-flex h-11 min-w-[44px] shrink-0 items-center justify-center gap-xs rounded-lg px-sm font-headline text-title-md uppercase leading-tight transition-colors duration-fast 2xl:px-md';
+
+const HEADER_TONE: Record<NonNullable<HeaderButtonProps['tone']>, string> = {
+  default: 'border border-outline bg-surface text-on-surface hover:border-accent hover:text-accent',
+  accent: 'border border-accent bg-surface-container-high text-accent hover:bg-accent/10',
+  success: 'border border-success/60 bg-success/10 text-success hover:bg-success/20',
+};
+
+function HeaderButton({ icon, label, onClick, tone = 'default', alwaysLabel = false }: HeaderButtonProps & { alwaysLabel?: boolean }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={label}
-      aria-label={label}
-      className={`inline-flex h-11 min-w-[44px] shrink-0 items-center justify-center gap-xs rounded-full border bg-surface px-sm font-mono text-mono-sm transition-colors duration-fast 2xl:px-md ${toneCls}`}
-    >
+    <button type="button" onClick={onClick} title={label} aria-label={label} className={`${HEADER_BTN} ${HEADER_TONE[tone]}`}>
       <Icon name={icon} className="text-[18px]" />
-      <span className="hidden 2xl:inline">{label}</span>
+      <span className={alwaysLabel ? 'hidden sm:inline' : 'hidden 2xl:inline'}>{label}</span>
     </button>
   );
 }
@@ -58,29 +61,17 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
   return (
     <header className="border-b border-outline-variant bg-surface-container">
       {/* Una fila compacta: izquierda (logo, Return) · centro (título, clima) · derecha (acciones, usuario) */}
-      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-sm px-md py-sm lg:px-xl lg:py-[12px]">
-        <div className="flex items-center gap-sm">
-          <SendaLogo compact />
-          <button
-            type="button"
-            onClick={() => dispatch({ type: 'backToGlobe' })}
-            aria-label="Return to Mars globe"
-            title="Return to Mars"
-            className="inline-flex h-11 shrink-0 items-center gap-xs rounded-full border-2 border-accent/60 bg-surface-container-high pl-[3px] pr-sm font-headline text-title-md text-on-surface transition-colors duration-fast hover:border-accent hover:bg-primary hover:text-on-primary xl:pr-md"
-          >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15">
-              <Icon name="arrow_back" className="text-[20px] text-accent" />
-            </span>
-            <span className="hidden md:inline">Return</span>
-          </button>
-        </div>
+      {/* Izquierda: Return · logo + título + clima (alineados a la izquierda) · derecha: acciones y usuario */}
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-md px-md py-sm lg:px-xl lg:py-[12px]">
+        <HeaderButton icon="arrow_back" label="Return" alwaysLabel onClick={() => dispatch({ type: 'backToGlobe' })} />
 
-        <div className="flex min-w-0 items-center justify-center gap-md xl:gap-2xl">
+        <div className="flex min-w-0 items-center gap-sm xl:gap-md">
+          <SendaLogo compact />
           <h1 className="min-w-0 truncate font-headline text-title-md tracking-wide text-on-surface lg:text-headline-sm 2xl:text-headline-lg">
             Mount Sharp Exploration
           </h1>
           {readiness && (
-            <div className="hidden shrink-0 border-l border-outline-variant pl-md sm:block xl:pl-xl">
+            <div className="ml-sm hidden shrink-0 border-l border-outline-variant pl-md sm:block xl:ml-md xl:pl-lg">
               <ReadinessBadge readiness={readiness} stacked />
             </div>
           )}
