@@ -6,10 +6,10 @@ import { CrewSuitModal } from './CrewSuitModal';
 import { GaleConceptModal } from './GaleConceptModal';
 import sendaLogo from '@/shared/assets/senda-logo.png';
 
-export function SendaLogo() {
+export function SendaLogo({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-sm">
-      <img src={sendaLogo} alt="SENDA" className="h-20 w-20 rounded-full" />
+    <div className="flex shrink-0 items-center gap-sm">
+      <img src={sendaLogo} alt="SENDA" className={compact ? 'h-11 w-11 rounded-full' : 'h-20 w-20 rounded-full'} />
     </div>
   );
 }
@@ -32,10 +32,11 @@ function HeaderButton({ icon, label, onClick, tone = 'default' }: HeaderButtonPr
       type="button"
       onClick={onClick}
       title={label}
-      className={`inline-flex min-h-[44px] items-center gap-xs rounded-full border bg-surface px-md font-mono text-mono-sm transition-colors duration-fast ${toneCls}`}
+      aria-label={label}
+      className={`inline-flex h-11 min-w-[44px] shrink-0 items-center justify-center gap-xs rounded-full border bg-surface px-sm font-mono text-mono-sm transition-colors duration-fast 2xl:px-md ${toneCls}`}
     >
       <Icon name={icon} className="text-[18px]" />
-      <span>{label}</span>
+      <span className="hidden 2xl:inline">{label}</span>
     </button>
   );
 }
@@ -55,34 +56,37 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
   };
 
   return (
-    <header className="flex flex-col border-b border-outline-variant bg-surface-container">
-      <div className="flex flex-wrap items-center gap-sm px-xl py-sm">
-        {/* Izquierda: logo y volver al globo */}
-        <SendaLogo />
-        <button
-          type="button"
-          onClick={() => dispatch({ type: 'backToGlobe' })}
-          aria-label="Return to Mars globe"
-          title="Return to Mars"
-          className="inline-flex min-h-[44px] items-center gap-xs rounded-full border-2 border-accent/60 bg-surface-container-high pl-xs pr-md font-headline text-title-md text-on-surface transition-colors duration-fast hover:border-accent hover:bg-primary hover:text-on-primary"
-        >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15">
-            <Icon name="arrow_back" className="text-[20px] text-accent" />
-          </span>
-          Return
-        </button>
-        {/* Centro: título y clima ocupan el espacio libre, con márgenes amplios a los lados */}
-        <div className="flex min-w-0 flex-1 items-center justify-center gap-2xl px-xl">
-          <h1 className="whitespace-nowrap font-headline text-headline-lg tracking-wider text-on-surface xl:text-[34px]">Mount Sharp Exploration</h1>
+    <header className="border-b border-outline-variant bg-surface-container">
+      {/* Una fila compacta: izquierda (logo, Return) · centro (título, clima) · derecha (acciones, usuario) */}
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-sm px-md py-xs lg:px-xl">
+        <div className="flex items-center gap-sm">
+          <SendaLogo compact />
+          <button
+            type="button"
+            onClick={() => dispatch({ type: 'backToGlobe' })}
+            aria-label="Return to Mars globe"
+            title="Return to Mars"
+            className="inline-flex h-11 shrink-0 items-center gap-xs rounded-full border-2 border-accent/60 bg-surface-container-high pl-[3px] pr-sm font-headline text-title-md text-on-surface transition-colors duration-fast hover:border-accent hover:bg-primary hover:text-on-primary xl:pr-md"
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15">
+              <Icon name="arrow_back" className="text-[20px] text-accent" />
+            </span>
+            <span className="hidden md:inline">Return</span>
+          </button>
+        </div>
+
+        <div className="flex min-w-0 items-center justify-center gap-md xl:gap-2xl">
+          <h1 className="min-w-0 truncate font-headline text-title-md tracking-wide text-on-surface lg:text-headline-sm 2xl:text-headline-lg">
+            Mount Sharp Exploration
+          </h1>
           {readiness && (
-            <div className="border-l border-outline-variant pl-xl">
+            <div className="hidden shrink-0 border-l border-outline-variant pl-md sm:block xl:pl-xl">
               <ReadinessBadge readiness={readiness} stacked />
             </div>
           )}
         </div>
 
-        {/* Derecha: acciones; quien planifica (extra) queda al final */}
-        <div className="flex flex-wrap items-center gap-sm">
+        <div className="flex items-center gap-xs xl:gap-sm">
           {going ? (
             <>
               <HeaderButton icon="monitor_heart" label="Crew status" tone="accent" onClick={() => dispatch({ type: 'setCrewStatusOpen', open: true })} />
@@ -91,7 +95,6 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
           ) : (
             <>
               <HeaderButton icon="play_arrow" label="Demo" tone="success" onClick={loadDemo} />
-              <HeaderButton icon="restart_alt" label="Reset" onClick={() => dispatch({ type: 'resetMission' })} />
               <HeaderButton icon="badge" label="Crew config" onClick={() => setCrewOpen(true)} />
               <HeaderButton icon="auto_awesome" label="Copilot" tone="accent" onClick={() => dispatch({ type: 'setCopilotOpen', open: true })} />
             </>
