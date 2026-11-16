@@ -59,9 +59,18 @@ export default {
           from: { opacity: '0', transform: 'translateY(6px)' },
           to: { opacity: '1', transform: 'none' },
         },
+        'toast-in': {
+          from: { opacity: '0', transform: 'translateX(24px)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        'toast-timer': {
+          from: { transform: 'scaleX(1)' },
+          to: { transform: 'scaleX(0)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 250ms cubic-bezier(0.2, 0, 0, 1) both',
+        'toast-in': 'toast-in 250ms cubic-bezier(0.2, 0, 0, 1) both',
       },
     },
   },

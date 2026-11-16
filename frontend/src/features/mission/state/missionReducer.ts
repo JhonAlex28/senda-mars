@@ -1,3 +1,4 @@
+import { planSignature } from './selectors';
 import type { MissionAction, MissionState } from './types';
 
 export const initialMissionState: MissionState = {
@@ -200,7 +201,7 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
     case 'planOpened': {
       const p = action.plan;
       const ready = !!p.traverse && p.traverse.parkings.every((pk) => p.evaPlans[pk.id]);
-      return {
+      const opened: MissionState = {
         ...state,
         phase: p.traverse ? (ready ? 'walk' : 'plan') : 'plan',
         tool: 'select',
@@ -216,9 +217,12 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
         activePlan: action.active,
         notice: null,
       };
+      // La huella se toma del estado ya abierto: recién abierto = sin cambios
+      return { ...opened, activePlan: { ...action.active, signature: planSignature(opened) } };
     }
     case 'activePlanSet':
-      return { ...state, activePlan: action.active };
+      // Recién guardado: lo que hay en pantalla es exactamente lo guardado
+      return { ...state, activePlan: action.active && { ...action.active, signature: planSignature(state) } };
     case 'setProfile':
       return { ...state, profileId: action.id };
     case 'viewChanged': {

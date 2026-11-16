@@ -39,6 +39,8 @@ export interface ActivePlan {
   id: string;
   title: string;
   sol: number;
+  /** Huella del plan tal como se guardó: si la pantalla cambia, hay cambios sin guardar. */
+  signature?: string;
 }
 
 /** Lo que se guarda de un plan: exactamente lo necesario para volver a dibujarlo. */

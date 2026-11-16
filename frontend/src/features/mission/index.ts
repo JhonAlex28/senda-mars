@@ -9,6 +9,6 @@ export { MissionHeader, SendaLogo } from './components/MissionHeader';
 export { PlanningMap } from './components/PlanningMap';
 export { TraversePanel } from './components/TraversePanel';
 export { MissionProvider, useMission } from './state/MissionContext';
-export { allEvasPlanned, planPayload, planStep, planSummaryOf, selectedEva, selectedTraverse } from './state/selectors';
+export { allEvasPlanned, hasUnsavedChanges, planPayload, planStep, planSummaryOf, selectedEva, selectedTraverse } from './state/selectors';
 export type { ActivePlan, CrewConfig, EvaPlan, MissionState, Phase, SavedPlanPayload } from './state/types';
 export { ROVER_VEHICLES, type RoverVehicleId } from './state/vehicles';

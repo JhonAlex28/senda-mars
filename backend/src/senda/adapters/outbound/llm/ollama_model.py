@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 from collections.abc import Sequence
 from typing import Any
 
@@ -29,6 +30,7 @@ class OllamaAssistantModel:
         # token: para un servidor remoto protegido (p. ej. un Space privado de Hugging Face)
         headers = {"Authorization": f"Bearer {token}"} if token else {}
         self._client = client or httpx.Client(base_url=base_url, headers=headers, timeout=180.0)
+        self._waking: threading.Thread | None = None
 
     def is_reachable(self) -> bool:
         """El servidor responde y tiene descargado el modelo configurado."""
@@ -40,6 +42,21 @@ class OllamaAssistantModel:
             return False
         names = {m.get("name") for m in res.json().get("models", [])}
         return self._model in names or f"{self._model}:latest" in names
+
+    def wake(self) -> None:
+        """Despierta un servidor dormido (Space gratuito) sin bloquear: una petición en segundo
+        plano con tiempo de espera largo. Si ya hay una en curso, no lanza otra."""
+        if self._waking is not None and self._waking.is_alive():
+            return
+
+        def ping() -> None:
+            try:
+                self._client.get("/api/tags", timeout=180.0)
+            except httpx.HTTPError:
+                pass
+
+        self._waking = threading.Thread(target=ping, daemon=True)
+        self._waking.start()
 
     def next_turn(self, system: str, messages: Sequence[Message],
                   tools: Sequence[ToolSpec]) -> AssistantMessage:
