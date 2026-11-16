@@ -115,3 +115,13 @@ def test_history_is_compacted_to_recent_orders():
     sent = model.seen[0]
     assert len(sent) == 5 and sent[-1].text == "start"
     assert all(long_answer not in m.text for m in sent)
+
+
+def test_a_short_offer_is_kept_so_a_yes_has_context():
+    from senda.application.use_cases.assistant import DONE_MARK, ChatTurn, _compact
+    history = [ChatTurn("user", "Inicia la simulación"),
+               ChatTurn("assistant", "Todavía no hay un plan en pantalla. ¿Quieres que prepare uno?"),
+               ChatTurn("user", "sí")]
+    assert "¿Quieres que prepare uno?" in _compact(history)[1].text
+    long_reply = ChatTurn("assistant", "Listo, cargué la salida. " * 20)
+    assert _compact([history[0], long_reply, history[2]])[1].text == DONE_MARK

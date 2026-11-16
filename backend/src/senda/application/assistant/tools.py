@@ -476,13 +476,19 @@ def _number(args: dict[str, Any], key: str, default: float | None,
     return value
 
 
+# Perfil por sus nombres habituales (el modelo a veces responde en español)
+_PROFILE_WORDS = {"safe": "safe", "segura": "safe", "seguro": "safe", "safest": "safe",
+                  "scientific": "scientific", "cientifica": "scientific",
+                  "científica": "scientific", "science": "scientific",
+                  "fast": "fast", "rapida": "fast", "rápida": "fast", "fastest": "fast"}
+
+
 def _profile(raw: Any) -> RouteProfile | None:
-    if raw in (None, ""):
-        return None
-    try:
-        return RouteProfile(raw)
-    except ValueError as e:
-        raise InvalidToolInput(f"profile must be one of {PROFILES}") from e
+    """Perfil pedido, o None (el planificador elige el más seguro viable). Los modelos
+    pequeños confunden campos (profile="go" por "iniciar la simulación"): un valor que no es
+    un perfil se ignora en vez de hacer fallar la planificación."""
+    word = _PROFILE_WORDS.get(str(raw or "").strip().lower())
+    return RouteProfile(word) if word else None
 
 
 def _hazards(raw: Any) -> list[Hazard]:

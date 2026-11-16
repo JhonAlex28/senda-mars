@@ -50,9 +50,17 @@ def _base() -> GeoPoint:
 
 def test_outing_without_targets_picks_by_priority_and_plans_every_leg():
     plan = _outing().execute(_base())
-    assert plan.planned and plan.target_ids[0] in {"T05", "T06"}   # prioridad 14
-    assert set(plan.evas) == {p.id for p in plan.traverse.parkings}
+    assert plan.planned and set(plan.evas) == {p.id for p in plan.traverse.parkings}
     assert plan.traverse_profile and set(plan.eva_profiles) == set(plan.evas)
+    # Sin tiempo: una salida normal (4 h), no los 15 objetivos del mapa (~14 h)
+    assert plan.budget_min == 240 and plan.total_min <= 240
+
+
+def test_without_targets_far_ones_do_not_block_closer_ones():
+    # T05/T06 (prioridad 14) quedan a ~13 km: con 2 horas se llevan varios cercanos, no uno lejano
+    plan = _outing().execute(_base(), budget_min=120)
+    assert plan.total_min <= 120 and len(plan.target_ids) >= 2
+    assert {"T05", "T06"} <= {d.id for d in plan.dropped if d.reason == "time"}
 
 
 def test_time_budget_drops_lowest_priority_targets_until_it_fits():
@@ -122,9 +130,18 @@ def test_adjust_view_needs_a_plan_and_valid_values():
 def test_invalid_inputs_become_tool_errors():
     tools = _tools()
     for args in ({"target_ids": ["NOPE"]}, {"speed_factor": 9}, {"time_available_min": 5},
-                 {"profile": "scenic"}, {"hazards": [{"lon": 1}]}):
+                 {"hazards": [{"lon": 1}]}):
         result, _ = _run(tools, "plan_outing", **args)
         assert result.is_error, args
+
+
+def test_a_word_that_is_not_a_profile_is_ignored_instead_of_failing():
+    # El modelo pidió profile="go" al decir "inicia la simulación": se planifica igual
+    for raw in ("go", "scenic"):
+        result, body = _run(_tools(), "plan_outing", target_ids=["S03"], profile=raw)
+        assert not result.is_error and body["planned"], raw
+    _, body = _run(_tools(), "plan_outing", target_ids=["S03"], profile="rápida")
+    assert body["rover"]["profile"] == "fast"
 
 
 def test_targets_come_sorted_by_priority():

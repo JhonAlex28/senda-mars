@@ -48,6 +48,8 @@ Rules:
 - Data is a snapshot of the current sol, not a forecast. For "tomorrow", say you used \
 today's data.
 - If a tool returns an error, say so in one sentence and adapt.
+- If your previous reply offered to do something and the user agrees ("sí", "yes", "ok", \
+"dale"), do it now with your tools.
 - Only help with SENDA and this Mars mission. Decline anything else in one sentence.
 
 Reply after acting: 2 to 4 short sentences. Say what you loaded on screen (targets by name, \
@@ -132,8 +134,16 @@ def _compact(history: Sequence[ChatTurn]) -> list[Message]:
     ("simulación iniciada") sin llamar a ninguna herramienta; con la marca, ejecuta la
     orden nueva. El estado actual no se pierde: llega en el prompt como estado de pantalla."""
     recent = list(history)[-(2 * HISTORY_TURNS - 1):]
-    return [UserMessage(t.text) if t.role == "user" else AssistantMessage(DONE_MARK)
+    return [UserMessage(t.text) if t.role == "user"
+            else AssistantMessage(t.text if _is_offer(t.text) else DONE_MARK)
             for t in recent]
+
+
+def _is_offer(text: str) -> bool:
+    """Una pregunta corta del asistente ("¿Quieres que prepare uno?") se conserva: sin ella,
+    un "sí" del usuario no tiene a qué responder. Las respuestas largas siguen siendo la marca."""
+    t = text.strip()
+    return 0 < len(t) <= 200 and t.endswith("?")
 
 
 def _system_prompt(context: str, last_user_text: str) -> str:
