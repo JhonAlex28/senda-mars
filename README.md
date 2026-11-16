@@ -56,6 +56,19 @@ SENDA grounds its 2D GIS layers, 3D terrain, and environmental telemetry in offi
 
 ---
 
+## 🔬 Physics & Pathfinding Model
+
+SENDA computes EVA life-support margins, traverse costs, and environmental penalties from explicit planetary physics (`backend/src/senda/domain/services/physics.py` & `pathfinding.py`):
+
+- **Martian EVA Metabolic Rate (Pandolf et al.):**
+  $$P_{\text{Mars}} = \left[1.5W + 2.0(W+L)\left(\frac{L}{W}\right)^2 + \eta(W+L)\left(1.5v^2 + 0.35vg\right)\right] \times 0.38 \times 1.25\ \text{W}$$
+  scaled to Martian gravity ($g_{\text{Mars}} = 3.721\ \text{m/s}^2$, ratio `0.38`), pressurized xEMU suit penalty (`1.25`), and regolith terrain factor ($\eta = 1.2$).
+- **Oxygen Consumption:** $V_{\text{O}_2} = E_{\text{kJ}} / 20.1\ \text{L}$ (`O2_ENERGY_KJ_PER_L = 20.1`).
+- **Terrain-Aware 8-Neighbor A\* Pathfinding:** Uses an octile heuristic $h(a,b) = \max(\Delta r, \Delta c) + (\sqrt{2} - 1)\min(\Delta r, \Delta c)$ over the DEM grid, enforcing slope hazard thresholds (`>10°` caution, `>18°` danger) and infinite step cost inside crew-marked hazard zones across three Pareto alternatives (**Safe**, **Scientific**, **Fast**).
+- **REMS / RAD Environmental Coupling:** Dust opacity ($\tau$) attenuates Pressurized Rover range via $R(\tau) = 100 \cdot e^{-0.21\max(0,\ \tau - 0.62)}\ \text{km}$ and damps the diurnal Gale Crater temperature curve (`-90..+6 °C`, `680–1150 Pa`), while RAD surface GCR dose (`0.64–0.67 mSv/sol`) scales inversely with atmospheric column pressure and escalates to `1.85 mSv/sol` during simulated Solar Particle Events (`SPE`).
+
+---
+
 ## 🏗️ System Architecture
 
 ```mermaid
