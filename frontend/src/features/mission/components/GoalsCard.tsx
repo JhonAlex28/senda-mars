@@ -23,7 +23,25 @@ export function GoalsCard() {
   }
 
   return (
-    <Card title="Goals" action={<span title="Drag to reorder"><Icon name="drag_indicator" className="text-[18px] text-accent" /></span>}>
+    <Card
+      title="Goals"
+      action={
+        <span className="flex items-center gap-xs">
+          <span title="Drag to reorder">
+            <Icon name="drag_indicator" className="text-[18px] text-accent" />
+          </span>
+          <button
+            type="button"
+            onClick={() => dispatch({ type: 'resetMission' })}
+            aria-label="Reset mission"
+            title="Reset"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant transition-colors duration-fast hover:bg-error/15 hover:text-error"
+          >
+            <Icon name="restart_alt" className="text-[20px]" />
+          </button>
+        </span>
+      }
+    >
       <GoalList
         goals={goals}
         focusedId={state.focusedTargetId}

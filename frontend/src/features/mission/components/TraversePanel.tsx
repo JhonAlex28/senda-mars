@@ -1,5 +1,6 @@
 import { RouteComparator } from '@/features/route-planning';
 import { Button } from '@/shared/ui/Button';
+import { PlanningProgress } from '@/shared/ui/PlanningProgress';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
 import { goalTargetIds, usePlanning } from '../hooks/usePlanning';
@@ -12,7 +13,7 @@ import { VehicleSelectorCard } from './VehicleSelectorCard';
 /** Fase Plan: pedir la ruta del vehículo, comparar las tres opciones y elegir la parada. */
 export function TraversePanel() {
   const { state, dispatch, targetById } = useMission();
-  const { planTraverse, optimizeOrder, planEva, loading, error, clearError } = usePlanning();
+  const { planTraverse, optimizeOrder, planEva, loading, loadingLabel, error, clearError } = usePlanning();
   const hasTargets = goalTargetIds(state).length > 0;
   const parking = activeParking(state);
   const parkingPlanned = parking ? !!state.evaPlans[parking.id] : false;
@@ -53,6 +54,7 @@ export function TraversePanel() {
           Optimize
         </Button>
       </div>
+      {loadingLabel && <PlanningProgress key={loading} label={loadingLabel} />}
       {error && <ErrorNote message={error} onClose={clearError} />}
 
       {state.traverse && (

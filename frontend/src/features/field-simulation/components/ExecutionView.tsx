@@ -14,7 +14,7 @@ import { MissionSummary } from './MissionSummary';
 import { ReplanToast } from './ReplanToast';
 import { CrewStatusModal } from './CrewStatusModal';
 
-import { type CrewConfig, type QuantumSummary, type RoverVehicleId } from '@/features/mission';
+import { type CrewConfig, type RoverVehicleId } from '@/features/mission';
 
 interface ExecutionViewProps {
   legs: Leg[];
@@ -30,7 +30,6 @@ interface ExecutionViewProps {
   /** "Crew status" (botón de la cabecera): HUD del casco. */
   crewStatusOpen?: boolean;
   onCloseCrewStatus?: () => void;
-  quantumSummary?: QuantumSummary | null;
   /** La página decide la franja inferior; aquí se le pasa la tarjeta de suministros en vivo. */
   renderFooter: (supplies: ReactNode) => ReactNode;
   onReplan: () => void;
@@ -51,7 +50,6 @@ export function ExecutionView({
   crew,
   crewStatusOpen = false,
   onCloseCrewStatus,
-  quantumSummary,
   renderFooter,
   onReplan,
   onExit,
@@ -86,7 +84,7 @@ export function ExecutionView({
       {crewStatusOpen && crew && <CrewStatusModal sim={sim} crew={crew} onClose={() => onCloseCrewStatus?.()} />}
       {sim.lastReplan && <ReplanToast key={sim.state.events.length} result={sim.lastReplan} onClose={sim.clearReplan} />}
       {sim.state.finished && (
-        <MissionSummary state={sim.state} roverCapacity={roverCapacity} targetName={targetName} crew={crew} quantumSummary={quantumSummary} onReplan={onReplan} onExit={onExit} />
+        <MissionSummary state={sim.state} roverCapacity={roverCapacity} targetName={targetName} crew={crew} onReplan={onReplan} onExit={onExit} />
       )}
     </>
   );

@@ -10,5 +10,5 @@ export { PlanningMap } from './components/PlanningMap';
 export { TraversePanel } from './components/TraversePanel';
 export { MissionProvider, useMission } from './state/MissionContext';
 export { allEvasPlanned, hasUnsavedChanges, planPayload, planStep, planSummaryOf, selectedEva, selectedTraverse } from './state/selectors';
-export type { ActivePlan, CrewConfig, EvaPlan, MissionState, Phase, QuantumSummary, SavedPlanPayload } from './state/types';
+export type { ActivePlan, CrewConfig, EvaPlan, MissionState, Phase, SavedPlanPayload } from './state/types';
 export { ROVER_VEHICLES, type RoverVehicleId } from './state/vehicles';

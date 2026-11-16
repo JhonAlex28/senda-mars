@@ -71,5 +71,9 @@ export function usePlanning() {
       dispatch({ type: 'evaPlanned', parkingId, routes });
     });
 
-  return { planTraverse, optimizeOrder, planEva, loading, error, clearError: () => setError(null) };
+  /** Texto corto para el aviso de carga según lo que se está calculando. */
+  const loadingLabel =
+    loading === 'traverse' ? 'Planning vehicle route…' : loading === 'optimize' ? 'Optimizing order…' : loading ? `Planning EVA · ${loading}…` : null;
+
+  return { planTraverse, optimizeOrder, planEva, loading, loadingLabel, error, clearError: () => setError(null) };
 }

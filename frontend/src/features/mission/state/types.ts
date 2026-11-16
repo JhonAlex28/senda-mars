@@ -34,19 +34,6 @@ export interface CrewConfig {
   members: [CrewMember, CrewMember];
 }
 
-export interface QuantumSummary {
-  backendName: string;
-  jobId: string;
-  nQubits: number;
-  layers: number;
-  shots: number;
-  bestBitstring: string;
-  expectationValue: number;
-  recommendedTargetIds: string[];
-  deltaKm?: number;
-  deltaKwh?: number;
-}
-
 /** Plan guardado que está abierto en pantalla (guardar lo actualiza en lugar de duplicarlo). */
 export interface ActivePlan {
   id: string;
@@ -86,7 +73,6 @@ export interface MissionState {
   evaPlans: Record<string, EvaPlan>;
   vehicleId: RoverVehicleId;
   crew: CrewConfig;
-  quantumSummary: QuantumSummary | null;
   activePlan: ActivePlan | null;
   profileId: string; // tripulante que planifica en este equipo (EVA-1, EVA-2…)
   /** Modal "Crew status" (HUD del casco) durante la ejecución. */
@@ -122,7 +108,6 @@ export type MissionAction =
   | { type: 'setCrew'; crew: CrewConfig }
   | { type: 'setCrewStatusOpen'; open: boolean }
   | { type: 'setCopilotOpen'; open: boolean }
-  | { type: 'applyQuantumGoals'; goals: string[]; summary: QuantumSummary }
   | { type: 'loadDemo'; goals: string[] }
   | { type: 'resetMission' }
   | { type: 'dismissNotice' }
