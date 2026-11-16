@@ -57,7 +57,7 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
   return (
     <header className="flex flex-col border-b border-outline-variant bg-surface-container">
       <div className="flex flex-wrap items-center gap-sm px-xl py-sm">
-        {/* Izquierda: logo, volver al globo, misión y clima real */}
+        {/* Izquierda: logo y volver al globo */}
         <SendaLogo />
         <button
           type="button"
@@ -71,11 +71,18 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
           </span>
           Return
         </button>
-        <h1 className="ml-sm font-headline text-headline-lg tracking-wide text-on-surface">Mount Sharp Exploration</h1>
-        {readiness && <ReadinessBadge readiness={readiness} stacked />}
+        {/* Centro: título y clima ocupan el espacio libre, con márgenes amplios a los lados */}
+        <div className="flex min-w-0 flex-1 items-center justify-center gap-2xl px-xl">
+          <h1 className="whitespace-nowrap font-headline text-headline-lg tracking-wider text-on-surface xl:text-[34px]">Mount Sharp Exploration</h1>
+          {readiness && (
+            <div className="border-l border-outline-variant pl-xl">
+              <ReadinessBadge readiness={readiness} stacked />
+            </div>
+          )}
+        </div>
 
         {/* Derecha: acciones; quien planifica (extra) queda al final */}
-        <div className="ml-auto flex flex-wrap items-center gap-sm">
+        <div className="flex flex-wrap items-center gap-sm">
           {going ? (
             <>
               <HeaderButton icon="monitor_heart" label="Crew status" tone="accent" onClick={() => dispatch({ type: 'setCrewStatusOpen', open: true })} />
