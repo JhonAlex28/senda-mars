@@ -8,19 +8,20 @@ import { useSpeech } from '../hooks/useSpeech';
 import { CopilotMascot } from './CopilotMascot';
 
 const EXAMPLES = [
-  { icon: 'event', text: 'Prepara la salida de mañana, tengo 3 horas' },
-  { icon: 'storm', text: 'Hay una tormenta de polvo, replanifica' },
-  { icon: 'science', text: 'Cambia a la ruta científica' },
-  { icon: 'rocket_launch', text: 'Inicia la simulación' },
-  { icon: 'help', text: '¿Cómo calcula SENDA la seguridad de una ruta?' },
+  // Respuestas rápidas también en el servidor gratuito (sin planificar salidas largas),
+  // probadas con senda-copilot-v2: herramienta correcta y respuesta en 1–6 s
+  { icon: 'partly_cloudy_day', text: 'Can we go out today?' },
+  { icon: 'diamond', text: 'Which targets have the highest priority?' },
+  { icon: 'route', text: 'Plan a short trip to Hottah conglomerate' },
+  { icon: 'shield', text: 'How does SENDA rate the safety of a route?' },
 ];
 
 /**
  * Copiloto de SENDA: chat lateral. El usuario da una orden y el asistente la ejecuta en el sistema;
- * el plan aparece en el mapa y aquí solo se resume. En la misión se abre desde la cabecera
- * ("Copilot"), así el botón no tapa los paneles; en el globo queda el botón flotante.
+ * el plan aparece en el mapa y aquí solo se resume. Se abre pulsando la mascota (CopilotMascot),
+ * que el usuario puede arrastrar a donde no le estorbe.
  */
-export function AssistantPanel({ floating = false }: { floating?: boolean }) {
+export function AssistantPanel() {
   const assistant = useAssistant();
   const { state, dispatch } = useMission();
   const open = state.copilotOpen;
@@ -38,7 +39,6 @@ export function AssistantPanel({ floating = false }: { floating?: boolean }) {
 
   return (
     <>
-      {floating && <Launcher open={open} busy={assistant.busy} availability={assistant.availability} onClick={() => setOpen((v) => !v)} />}
       <CopilotMascot
         open={open}
         busy={assistant.busy}
@@ -72,31 +72,6 @@ const STATUS: Record<Availability, { dot: string; text: string }> = {
   offline: { dot: 'bg-error', text: 'Model not responding' },
   'no-backend': { dot: 'bg-error', text: 'SENDA server not reachable' },
 };
-
-function Launcher({ open, busy, availability, onClick }: { open: boolean; busy: boolean; availability: Availability; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-expanded={open}
-      aria-label={open ? 'Close SENDA Copilot' : 'Open SENDA Copilot'}
-      className={`group fixed bottom-lg right-lg z-40 flex items-center gap-sm rounded-full bg-gradient-to-br from-primary to-accent py-sm pl-sm pr-lg text-on-primary shadow-[0_8px_28px_rgba(59,130,246,0.45)] transition-all duration-standard hover:shadow-[0_10px_34px_rgba(56,189,248,0.6)] ${
-        open ? 'pointer-events-none translate-y-4 opacity-0' : 'opacity-100'
-      }`}
-    >
-      <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/15">
-        <Icon name="auto_awesome" filled className="text-[20px]" />
-        {busy && <span className="absolute inset-0 animate-ping rounded-full bg-white/30" />}
-      </span>
-      <span className="flex flex-col items-start leading-tight">
-        <span className="font-headline text-title-md">SENDA Copilot</span>
-        <span className="font-body text-[11px] opacity-85">
-          {busy ? 'Working on it…' : availability === 'ready' ? 'Tell me what to plan' : availability === 'checking' ? 'Connecting…' : 'Not available here'}
-        </span>
-      </span>
-    </button>
-  );
-}
 
 function Header({ availability, onClose, onClear }: { availability: Availability; onClose: () => void; onClear?: () => void }) {
   return (

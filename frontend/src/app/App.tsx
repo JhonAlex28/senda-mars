@@ -11,7 +11,7 @@ function Screens() {
     <>
       {state.phase === 'globe' ? <GlobePage /> : <MissionControlPage />}
       {/* El copiloto está disponible al planificar; durante la simulación no se replanifica */}
-      {state.phase !== 'go' && <AssistantPanel floating={state.phase === 'globe'} />}
+      {state.phase !== 'go' && <AssistantPanel />}
     </>
   );
 }

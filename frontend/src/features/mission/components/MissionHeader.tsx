@@ -87,7 +87,6 @@ export function MissionHeader({ extra }: { extra?: ReactNode } = {}) {
             <>
               <HeaderButton icon="play_arrow" label="Demo" tone="success" onClick={loadDemo} />
               <HeaderButton icon="badge" label="Crew config" onClick={() => setCrewOpen(true)} />
-              <HeaderButton icon="auto_awesome" label="Copilot" tone="accent" onClick={() => dispatch({ type: 'setCopilotOpen', open: true })} />
             </>
           )}
           <HeaderButton icon="satellite_alt" label="Gale EZ" onClick={() => setConceptOpen(true)} />

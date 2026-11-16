@@ -31,7 +31,7 @@ export function useSpeech(onText: (text: string) => void) {
     const Ctor = recognitionCtor();
     if (!Ctor) return;
     const rec = new Ctor();
-    rec.lang = navigator.language || 'es-ES';
+    rec.lang = navigator.language || 'en-US';
     rec.interimResults = false;
     rec.onresult = (e) => {
       const text = Array.from(e.results, (r) => r[0]?.transcript ?? '').join(' ').trim();
