@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 from senda.adapters.outbound.knowledge.markdown_kb import MarkdownKnowledgeBase
+from senda.adapters.outbound.llm.fallback_model import FallbackAssistantModel
 from senda.adapters.outbound.llm.ollama_model import OllamaAssistantModel
 from senda.adapters.outbound.persistence.json_environment import JsonEnvironmentRepository
 from senda.adapters.outbound.persistence.json_params import JsonMissionParamsRepository
@@ -42,8 +43,13 @@ class Container:
 def _assistant_model(s: Settings) -> AssistantModel | None:
     if not s.assistant_enabled:
         return None
-    return OllamaAssistantModel(s.llm_model, s.ollama_url, s.llm_context_tokens,
-                                s.ollama_token, think=s.llm_think)
+    primary = OllamaAssistantModel(s.llm_model, s.ollama_url, s.llm_context_tokens,
+                                   s.ollama_token, think=s.llm_think)
+    if not s.ollama_fallback_url:
+        return primary
+    fallback = OllamaAssistantModel(s.llm_model, s.ollama_fallback_url, s.llm_context_tokens,
+                                    s.ollama_fallback_token, think=s.llm_think)
+    return FallbackAssistantModel([("primary", primary), ("fallback", fallback)])
 
 
 def build_container(s: Settings) -> Container:

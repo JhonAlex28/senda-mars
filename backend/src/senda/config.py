@@ -28,6 +28,10 @@ class Settings:
     ollama_url: str = "http://localhost:11434"
     llm_context_tokens: int = 8192
     ollama_token: str = ""
+    # Respaldo: otro servidor con el mismo modelo (p. ej. Space de Hugging Face) para cuando
+    # el principal (la laptop por un túnel) no responde. Vacío = sin respaldo.
+    ollama_fallback_url: str = ""
+    ollama_fallback_token: str = ""
     llm_think: bool | None = False      # SENDA_LLM_THINK: false (defecto) | true | auto (no enviar)
     # IBM Quantum (opcional): solo en el servidor, nunca en el frontend ni en git
     ibm_quantum_token: str = ""
@@ -53,6 +57,8 @@ class Settings:
             ollama_url=os.getenv("SENDA_OLLAMA_URL", "http://localhost:11434"),
             llm_context_tokens=int(os.getenv("SENDA_LLM_CONTEXT_TOKENS", "8192")),
             ollama_token=os.getenv("SENDA_OLLAMA_TOKEN", ""),
+            ollama_fallback_url=os.getenv("SENDA_OLLAMA_FALLBACK_URL", "").strip(),
+            ollama_fallback_token=os.getenv("SENDA_OLLAMA_FALLBACK_TOKEN", ""),
             llm_think=_think(os.getenv("SENDA_LLM_THINK", "false")),
             ibm_quantum_token=os.getenv("IBM_QUANTUM_TOKEN", ""),
             ibm_quantum_channel=os.getenv("IBM_QUANTUM_CHANNEL", "ibm_quantum_platform"),
