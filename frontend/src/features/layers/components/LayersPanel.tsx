@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card } from '@/shared/ui/Card';
 import { Icon } from '@/shared/ui/Icon';
@@ -89,15 +90,48 @@ function LayerRow({ layer, sub = false, parentOn = true }: { layer: LayerDef; su
       </Tooltip>
 
       {on && (layer.raster || layer.legend) && (
-        <div className="flex items-center gap-sm pl-[26px]">
-          {layer.legend?.map((item) => (
-            <span key={item.label} className="flex items-center gap-xs font-mono text-mono-sm text-on-surface-variant" translate="no">
-              <span className={`h-2 w-3 rounded-sm ${item.swatch}`} />
-              {item.label}
-            </span>
-          ))}
+        <div
+          className={`gap-sm ${
+            layer.id === 'relief'
+              ? 'flex flex-col items-center px-4'
+              : 'flex flex-wrap items-center pl-[26px]'
+          }`}
+        >
+          {layer.id === 'relief' ? (
+            <div className="w-[90%] max-w-[210px]">
+              <div
+                className="h-2 w-full rounded-sm"
+                style={{
+                  background:
+                    'linear-gradient(to right, #46261f, #704032, #965743, #ba795a, #d69e72, #e7bf98, #f2ddbb)',
+                }}
+              />
+              <div className="mt-1 flex justify-between font-mono text-[10px] text-on-surface-variant">
+                <span>-4700 m</span>
+                <span>-3000 m</span>
+              </div>
+            </div>
+          ) : (
+            layer.legend?.map((item) => (
+              <span
+                key={item.label}
+                className="flex items-center gap-xs font-mono text-mono-sm text-on-surface-variant"
+                translate="no"
+              >
+                <span className={`h-2 w-3 rounded-sm ${item.swatch}`} />
+                {item.label}
+              </span>
+            ))
+          )}
+
           {layer.raster && (
-            <>
+            <div
+              className={`flex items-center gap-sm ${
+                layer.id === 'relief'
+                  ? 'w-[90%] max-w-[210px]'
+                  : 'min-w-0 flex-1'
+              }`}
+            >
               <input
                 type="range"
                 min={0.1}
@@ -108,8 +142,10 @@ function LayerRow({ layer, sub = false, parentOn = true }: { layer: LayerDef; su
                 aria-label={`${layer.name} opacity`}
                 className="h-1 min-w-0 flex-1 cursor-pointer accent-primary"
               />
-              <Live className="w-9 text-right font-mono text-mono-sm text-on-surface-variant">{Math.round(view.opacity * 100)}%</Live>
-            </>
+              <Live className="w-9 shrink-0 text-right font-mono text-mono-sm text-on-surface-variant">
+                {Math.round(view.opacity * 100)}%
+              </Live>
+            </div>
           )}
         </div>
       )}
